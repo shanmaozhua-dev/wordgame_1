@@ -79,9 +79,10 @@ Implemented for this pass:
 - The current playable scene uses a 24px render cell so the full 32 x 18 page fits the automated/manual test window without text overlap.
 - `Fonts/Zpix.tres` no longer forces `fixed_size = 54`; labels can scale to the active cell size.
 - First playable map for the 勇者试炼拳头 segment.
-- Initial key words from source: `贏`, `不`, `二`, `讚`, `一`, `零`, `好`, `劍`, `勇`.
+- Initial key words from source: `贏`, `不`, `二`, `讚`, `一`, `零`, `劍`, `勇`. The source also has `好`, but it is hidden behind `ch3_生命線敘述出現` and is not spawned in the initial layout.
 - Upper narration and lower hand-gesture sentence as collision map text.
+- Initial visible palm walls are locked against the source `零的手勢`, `生命線`, and `拇指下收` `big_text` coordinates.
 - Recognition for `巨大手掌，是好的手勢`, `巨大手掌，是二的手勢`, `巨大手掌，是讚的手勢`, `巨大手掌，是贏的手勢`.
-- Recognition for deleting `不` to form `會輕易放開`, which sets `hero_trial_complete` and spawns a persistent tail message.
+- Recognition for deleting `不` to form `會輕易放開`, which sets `hero_trial_complete`. No invented tail text is spawned by the prototype.
 
-Known gaps: full original animations, all failure branches, exact full-map geometry, and final transition scene need more screenshots/video notes before 1:1 recreation.
+Known gaps: full original animations, conditional text events, all failure branches, gesture-state palm variants, and final transition scene need more source extraction plus screenshots/video notes before 1:1 recreation.

@@ -41,13 +41,14 @@ func test_initial_hero_trial_layout() -> void:
 	assert_entity(world, "二", Vector2i(1, 5), true, true, "two word is pushable")
 	assert_entity(world, "讚", Vector2i(10, 5), true, true, "praise word is pushable")
 	assert_entity_at(world, "劍", Vector2i(16, 7), true, false, "sword is part of the map collision")
-	assert_entity(world, "好", Vector2i(14, 13), true, true, "good word starts beside the life-line sentence")
+	assert_equal(world.find_first_entity_by_text("好"), null, "good word is hidden until the life-line narration appears")
+	assert_entity_at(world, "掌", Vector2i(14, 13), true, false, "thumb-down palm wall fills the life-line row")
 	assert_true(world.get_entity_at(Vector2i(7, 2)) != null, "upper narration text has collision")
 	assert_true(world.get_entity_at(Vector2i(25, 17)) != null, "lower hand-gesture sentence has collision")
 
 func test_zero_gesture_palm_matches_unpacked_big_text() -> void:
 	var world = make_world()
-	var expected := expected_zero_gesture_palm_cells()
+	var expected := expected_initial_palm_cells()
 	var actual := {}
 	for entity in world.entities.values():
 		if entity.text == "掌" and entity.tags.has("palm_wall"):
@@ -55,14 +56,14 @@ func test_zero_gesture_palm_matches_unpacked_big_text() -> void:
 				actual[cell] = true
 	for cell in expected.keys():
 		if not actual.has(cell):
-			failures.append("missing palm wall at %s from original zero gesture big_text" % cell)
+			failures.append("missing palm wall at %s from original visible palm big_text" % cell)
 	for cell in actual.keys():
 		if not expected.has(cell):
-			failures.append("unexpected palm wall at %s; not in original zero gesture big_text" % cell)
+			failures.append("unexpected palm wall at %s; not in original visible palm big_text" % cell)
 
 func test_gesture_sentence_updates_state_and_keeps_collision_caption() -> void:
 	var world = make_world()
-	var good = world.find_first_entity_by_text("好")
+	var good = world.add_entity("好", Vector2i(2, 14), {"solid": true, "pushable": true})
 	var zero = world.find_first_entity_by_text("零")
 	world.move_entity_to(zero.id, Vector2i(30, 16))
 	world.move_entity_to(good.id, Vector2i(26, 17))
@@ -88,11 +89,7 @@ func test_release_sentence_completes_trial_after_deleting_not() -> void:
 	assert_true(result.has("會輕易放開"), "release sentence is recognized after deleting not")
 	assert_equal(world.switches.get("ch3_會輕易放開成立", false), true, "release switch is set")
 	assert_equal(world.switches.get("hero_trial_complete", false), true, "trial completion flag is set")
-	var tail = world.find_first_entity_by_text("尾聲：巨掌鬆開，勇者試煉完成")
-	assert_true(tail != null, "tail message is spawned into the map")
-	if tail:
-		world.player_pos = tail.grid_pos - Vector2i(1, 0)
-		assert_false(world.try_move_player(Vector2i(1, 0)).success, "tail message blocks movement as map text")
+	assert_equal(world.find_first_entity_by_text("尾聲：巨掌鬆開，勇者試煉完成"), null, "prototype does not spawn invented tail text")
 
 func assert_entity(world: RefCounted, text: String, pos: Vector2i, solid: bool, pushable: bool, label: String) -> void:
 	var entity = world.find_first_entity_by_text(text)
@@ -137,8 +134,9 @@ func assert_entities_inside_first_screen(world: RefCounted) -> void:
 			if cell.x < 0 or cell.x >= world.screen_size.x or cell.y < 0 or cell.y >= world.screen_size.y:
 				failures.append("word %s at %s is outside the first 32 by 18 screen" % [entity.text, cell])
 
-func expected_zero_gesture_palm_cells() -> Dictionary:
-	var rows := [
+func expected_initial_palm_cells() -> Dictionary:
+	var cells := {}
+	_add_big_text_cells(cells, Vector2i(7, 0), [
 		"＿＿＿＿＿＿＿＿掌掌掌＿掌掌掌＿掌掌掌＿＿＿＿＿",
 		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿＿",
 		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌掌掌掌＿",
@@ -154,11 +152,22 @@ func expected_zero_gesture_palm_cells() -> Dictionary:
 		"＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌",
 		"＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌",
 		"＿＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌"
-	]
-	var cells := {}
+	])
+	_add_big_text_cells(cells, Vector2i(21, 12), [
+		"掌掌掌",
+		"＿＿掌",
+		"＿＿掌",
+		"＿＿掌",
+		"＿＿掌"
+	])
+	_add_big_text_cells(cells, Vector2i(12, 13), [
+		"掌掌掌掌掌掌掌掌"
+	])
+	return cells
+
+func _add_big_text_cells(cells: Dictionary, origin: Vector2i, rows: Array) -> void:
 	for y in range(rows.size()):
 		var row: String = rows[y]
 		for x in range(row.length()):
 			if row.substr(x, 1) == "掌":
-				cells[Vector2i(7 + x, y)] = true
-	return cells
+				cells[origin + Vector2i(x, y)] = true

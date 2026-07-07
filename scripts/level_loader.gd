@@ -65,6 +65,12 @@ static func build_hero_trial_fist_level() -> Dictionary:
 			{"pos": Vector2i(7, 12), "text": "＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌", "config": {"tags": ["palm_wall"]}},
 			{"pos": Vector2i(7, 13), "text": "＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌", "config": {"tags": ["palm_wall"]}},
 			{"pos": Vector2i(7, 14), "text": "＿＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌", "config": {"tags": ["palm_wall"]}},
+			{"pos": Vector2i(21, 12), "text": "掌掌掌", "config": {"tags": ["palm_wall", "life_line"]}},
+			{"pos": Vector2i(21, 13), "text": "＿＿掌", "config": {"tags": ["palm_wall", "life_line"]}},
+			{"pos": Vector2i(21, 14), "text": "＿＿掌", "config": {"tags": ["palm_wall", "life_line"]}},
+			{"pos": Vector2i(21, 15), "text": "＿＿掌", "config": {"tags": ["palm_wall", "life_line"]}},
+			{"pos": Vector2i(21, 16), "text": "＿＿掌", "config": {"tags": ["palm_wall", "life_line"]}},
+			{"pos": Vector2i(12, 13), "text": "掌＿掌掌掌掌掌掌", "config": {"tags": ["palm_wall", "thumb_down"]}},
 			{"pos": Vector2i(15, 17), "text": "俯瞰這 個巨大手掌，是 的手勢"}
 		],
 		"entity_spawns": [
@@ -74,7 +80,6 @@ static func build_hero_trial_fist_level() -> Dictionary:
 			{"text": "讚", "pos": Vector2i(10, 5)},
 			{"text": "一", "pos": Vector2i(18, 17)},
 			{"text": "零", "pos": Vector2i(26, 17)},
-			{"text": "好", "pos": Vector2i(14, 13)},
 			{"text": "劍", "pos": Vector2i(16, 7)},
 			{"text": "勇", "pos": Vector2i(24, 4)}
 		],
@@ -118,13 +123,13 @@ static func build_hero_trial_fist_level() -> Dictionary:
 				"caption_pos": Vector2i(18, 15)
 			},
 			"會輕易放開": {
-				"message": "尾聲：巨掌鬆開，勇者試煉完成",
+				"message": "",
 				"switch": "ch3_會輕易放開成立",
 				"switches": {"hero_trial_complete": true},
 				"caption_pos": Vector2i(5, 15)
 			},
 			"不會輕易放開": {
-				"message": "巨掌仍然緊握",
+				"message": "",
 				"switch": "ch3_不會輕易放開成立",
 				"caption_pos": Vector2i(5, 15)
 			}
