@@ -8,6 +8,7 @@ var failures: Array[String] = []
 func _init() -> void:
 	test_screen_metrics_match_original_grid()
 	test_initial_hero_trial_layout()
+	test_zero_gesture_palm_matches_unpacked_big_text()
 	test_gesture_sentence_updates_state_and_keeps_collision_caption()
 	test_release_sentence_completes_trial_after_deleting_not()
 
@@ -43,6 +44,21 @@ func test_initial_hero_trial_layout() -> void:
 	assert_entity(world, "好", Vector2i(14, 13), true, true, "good word starts beside the life-line sentence")
 	assert_true(world.get_entity_at(Vector2i(7, 2)) != null, "upper narration text has collision")
 	assert_true(world.get_entity_at(Vector2i(25, 17)) != null, "lower hand-gesture sentence has collision")
+
+func test_zero_gesture_palm_matches_unpacked_big_text() -> void:
+	var world = make_world()
+	var expected := expected_zero_gesture_palm_cells()
+	var actual := {}
+	for entity in world.entities.values():
+		if entity.text == "掌" and entity.tags.has("palm_wall"):
+			for cell in entity.cells:
+				actual[cell] = true
+	for cell in expected.keys():
+		if not actual.has(cell):
+			failures.append("missing palm wall at %s from original zero gesture big_text" % cell)
+	for cell in actual.keys():
+		if not expected.has(cell):
+			failures.append("unexpected palm wall at %s; not in original zero gesture big_text" % cell)
 
 func test_gesture_sentence_updates_state_and_keeps_collision_caption() -> void:
 	var world = make_world()
@@ -120,3 +136,29 @@ func assert_entities_inside_first_screen(world: RefCounted) -> void:
 		for cell in entity.cells:
 			if cell.x < 0 or cell.x >= world.screen_size.x or cell.y < 0 or cell.y >= world.screen_size.y:
 				failures.append("word %s at %s is outside the first 32 by 18 screen" % [entity.text, cell])
+
+func expected_zero_gesture_palm_cells() -> Dictionary:
+	var rows := [
+		"＿＿＿＿＿＿＿＿掌掌掌＿掌掌掌＿掌掌掌＿＿＿＿＿",
+		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿＿",
+		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌掌掌掌＿",
+		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌",
+		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌",
+		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌",
+		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌",
+		"＿＿＿＿＿掌掌掌＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌",
+		"＿＿＿＿掌＿＿＿掌掌掌＿掌掌掌＿掌掌掌＿掌掌掌＿",
+		"＿＿＿＿掌＿＿＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿掌",
+		"＿＿＿＿掌＿＿＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿掌",
+		"＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌",
+		"＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌",
+		"＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌",
+		"＿＿＿＿＿＿＿掌＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿掌"
+	]
+	var cells := {}
+	for y in range(rows.size()):
+		var row: String = rows[y]
+		for x in range(row.length()):
+			if row.substr(x, 1) == "掌":
+				cells[Vector2i(7 + x, y)] = true
+	return cells
