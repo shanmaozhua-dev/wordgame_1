@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/Crash.gd" type="Script" id=1]
+[ext_resource path="res://test.png" type="Texture2D" id=2]
+
+[node name="Crash" type="Node2D"]
+position = Vector2( 30, 30 )
+script = ExtResource( 1 )
+texture = ExtResource( 2 )
+resolution = 6
+period = 0.1

@@ -1,0 +1,1289 @@
+[gd_scene load_steps=29 format=2]
+
+[ext_resource path="res://Sprites/title/title_word_1.png" type="Texture2D" id=1]
+[ext_resource path="res://Sprites/title/title_word_3.png" type="Texture2D" id=2]
+[ext_resource path="res://Sprites/title/title_word_4.png" type="Texture2D" id=3]
+[ext_resource path="res://Sprites/title/title_word_2.png" type="Texture2D" id=4]
+[ext_resource path="res://Sprites/title/title_word_b_1.png" type="Texture2D" id=5]
+[ext_resource path="res://Sprites/title/title_word_b_3.png" type="Texture2D" id=6]
+[ext_resource path="res://Sprites/title/title_word_b_2.png" type="Texture2D" id=7]
+[ext_resource path="res://Sprites/title/title_word_b_4.png" type="Texture2D" id=8]
+[ext_resource path="res://Scenes/Events/WordSprite.tscn" type="PackedScene" id=9]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+
+func standby():
+	var tw = create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(self, \"position:y\", position.y-120, 2).from(position.y).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	await tw.finished
+"
+
+[sub_resource type="Animation" id=2]
+resource_name = "Loop"
+length = 1.5
+loop_mode = 1
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Title LT/SubViewport/Title/title_word_1:material:shader_parameter/t")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.85 ),
+"transitions": PackedFloat32Array( 0.5, 1 ),
+"update": 0,
+"values": [ 0.4, 0.85 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Title LT/SubViewport/Title/title_word_2:material:shader_parameter/t")
+tracks/1/interp = 1
+tracks/1/loop_wrap = false
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 0.05, 0.9 ),
+"transitions": PackedFloat32Array( 0.5, 0.5, 1 ),
+"update": 0,
+"values": [ 0.35, 0.35, 0.7 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Title LT/SubViewport/Title/title_word_3:material:shader_parameter/t")
+tracks/2/interp = 1
+tracks/2/loop_wrap = false
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 0.1, 0.95 ),
+"transitions": PackedFloat32Array( 0.5, 0.5, 1 ),
+"update": 0,
+"values": [ 0.3, 0.3, 0.65 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Title LT/SubViewport/Title/title_word_4:material:shader_parameter/t")
+tracks/3/interp = 1
+tracks/3/loop_wrap = false
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PackedFloat32Array( 0, 0.15, 1 ),
+"transitions": PackedFloat32Array( 0.5, 0.5, 1 ),
+"update": 0,
+"values": [ 0.25, 0.25, 0.6 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Title LT/SubViewport/Title/title_word_1:material:shader_parameter/s")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("Title LT/SubViewport/Title/title_word_2:material:shader_parameter/s")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("Title LT/SubViewport/Title/title_word_3:material:shader_parameter/s")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("Title LT/SubViewport/Title/title_word_4:material:shader_parameter/s")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath("Title LT/SubViewport/Title/title_word_b_1:material:shader_parameter/t")
+tracks/8/interp = 1
+tracks/8/loop_wrap = false
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PackedFloat32Array( 0, 0.85 ),
+"transitions": PackedFloat32Array( 0.5, 1 ),
+"update": 0,
+"values": [ 0.4, 0.85 ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("Title LT/SubViewport/Title/title_word_b_2:material:shader_parameter/t")
+tracks/9/interp = 1
+tracks/9/loop_wrap = false
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PackedFloat32Array( 0, 0.05, 0.9 ),
+"transitions": PackedFloat32Array( 0.5, 0.5, 1 ),
+"update": 0,
+"values": [ 0.35, 0.35, 0.7 ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("Title LT/SubViewport/Title/title_word_b_3:material:shader_parameter/t")
+tracks/10/interp = 1
+tracks/10/loop_wrap = false
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PackedFloat32Array( 0, 0.1, 0.95 ),
+"transitions": PackedFloat32Array( 0.5, 0.5, 1 ),
+"update": 0,
+"values": [ 0.3, 0.3, 0.65 ]
+}
+tracks/11/type = "value"
+tracks/11/path = NodePath("Title LT/SubViewport/Title/title_word_b_4:material:shader_parameter/t")
+tracks/11/interp = 1
+tracks/11/loop_wrap = false
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/keys = {
+"times": PackedFloat32Array( 0, 0.15, 1 ),
+"transitions": PackedFloat32Array( 0.5, 0.5, 1 ),
+"update": 0,
+"values": [ 0.25, 0.25, 0.6 ]
+}
+tracks/12/type = "value"
+tracks/12/path = NodePath("Title LT/SubViewport/Title/title_word_b_1:material:shader_parameter/s")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/13/type = "value"
+tracks/13/path = NodePath("Title LT/SubViewport/Title/title_word_b_2:material:shader_parameter/s")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/14/type = "value"
+tracks/14/path = NodePath("Title LT/SubViewport/Title/title_word_b_3:material:shader_parameter/s")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/15/type = "value"
+tracks/15/path = NodePath("Title LT/SubViewport/Title/title_word_b_4:material:shader_parameter/s")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/16/type = "value"
+tracks/16/path = NodePath("Slash:material:shader_parameter/start")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/17/type = "value"
+tracks/17/path = NodePath("Slash:material:shader_parameter/end")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/18/type = "value"
+tracks/18/path = NodePath("白遮:visible")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/19/type = "value"
+tracks/19/path = NodePath("白遮:modulate:a")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/20/type = "value"
+tracks/20/path = NodePath("Title LT:position")
+tracks/20/interp = 1
+tracks/20/loop_wrap = true
+tracks/20/imported = false
+tracks/20/enabled = true
+tracks/20/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Vector2( -40, -40 ) ]
+}
+tracks/21/type = "value"
+tracks/21/path = NodePath("Title LT:modulate")
+tracks/21/interp = 1
+tracks/21/loop_wrap = true
+tracks/21/imported = false
+tracks/21/enabled = true
+tracks/21/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/22/type = "value"
+tracks/22/path = NodePath("Title RB:position")
+tracks/22/interp = 1
+tracks/22/loop_wrap = true
+tracks/22/imported = false
+tracks/22/enabled = true
+tracks/22/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Vector2( 20, 20 ) ]
+}
+tracks/23/type = "value"
+tracks/23/path = NodePath("Title RB:modulate")
+tracks/23/interp = 1
+tracks/23/loop_wrap = true
+tracks/23/imported = false
+tracks/23/enabled = true
+tracks/23/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Title LT/SubViewport/Title/title_word_1:material:shader_parameter/s")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Title LT/SubViewport/Title/title_word_1:material:shader_parameter/t")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Title LT/SubViewport/Title/title_word_2:material:shader_parameter/s")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Title LT/SubViewport/Title/title_word_2:material:shader_parameter/t")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Title LT/SubViewport/Title/title_word_3:material:shader_parameter/s")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("Title LT/SubViewport/Title/title_word_3:material:shader_parameter/t")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("Title LT/SubViewport/Title/title_word_4:material:shader_parameter/s")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("Title LT/SubViewport/Title/title_word_4:material:shader_parameter/t")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath("Title LT/SubViewport/Title/title_word_b_1:material:shader_parameter/s")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("Title LT/SubViewport/Title/title_word_b_1:material:shader_parameter/t")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("Title LT/SubViewport/Title/title_word_b_2:material:shader_parameter/s")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/11/type = "value"
+tracks/11/path = NodePath("Title LT/SubViewport/Title/title_word_b_2:material:shader_parameter/t")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/12/type = "value"
+tracks/12/path = NodePath("Title LT/SubViewport/Title/title_word_b_3:material:shader_parameter/s")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/13/type = "value"
+tracks/13/path = NodePath("Title LT/SubViewport/Title/title_word_b_3:material:shader_parameter/t")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/14/type = "value"
+tracks/14/path = NodePath("Title LT/SubViewport/Title/title_word_b_4:material:shader_parameter/s")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/15/type = "value"
+tracks/15/path = NodePath("Title LT/SubViewport/Title/title_word_b_4:material:shader_parameter/t")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/16/type = "value"
+tracks/16/path = NodePath("Slash:material:shader_parameter/start")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/17/type = "value"
+tracks/17/path = NodePath("Slash:material:shader_parameter/end")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/18/type = "value"
+tracks/18/path = NodePath("白遮:visible")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/19/type = "value"
+tracks/19/path = NodePath("白遮:modulate:a")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/20/type = "value"
+tracks/20/path = NodePath("Title LT:position")
+tracks/20/interp = 1
+tracks/20/loop_wrap = true
+tracks/20/imported = false
+tracks/20/enabled = true
+tracks/20/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/21/type = "value"
+tracks/21/path = NodePath("Title RB:position")
+tracks/21/interp = 1
+tracks/21/loop_wrap = true
+tracks/21/imported = false
+tracks/21/enabled = true
+tracks/21/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+tracks/22/type = "value"
+tracks/22/path = NodePath("Title RB:modulate")
+tracks/22/interp = 1
+tracks/22/loop_wrap = true
+tracks/22/imported = false
+tracks/22/enabled = true
+tracks/22/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ) ]
+}
+tracks/23/type = "value"
+tracks/23/path = NodePath("Title LT:modulate")
+tracks/23/interp = 1
+tracks/23/loop_wrap = true
+tracks/23/imported = false
+tracks/23/enabled = true
+tracks/23/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ) ]
+}
+tracks/24/type = "value"
+tracks/24/path = NodePath(".:position")
+tracks/24/interp = 1
+tracks/24/loop_wrap = true
+tracks/24/imported = false
+tracks/24/enabled = true
+tracks/24/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "Start"
+length = 7.0
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Title LT/SubViewport/Title/title_word_1:material:shader_parameter/s")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Title LT/SubViewport/Title/title_word_1:material:shader_parameter/t")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 5, 5.8 ),
+"transitions": PackedFloat32Array( 1, 0.5, 0.5 ),
+"update": 0,
+"values": [ 0.0, 0.4, 0.85 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Title LT/SubViewport/Title/title_word_2:material:shader_parameter/s")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Title LT/SubViewport/Title/title_word_2:material:shader_parameter/t")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PackedFloat32Array( 0, 5.05, 5.85 ),
+"transitions": PackedFloat32Array( 1, 0.5, 0.5 ),
+"update": 0,
+"values": [ 0.0, 0.35, 0.7 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("Title LT/SubViewport/Title/title_word_3:material:shader_parameter/s")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("Title LT/SubViewport/Title/title_word_3:material:shader_parameter/t")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PackedFloat32Array( 0, 5.1, 5.9 ),
+"transitions": PackedFloat32Array( 1, 0.5, 0.5 ),
+"update": 0,
+"values": [ 0.0, 0.3, 0.65 ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("Title LT/SubViewport/Title/title_word_4:material:shader_parameter/s")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("Title LT/SubViewport/Title/title_word_4:material:shader_parameter/t")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PackedFloat32Array( 0, 5.15, 5.95 ),
+"transitions": PackedFloat32Array( 1, 0.5, 0.5 ),
+"update": 0,
+"values": [ 0.0, 0.25, 0.6 ]
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath("Title LT/SubViewport/Title/title_word_b_1:material:shader_parameter/s")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PackedFloat32Array( 0, 5, 5.85 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.4, 0.85 ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("Title LT/SubViewport/Title/title_word_b_1:material:shader_parameter/t")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("Title LT/SubViewport/Title/title_word_b_2:material:shader_parameter/s")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PackedFloat32Array( 0, 5.05, 5.9 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.35, 0.7 ]
+}
+tracks/11/type = "value"
+tracks/11/path = NodePath("Title LT/SubViewport/Title/title_word_b_2:material:shader_parameter/t")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/12/type = "value"
+tracks/12/path = NodePath("Title LT/SubViewport/Title/title_word_b_3:material:shader_parameter/s")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/keys = {
+"times": PackedFloat32Array( 0, 5.1, 5.95 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.3, 0.65 ]
+}
+tracks/13/type = "value"
+tracks/13/path = NodePath("Title LT/SubViewport/Title/title_word_b_3:material:shader_parameter/t")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/14/type = "value"
+tracks/14/path = NodePath("Title LT/SubViewport/Title/title_word_b_4:material:shader_parameter/s")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/keys = {
+"times": PackedFloat32Array( 0, 5.15, 6 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.25, 0.6 ]
+}
+tracks/15/type = "value"
+tracks/15/path = NodePath("Title LT/SubViewport/Title/title_word_b_4:material:shader_parameter/t")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/16/type = "value"
+tracks/16/path = NodePath("Slash:material:shader_parameter/start")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/keys = {
+"times": PackedFloat32Array( 0, 2.5, 3.5 ),
+"transitions": PackedFloat32Array( 0.5, 0.25, 1 ),
+"update": 0,
+"values": [ 1.0, 1.0, 0.0 ]
+}
+tracks/17/type = "value"
+tracks/17/path = NodePath("Slash:material:shader_parameter/end")
+tracks/17/interp = 1
+tracks/17/loop_wrap = true
+tracks/17/imported = false
+tracks/17/enabled = true
+tracks/17/keys = {
+"times": PackedFloat32Array( 0, 2, 3 ),
+"transitions": PackedFloat32Array( 0.3, 0.25, 1 ),
+"update": 0,
+"values": [ 1.0, 1.0, 0.15 ]
+}
+tracks/18/type = "value"
+tracks/18/path = NodePath("白遮:visible")
+tracks/18/interp = 1
+tracks/18/loop_wrap = true
+tracks/18/imported = false
+tracks/18/enabled = true
+tracks/18/keys = {
+"times": PackedFloat32Array( 0, 4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
+tracks/19/type = "value"
+tracks/19/path = NodePath("白遮:modulate:a")
+tracks/19/interp = 1
+tracks/19/loop_wrap = true
+tracks/19/imported = false
+tracks/19/enabled = true
+tracks/19/keys = {
+"times": PackedFloat32Array( 0, 4, 5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 1.0, 1.0, 0.0 ]
+}
+tracks/20/type = "value"
+tracks/20/path = NodePath("Title LT:position")
+tracks/20/interp = 1
+tracks/20/loop_wrap = true
+tracks/20/imported = false
+tracks/20/enabled = true
+tracks/20/keys = {
+"times": PackedFloat32Array( 0, 4, 5 ),
+"transitions": PackedFloat32Array( 1, 0.3, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 0 ), Vector2( -40, -40 ) ]
+}
+tracks/21/type = "value"
+tracks/21/path = NodePath("Title RB:position")
+tracks/21/interp = 1
+tracks/21/loop_wrap = true
+tracks/21/imported = false
+tracks/21/enabled = true
+tracks/21/keys = {
+"times": PackedFloat32Array( 0, 4, 5 ),
+"transitions": PackedFloat32Array( 1, 0.3, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( 0, 0 ), Vector2( 20, 20 ) ]
+}
+tracks/22/type = "value"
+tracks/22/path = NodePath("Title LT:modulate")
+tracks/22/interp = 1
+tracks/22/loop_wrap = true
+tracks/22/imported = false
+tracks/22/enabled = true
+tracks/22/keys = {
+"times": PackedFloat32Array( 0, 2 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/23/type = "value"
+tracks/23/path = NodePath("Title RB:modulate")
+tracks/23/interp = 1
+tracks/23/loop_wrap = true
+tracks/23/imported = false
+tracks/23/enabled = true
+tracks/23/keys = {
+"times": PackedFloat32Array( 0, 2 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/24/type = "method"
+tracks/24/path = NodePath(".")
+tracks/24/interp = 1
+tracks/24/loop_wrap = true
+tracks/24/imported = false
+tracks/24/enabled = true
+tracks/24/keys = {
+"times": PackedFloat32Array( 6 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [  ],
+"method": "standby"
+} ]
+}
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+const vec2 size = vec2(96.0, 54.0);
+
+void fragment() {
+	vec2 uv = UV;
+	uv *= size;
+	vec2 id = floor(uv);
+	
+	COLOR.rgb = vec3(1.0);
+	COLOR.a = texture(TEXTURE,UV).r;
+	COLOR.a *= step(id.x-id.y*2.75, -17.0);
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+
+[sub_resource type="Shader" id=7]
+code = "shader_type canvas_item;
+
+uniform float s :hint_range(0, 1) = 0;
+uniform float t :hint_range(0, 1) = 0;
+const vec2 size = vec2(96.0, 54.0);
+
+void fragment() {
+	vec2 uv = UV;
+	uv *= size;
+	vec2 id = floor(uv);
+	
+	float c = smoothstep((1.0-t)*(size.x+2.0*size.y), (1.0-t)*(size.x+2.0*size.y)+5.0, id.x+5.0*t*id.y);
+	c *= smoothstep((1.0-t)*(size.x+2.0*size.y)+25.0, (1.0-t)*(size.x+2.0*size.y)+5.0, id.x+4.5*t*id.y);
+	float start = smoothstep((1.0-s)*(size.x+2.0*size.y), (1.0-s)*(size.x+2.0*size.y)+5.0, id.x+5.0*s*id.y);
+	
+	COLOR = texture(TEXTURE, UV);
+	COLOR.a -= c;
+	COLOR.a *= start;
+	COLOR.a = clamp(COLOR.a, 0.0, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = SubResource( 7 )
+shader_parameter/s = 1.0
+shader_parameter/t = 0.4
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = SubResource( 7 )
+shader_parameter/s = 1.0
+shader_parameter/t = 0.35
+
+[sub_resource type="ShaderMaterial" id=10]
+shader = SubResource( 7 )
+shader_parameter/s = 1.0
+shader_parameter/t = 0.3
+
+[sub_resource type="ShaderMaterial" id=11]
+shader = SubResource( 7 )
+shader_parameter/s = 1.0
+shader_parameter/t = 0.25
+
+[sub_resource type="ShaderMaterial" id=12]
+shader = SubResource( 7 )
+shader_parameter/s = 1.0
+shader_parameter/t = 0.4
+
+[sub_resource type="ShaderMaterial" id=13]
+shader = SubResource( 7 )
+shader_parameter/s = 1.0
+shader_parameter/t = 0.35
+
+[sub_resource type="ShaderMaterial" id=14]
+shader = SubResource( 7 )
+shader_parameter/s = 1.0
+shader_parameter/t = 0.3
+
+[sub_resource type="ShaderMaterial" id=15]
+shader = SubResource( 7 )
+shader_parameter/s = 1.0
+shader_parameter/t = 0.25
+
+[sub_resource type="Shader" id=16]
+code = "shader_type canvas_item;
+
+const vec2 size = vec2(96.0, 54.0);
+
+void fragment() {
+	vec2 uv = UV;
+	uv *= size;
+	vec2 id = floor(uv);
+	
+	COLOR.rgb = vec3(1.0);
+	COLOR.a = texture(TEXTURE,UV).r;
+	COLOR.a *= 1.0 - step(id.x-id.y*2.75, -20.5);
+}"
+
+[sub_resource type="ShaderMaterial" id=17]
+shader = SubResource( 16 )
+
+[sub_resource type="Shader" id=18]
+code = "shader_type canvas_item;
+
+uniform float start :hint_range(0,1) = 0;
+uniform float end :hint_range(0,1) = 0;
+
+const vec2 size = vec2(96.,54.);
+
+void fragment() {
+	vec2 uv = UV;
+	uv.y = 1.-uv.y;
+	uv *= size;
+	vec2 id = floor(uv);
+	vec2 uv_by_id = id/size;
+	
+	float s = clamp(.18,.93,start);
+	float e = clamp(.18,.93,end);
+	
+	COLOR.a = 1.-step(id.x-id.y*2.75, -23.);
+	COLOR.a *= step(id.x-id.y*2.75, -19.);
+	COLOR.a *= step(uv_by_id.x, s);
+	COLOR.a *= step(e, uv_by_id.x);
+}"
+
+[sub_resource type="ShaderMaterial" id=19]
+shader = SubResource( 18 )
+shader_parameter/start = 1.0
+shader_parameter/end = 1.0
+
+[node name="Title" type="Node2D"]
+script = SubResource( 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "Setup"
+anims/Loop = SubResource( 2 )
+anims/Setup = SubResource( 3 )
+anims/Start = SubResource( 4 )
+
+[node name="Title LT" type="SubViewportContainer" parent="."]
+material = SubResource( 6 )
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 1880.0
+offset_bottom = 1040.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SubViewport" type="SubViewport" parent="Title LT"]
+size = Vector2( 1920, 1080 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+gui_disable_input = true
+
+[node name="BG" type="ColorRect" parent="Title LT/SubViewport"]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Node2D" parent="Title LT/SubViewport"]
+
+[node name="WordSprite" parent="Title LT/SubViewport/Title" instance=ExtResource( 9 )]
+position = Vector2( 210, 270 )
+scale = Vector2( 0.333, 0.333 )
+texture = null
+text = "
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲
+文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲戲戲戲
+＿文文文文＿＿＿＿＿＿文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲戲戲戲戲戲戲
+＿文文文文文文＿＿＿＿文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲＿＿＿＿戲戲戲戲戲戲戲戲
+＿＿文文文文文文文＿＿＿文文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲戲＿＿＿＿戲戲戲戲戲戲戲戲
+＿＿文文文文文文文文文＿文文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲＿＿＿＿＿戲戲戲戲戲戲戲
+＿＿＿文文文文文文文文文文文文文文＿＿＿＿＿＿＿＿＿＿＿字字字字＿＿＿＿＿＿＿遊遊＿＿＿＿遊遊遊＿＿遊遊遊＿＿＿＿＿＿戲戲戲＿＿＿＿戲戲戲戲戲戲戲
+＿＿＿文文文文文文文文文文文文文文文文＿＿＿＿＿＿＿＿＿＿字字字＿＿＿＿＿＿＿遊遊＿＿＿＿遊遊遊＿＿遊遊遊＿＿＿＿＿＿戲戲戲戲戲＿＿戲戲戲戲
+＿＿＿＿文文文文文文文文文文文文文文文文文文文＿＿＿＿＿＿字字字字＿＿＿＿＿＿遊遊＿＿＿＿遊遊遊＿遊遊遊遊＿＿＿＿＿戲戲戲戲戲戲＿＿戲戲戲戲
+＿＿＿＿＿＿＿＿文文文文文文文文文文文文文文文文字字字字字字字字字＿＿＿＿＿＿遊遊＿＿＿＿遊遊遊＿遊遊遊遊遊遊＿＿＿戲戲戲戲戲＿＿戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿文文文文文文文文文文文文文字字字字字字字字字字字字字字＿＿＿＿＿遊遊遊遊遊遊遊遊遊遊遊＿＿＿＿戲戲戲戲戲戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿文文文文＿＿文文文文文文文字字字字字字字字字字字字字字＿＿＿＿＿遊遊遊遊遊遊遊遊遊遊遊戲戲戲戲戲戲戲＿＿戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿文文文＿＿＿＿字字字字字字字字字字字字字字＿＿＿＿＿遊遊遊遊遊遊遊遊遊遊遊戲戲戲戲戲戲＿＿戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿＿文文＿＿＿＿字字＿＿字字字字字字字＿字字＿＿＿＿＿＿遊遊遊＿遊遊遊遊遊＿戲戲戲戲戲戲＿＿戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文文文文＿＿文文＿＿＿＿字字＿＿＿字字字字字字＿字字＿遊遊遊＿＿遊遊遊＿遊遊遊遊遊戲戲戲戲戲戲戲戲戲＿戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿文文文＿＿＿＿＿＿＿＿＿＿＿字字字＿＿＿＿遊遊遊遊＿遊遊遊遊遊遊遊遊遊戲戲戲戲戲戲戲戲戲＿戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿文文文文文文文文＿＿＿＿＿＿＿＿＿＿＿字字字＿＿＿＿遊遊遊遊＿遊遊遊遊＿＿遊遊＿戲戲戲戲戲戲戲戲＿＿戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿＿＿＿＿字字字字字字字字字字字字字字＿＿遊遊遊遊＿遊遊遊遊遊遊＿戲戲戲戲＿戲戲戲＿戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿＿＿＿＿＿字字字字字字字字字字字字字＿＿遊遊遊＿＿遊遊遊遊遊遊＿戲戲戲＿＿戲戲＿＿戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文文文文文文＿＿＿＿＿＿＿＿＿＿＿字字＿＿＿＿＿＿＿遊遊＿遊遊＿＿遊遊＿＿戲戲＿＿戲戲戲戲＿＿戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿文文文＿＿＿＿＿＿＿＿＿＿字字＿＿＿＿＿＿＿遊＿＿遊遊＿遊遊＿＿＿戲戲＿戲戲戲＿＿＿戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文＿＿文文文文文文＿＿＿＿＿字字字字＿＿＿＿＿遊遊＿遊遊遊遊遊遊遊遊＿＿戲戲戲戲戲戲＿＿＿戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文文文文＿＿＿＿＿＿文文文文＿＿＿＿字字字字＿＿＿＿＿遊遊＿遊遊遊遊遊遊遊遊遊＿戲戲戲戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿文文文文文文文＿＿＿＿＿＿文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲戲戲戲＿＿戲戲戲
+＿＿＿＿＿＿＿＿＿＿文文文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲＿＿戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲"
+
+[node name="title_word_1" type="Sprite2D" parent="Title LT/SubViewport/Title"]
+material = SubResource( 8 )
+position = Vector2( 960, 540 )
+scale = Vector2( 20, 20 )
+texture = ExtResource( 1 )
+
+[node name="title_word_2" type="Sprite2D" parent="Title LT/SubViewport/Title"]
+material = SubResource( 9 )
+position = Vector2( 960, 540 )
+scale = Vector2( 20, 20 )
+texture = ExtResource( 4 )
+
+[node name="title_word_3" type="Sprite2D" parent="Title LT/SubViewport/Title"]
+material = SubResource( 10 )
+position = Vector2( 960, 540 )
+scale = Vector2( 20, 20 )
+texture = ExtResource( 2 )
+
+[node name="title_word_4" type="Sprite2D" parent="Title LT/SubViewport/Title"]
+material = SubResource( 11 )
+position = Vector2( 960, 540 )
+scale = Vector2( 20, 20 )
+texture = ExtResource( 3 )
+
+[node name="title_word_b_1" type="Sprite2D" parent="Title LT/SubViewport/Title"]
+material = SubResource( 12 )
+position = Vector2( 960, 540 )
+texture = ExtResource( 5 )
+
+[node name="title_word_b_2" type="Sprite2D" parent="Title LT/SubViewport/Title"]
+material = SubResource( 13 )
+position = Vector2( 960, 540 )
+texture = ExtResource( 7 )
+
+[node name="title_word_b_3" type="Sprite2D" parent="Title LT/SubViewport/Title"]
+material = SubResource( 14 )
+position = Vector2( 960, 540 )
+texture = ExtResource( 6 )
+
+[node name="title_word_b_4" type="Sprite2D" parent="Title LT/SubViewport/Title"]
+material = SubResource( 15 )
+position = Vector2( 960, 540 )
+texture = ExtResource( 8 )
+
+[node name="Title RB" type="SubViewportContainer" parent="."]
+material = SubResource( 17 )
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 1940.0
+offset_bottom = 1100.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SubViewport" type="SubViewport" parent="Title RB"]
+size = Vector2( 1920, 1080 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+gui_disable_input = true
+
+[node name="BG" type="ColorRect" parent="Title RB/SubViewport"]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color( 0, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Node2D" parent="Title RB/SubViewport"]
+
+[node name="WordSprite" parent="Title RB/SubViewport/Title" instance=ExtResource( 9 )]
+position = Vector2( 210, 270 )
+scale = Vector2( 0.333, 0.333 )
+texture = null
+text = "
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲
+文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲戲戲戲
+＿文文文文＿＿＿＿＿＿文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲戲戲戲戲戲戲
+＿文文文文文文＿＿＿＿文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲＿＿＿＿戲戲戲戲戲戲戲戲
+＿＿文文文文文文文＿＿＿文文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲戲＿＿＿＿戲戲戲戲戲戲戲戲
+＿＿文文文文文文文文文＿文文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲＿＿＿＿＿戲戲戲戲戲戲戲
+＿＿＿文文文文文文文文文文文文文文＿＿＿＿＿＿＿＿＿＿＿字字字字＿＿＿＿＿＿＿遊遊＿＿＿＿遊遊遊＿＿遊遊遊＿＿＿＿＿＿戲戲戲＿＿＿＿戲戲戲戲戲戲戲
+＿＿＿文文文文文文文文文文文文文文文文＿＿＿＿＿＿＿＿＿＿字字字＿＿＿＿＿＿＿遊遊＿＿＿＿遊遊遊＿＿遊遊遊＿＿＿＿＿＿戲戲戲戲戲＿＿戲戲戲戲
+＿＿＿＿文文文文文文文文文文文文文文文文文文文＿＿＿＿＿＿字字字字＿＿＿＿＿＿遊遊＿＿＿＿遊遊遊＿遊遊遊遊＿＿＿＿＿戲戲戲戲戲戲＿＿戲戲戲戲
+＿＿＿＿＿＿＿＿文文文文文文文文文文文文文文文文字字字字字字字字字＿＿＿＿＿＿遊遊＿＿＿＿遊遊遊＿遊遊遊遊遊遊＿＿＿戲戲戲戲戲＿＿戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿文文文文文文文文文文文文文字字字字字字字字字字字字字字＿＿＿＿＿遊遊遊遊遊遊遊遊遊遊遊＿＿＿＿戲戲戲戲戲戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿文文文文＿＿文文文文文文文字字字字字字字字字字字字字字＿＿＿＿＿遊遊遊遊遊遊遊遊遊遊遊戲戲戲戲戲戲戲＿＿戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿文文文＿＿＿＿字字字字字字字字字字字字字字＿＿＿＿＿遊遊遊遊遊遊遊遊遊遊遊戲戲戲戲戲戲＿＿戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿＿文文＿＿＿＿字字＿＿字字字字字字字＿字字＿＿＿＿＿＿遊遊遊＿遊遊遊遊遊＿戲戲戲戲戲戲＿＿戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文文文文＿＿文文＿＿＿＿字字＿＿＿字字字字字字＿字字＿遊遊遊＿＿遊遊遊＿遊遊遊遊遊戲戲戲戲戲戲戲戲戲＿戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿文文文＿＿＿＿＿＿＿＿＿＿＿字字字＿＿＿＿遊遊遊遊＿遊遊遊遊遊遊遊遊遊戲戲戲戲戲戲戲戲戲＿戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿文文文文文文文文＿＿＿＿＿＿＿＿＿＿＿字字字＿＿＿＿遊遊遊遊＿遊遊遊遊＿＿遊遊＿戲戲戲戲戲戲戲戲＿＿戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿＿＿＿＿字字字字字字字字字字字字字字＿＿遊遊遊遊＿遊遊遊遊遊遊＿戲戲戲戲＿戲戲戲＿戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿＿＿＿＿＿字字字字字字字字字字字字字＿＿遊遊遊＿＿遊遊遊遊遊遊＿戲戲戲＿＿戲戲＿＿戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文文文文文文＿＿＿＿＿＿＿＿＿＿＿字字＿＿＿＿＿＿＿遊遊＿遊遊＿＿遊遊＿＿戲戲＿＿戲戲戲戲＿＿戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文文＿＿文文文＿＿＿＿＿＿＿＿＿＿字字＿＿＿＿＿＿＿遊＿＿遊遊＿遊遊＿＿＿戲戲＿戲戲戲＿＿＿戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿文文＿＿文文文文文文＿＿＿＿＿字字字字＿＿＿＿＿遊遊＿遊遊遊遊遊遊遊遊＿＿戲戲戲戲戲戲＿＿＿戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文文文文＿＿＿＿＿＿文文文文＿＿＿＿字字字字＿＿＿＿＿遊遊＿遊遊遊遊遊遊遊遊遊＿戲戲戲戲戲戲戲戲戲戲戲戲
+＿＿＿＿＿＿＿＿＿文文文文文文文＿＿＿＿＿＿文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲戲戲戲＿＿戲戲戲
+＿＿＿＿＿＿＿＿＿＿文文文文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲＿＿戲戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿文文文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲戲戲
+＿＿＿＿＿＿＿＿＿＿＿＿文＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿戲"
+
+[node name="title_word_1" type="Sprite2D" parent="Title RB/SubViewport/Title"]
+material = SubResource( 8 )
+position = Vector2( 960, 540 )
+scale = Vector2( 20, 20 )
+texture = ExtResource( 1 )
+
+[node name="title_word_2" type="Sprite2D" parent="Title RB/SubViewport/Title"]
+material = SubResource( 9 )
+position = Vector2( 960, 540 )
+scale = Vector2( 20, 20 )
+texture = ExtResource( 4 )
+
+[node name="title_word_3" type="Sprite2D" parent="Title RB/SubViewport/Title"]
+material = SubResource( 10 )
+position = Vector2( 960, 540 )
+scale = Vector2( 20, 20 )
+texture = ExtResource( 2 )
+
+[node name="title_word_4" type="Sprite2D" parent="Title RB/SubViewport/Title"]
+material = SubResource( 11 )
+position = Vector2( 960, 540 )
+scale = Vector2( 20, 20 )
+texture = ExtResource( 3 )
+
+[node name="title_word_b_1" type="Sprite2D" parent="Title RB/SubViewport/Title"]
+material = SubResource( 12 )
+position = Vector2( 960, 540 )
+texture = ExtResource( 5 )
+
+[node name="title_word_b_2" type="Sprite2D" parent="Title RB/SubViewport/Title"]
+material = SubResource( 13 )
+position = Vector2( 960, 540 )
+texture = ExtResource( 7 )
+
+[node name="title_word_b_3" type="Sprite2D" parent="Title RB/SubViewport/Title"]
+material = SubResource( 14 )
+position = Vector2( 960, 540 )
+texture = ExtResource( 6 )
+
+[node name="title_word_b_4" type="Sprite2D" parent="Title RB/SubViewport/Title"]
+material = SubResource( 15 )
+position = Vector2( 960, 540 )
+texture = ExtResource( 8 )
+
+[node name="Slash" type="ColorRect" parent="."]
+material = SubResource( 19 )
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color( 1, 1, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="白遮" type="ColorRect" parent="."]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+offset_right = 1920.0
+offset_bottom = 1080.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

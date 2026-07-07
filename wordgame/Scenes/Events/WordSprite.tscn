@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Sprites/base.png" type="Texture2D" id=1]
+[ext_resource path="res://Scripts/DrawText.gd" type="Script" id=2]
+
+[node name="WordSprite" type="Sprite2D" groups=[
+"word_sprite",
+]]
+texture = ExtResource( 1 )
+script = ExtResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[connection signal="tree_entered" from="." to="." method="_on_WordSprite_tree_entered"]
