@@ -75,6 +75,9 @@ Before pushing a public repository, confirm the font license for `Fonts/Zpix.ttf
 
 Implemented for this pass:
 
+- Screen metric fixed from the original reference screenshot: one page is `32 x 18` text cells.
+- The current playable scene uses a 24px render cell so the full 32 x 18 page fits the automated/manual test window without text overlap.
+- `Fonts/Zpix.tres` no longer forces `fixed_size = 54`; labels can scale to the active cell size.
 - First playable map for the 勇者试炼拳头 segment.
 - Initial key words from source: `贏`, `不`, `二`, `讚`, `一`, `零`, `好`, `劍`, `勇`.
 - Upper narration and lower hand-gesture sentence as collision map text.

@@ -6,6 +6,7 @@ const LevelLoader = preload("res://scripts/level_loader.gd")
 var failures: Array[String] = []
 
 func _init() -> void:
+	test_screen_metrics_match_original_grid()
 	test_initial_hero_trial_layout()
 	test_gesture_sentence_updates_state_and_keeps_collision_caption()
 	test_release_sentence_completes_trial_after_deleting_not()
@@ -22,6 +23,13 @@ func make_world() -> RefCounted:
 	var world = GridWorld.new()
 	world.load_level(LevelLoader.build_hero_trial_fist_level())
 	return world
+
+func test_screen_metrics_match_original_grid() -> void:
+	var world = make_world()
+	assert_equal(world.screen_size, Vector2i(32, 18), "one screen uses the original 32 by 18 text grid")
+	assert_equal(world.cell_size, 24, "render cell size keeps the 32 by 18 screen visible in the test window")
+	assert_no_occupied_cell_overlap(world)
+	assert_entities_inside_first_screen(world)
 
 func test_initial_hero_trial_layout() -> void:
 	var world = make_world()
@@ -97,3 +105,18 @@ func assert_true(actual: bool, label: String) -> void:
 func assert_false(actual: bool, label: String) -> void:
 	if actual:
 		failures.append("%s expected false but got true" % label)
+
+func assert_no_occupied_cell_overlap(world: RefCounted) -> void:
+	var occupied := {}
+	for entity in world.entities.values():
+		for cell in entity.cells:
+			if occupied.has(cell):
+				failures.append("cell %s is occupied by both %s and %s" % [cell, occupied[cell], entity.text])
+			else:
+				occupied[cell] = entity.text
+
+func assert_entities_inside_first_screen(world: RefCounted) -> void:
+	for entity in world.entities.values():
+		for cell in entity.cells:
+			if cell.x < 0 or cell.x >= world.screen_size.x or cell.y < 0 or cell.y >= world.screen_size.y:
+				failures.append("word %s at %s is outside the first 32 by 18 screen" % [entity.text, cell])

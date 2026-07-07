@@ -3,6 +3,6 @@
 [ext_resource type="FontFile" path="res://Fonts/Zpix.ttf" id="1_zpix"]
 
 [resource]
-fixed_size = 54
+fixed_size = 0
 extra_spacing_char = 1
 data = ExtResource("1_zpix")

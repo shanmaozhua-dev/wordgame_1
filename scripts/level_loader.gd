@@ -44,7 +44,7 @@ static func build_test_level() -> Dictionary:
 static func build_hero_trial_fist_level() -> Dictionary:
 	return {
 		"player_start": Vector2i(21, 16),
-		"cell_size": 48,
+		"cell_size": 24,
 		"screen_size": Vector2i(32, 18),
 		"map_text_lines": [
 			{"pos": Vector2i(1, 2), "text": " 得聖劍，拜見指內勇者。"},
@@ -53,15 +53,17 @@ static func build_hero_trial_fist_level() -> Dictionary:
 			{"pos": Vector2i(14, 1), "text": "掌掌掌  掌掌掌  掌掌掌"},
 			{"pos": Vector2i(14, 2), "text": "掌   掌  掌   掌  掌"},
 			{"pos": Vector2i(14, 3), "text": "掌   掌  掌   掌  掌掌掌"},
-			{"pos": Vector2i(14, 4), "text": "掌   掌  掌   掌  掌   掌"},
-			{"pos": Vector2i(14, 5), "text": "掌   掌  掌   掌  掌   掌"},
+			{"pos": Vector2i(14, 4), "text": "掌   掌  掌   掌  掌   "},
+			{"pos": Vector2i(14, 5), "text": "掌   掌  掌   掌  掌   "},
 			{"pos": Vector2i(14, 6), "text": "掌掌掌  掌掌掌  掌掌掌"},
-			{"pos": Vector2i(12, 8), "text": "掌掌掌掌掌掌掌掌"},
+			{"pos": Vector2i(1, 8), "text": "勇：別被一條線給困住了！"},
+			{"pos": Vector2i(13, 8), "text": "掌掌掌掌掌掌掌掌"},
 			{"pos": Vector2i(13, 9), "text": "掌     掌"},
 			{"pos": Vector2i(14, 10), "text": "掌   掌掌掌"},
 			{"pos": Vector2i(15, 11), "text": "掌掌掌 掌"},
 			{"pos": Vector2i(16, 12), "text": "掌   掌"},
 			{"pos": Vector2i(12, 13), "text": "逼退 手的生命線"},
+			{"pos": Vector2i(1, 16), "text": "勇：上啊！"},
 			{"pos": Vector2i(15, 17), "text": "俯瞰這 個巨大手掌，是 的手勢"}
 		],
 		"entity_spawns": [

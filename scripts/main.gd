@@ -6,6 +6,8 @@ const PageCamera = preload("res://scripts/page_camera.gd")
 const DemoRunner = preload("res://scripts/demo_runner.gd")
 const OriginalFont = preload("res://Fonts/Zpix.tres")
 
+const FONT_SIZE_RATIO := 0.78
+
 var world := GridWorld.new()
 var page_camera := PageCamera.new()
 var demo := DemoRunner.new()
@@ -117,7 +119,7 @@ func _make_word_label(text: String, font_color := Color.WHITE, bg_color := Color
 	label.size = Vector2(max(1, text.length()) * world.cell_size, world.cell_size)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.add_theme_font_size_override("font_size", roundi(world.cell_size * 0.74))
+	label.add_theme_font_size_override("font_size", font_size_for_cell(world.cell_size))
 	label.add_theme_font_override("font", OriginalFont)
 	label.add_theme_color_override("font_color", font_color)
 	var style := StyleBoxFlat.new()
@@ -128,3 +130,6 @@ func _make_word_label(text: String, font_color := Color.WHITE, bg_color := Color
 	style.content_margin_bottom = 0
 	label.add_theme_stylebox_override("normal", style)
 	return label
+
+static func font_size_for_cell(render_cell_size: int) -> int:
+	return roundi(render_cell_size * FONT_SIZE_RATIO)

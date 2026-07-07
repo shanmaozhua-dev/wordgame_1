@@ -42,9 +42,6 @@ public static class Win32Capture {
     public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
 
     [DllImport("user32.dll")]
-    public static extern bool SetForegroundWindow(IntPtr hWnd);
-
-    [DllImport("user32.dll")]
     public static extern bool PrintWindow(IntPtr hWnd, IntPtr hdcBlt, int nFlags);
 
     public static IntPtr FindLargestWindowForProcess(uint targetProcessId) {
@@ -74,7 +71,7 @@ public static class Win32Capture {
 }
 "@
 
-$arguments = "--path `"$ProjectRoot`""
+$arguments = "--path `"$ProjectRoot`" --resolution 1200x760"
 $process = Start-Process -FilePath $Godot -ArgumentList $arguments -PassThru
 try {
     $handle = [IntPtr]::Zero
