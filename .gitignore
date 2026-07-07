@@ -1,0 +1,22 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Godot exports and local build outputs
+/.import/
+/export/
+/exports/
+*.pck
+*.exe
+*.apk
+*.aab
+*.app
+*.dmg
+
+# Runtime and temporary artifacts
+*.log
+*.tmp
+*.bak
+screenshots/
+test-output/
+.superpowers/

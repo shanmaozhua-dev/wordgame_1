@@ -1,0 +1,8 @@
+[gd_resource type="FontFile" load_steps=2 format=3]
+
+[ext_resource type="FontFile" path="res://Fonts/Zpix.ttf" id="1_zpix"]
+
+[resource]
+fixed_size = 54
+extra_spacing_char = 1
+data = ExtResource("1_zpix")
