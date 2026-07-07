@@ -55,8 +55,6 @@ def text_cells(text: str, origin: tuple[int, int], blank_chars: set[str]) -> lis
     ox, oy = origin
     cells = []
     rows = text.splitlines()
-    while rows and rows[0] == "":
-        rows.pop(0)
     for y, row in enumerate(rows):
         for x, char in enumerate(row):
             if char in blank_chars:

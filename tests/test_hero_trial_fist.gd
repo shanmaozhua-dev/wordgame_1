@@ -43,6 +43,7 @@ func test_initial_hero_trial_layout() -> void:
 	assert_entity_at(world, "劍", Vector2i(16, 7), true, false, "sword is part of the map collision")
 	assert_equal(world.find_first_entity_by_text("好"), null, "good word is hidden until the life-line narration appears")
 	assert_entity_at(world, "掌", Vector2i(14, 13), true, false, "thumb-down palm wall fills the life-line row")
+	assert_entity_at(world, "掌", Vector2i(15, 2), true, false, "top palm row aligns with the win sentence row")
 	assert_true(world.get_entity_at(Vector2i(7, 2)) != null, "upper narration text has collision")
 	assert_true(world.get_entity_at(Vector2i(25, 17)) != null, "lower hand-gesture sentence has collision")
 
@@ -136,7 +137,7 @@ func assert_entities_inside_first_screen(world: RefCounted) -> void:
 
 func expected_initial_palm_cells() -> Dictionary:
 	var cells := {}
-	_add_big_text_cells(cells, Vector2i(7, 0), [
+	_add_big_text_cells(cells, Vector2i(7, 2), [
 		"＿＿＿＿＿＿＿＿掌掌掌＿掌掌掌＿掌掌掌＿＿＿＿＿",
 		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿＿",
 		"＿＿＿＿＿＿＿掌＿＿＿掌＿＿＿掌＿＿＿掌掌掌掌＿",
