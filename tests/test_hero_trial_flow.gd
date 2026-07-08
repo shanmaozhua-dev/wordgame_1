@@ -10,6 +10,7 @@ func _init() -> void:
 	test_flow_config_loads_all_maps_and_rules()
 	test_space_advances_from_scene_one_to_scene_two()
 	test_push_good_out_of_life_line_switches_state_and_keeps_good()
+	test_life_line_state_does_not_flicker_back_to_zero_gesture_after_good_moves()
 	test_pull_good_out_of_life_line_switches_state_and_keeps_good()
 	test_one_gesture_state_keeps_displaced_words()
 	test_pushing_one_into_zero_slot_displaces_zero_and_switches_state()
@@ -69,6 +70,24 @@ func test_push_good_out_of_life_line_switches_state_and_keeps_good() -> void:
 	if moved_good:
 		assert_equal(moved_good.text, good_word, "moved word remains good")
 		assert_true(moved_good.pushable, "moved good remains movable")
+
+func test_life_line_state_does_not_flicker_back_to_zero_gesture_after_good_moves() -> void:
+	var world := GridWorld.new()
+	var flow := HeroTrialFlow.new()
+	flow.load_start_scene(world)
+	flow.handle_space(world)
+	world.player_pos = Vector2i(14, 12)
+	world.facing = Vector2i(0, 1)
+
+	assert_true(world.try_move_player(Vector2i(0, 1)).success, "push good down out of life-line before flicker check")
+	flow.sync_after_player_action(world)
+	assert_equal(flow.stage, "life_line_without_good", "flow reaches life-line state before flicker check")
+
+	for direction in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1)]:
+		assert_true(world.try_move_player(direction).success, "player can continue moving after life-line state switch")
+		flow.sync_after_player_action(world)
+		assert_equal(flow.stage, "life_line_without_good", "life-line state remains stable after player movement")
+		assert_life_line_middle_palm_open(world)
 
 func test_pull_good_out_of_life_line_switches_state_and_keeps_good() -> void:
 	var world := GridWorld.new()
