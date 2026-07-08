@@ -1,0 +1,2166 @@
+{
+	"screen_size": [
+		32,
+		18
+	],
+	"cell_size": 24,
+	"player_start": [
+		21,
+		16
+	],
+	"cells": [
+		{
+			"x": 1,
+			"y": 2,
+			"text": "贏",
+			"solid": true,
+			"pushable": true,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 2,
+			"y": 2,
+			"text": "得",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 3,
+			"y": 2,
+			"text": "聖",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 4,
+			"y": 2,
+			"text": "劍",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 5,
+			"y": 2,
+			"text": "，",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 6,
+			"y": 2,
+			"text": "拜",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 7,
+			"y": 2,
+			"text": "見",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 8,
+			"y": 2,
+			"text": "指",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 9,
+			"y": 2,
+			"text": "內",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 10,
+			"y": 2,
+			"text": "勇",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 11,
+			"y": 2,
+			"text": "者",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 12,
+			"y": 2,
+			"text": "。",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 15,
+			"y": 2,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 16,
+			"y": 2,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 17,
+			"y": 2,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 19,
+			"y": 2,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 20,
+			"y": 2,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 21,
+			"y": 2,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 23,
+			"y": 2,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 24,
+			"y": 2,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 25,
+			"y": 2,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 1,
+			"y": 3,
+			"text": "巨",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 2,
+			"y": 3,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 3,
+			"y": 3,
+			"text": "緊",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 4,
+			"y": 3,
+			"text": "握",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 5,
+			"y": 3,
+			"text": "，",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 7,
+			"y": 3,
+			"text": "會",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 8,
+			"y": 3,
+			"text": "輕",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 9,
+			"y": 3,
+			"text": "易",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 10,
+			"y": 3,
+			"text": "放",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 11,
+			"y": 3,
+			"text": "開",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 12,
+			"y": 3,
+			"text": "。",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 14,
+			"y": 3,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 18,
+			"y": 3,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 22,
+			"y": 3,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 26,
+			"y": 3,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 14,
+			"y": 4,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 18,
+			"y": 4,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 22,
+			"y": 4,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 24,
+			"y": 4,
+			"text": "勇",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 26,
+			"y": 4,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 27,
+			"y": 4,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 28,
+			"y": 4,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 29,
+			"y": 4,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 1,
+			"y": 5,
+			"text": "二",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 2,
+			"y": 5,
+			"text": "勇",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 3,
+			"y": 5,
+			"text": "者",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 4,
+			"y": 5,
+			"text": "站",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 5,
+			"y": 5,
+			"text": "在",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 6,
+			"y": 5,
+			"text": "旁",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 7,
+			"y": 5,
+			"text": "邊",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 8,
+			"y": 5,
+			"text": "大",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 9,
+			"y": 5,
+			"text": "力",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 10,
+			"y": 5,
+			"text": "讚",
+			"solid": true,
+			"pushable": true,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 11,
+			"y": 5,
+			"text": "揚",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 12,
+			"y": 5,
+			"text": "。",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 14,
+			"y": 5,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 18,
+			"y": 5,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 22,
+			"y": 5,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 24,
+			"y": 5,
+			"text": "·",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 26,
+			"y": 5,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 30,
+			"y": 5,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 14,
+			"y": 6,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 18,
+			"y": 6,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 22,
+			"y": 6,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 24,
+			"y": 6,
+			"text": "·",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 26,
+			"y": 6,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 30,
+			"y": 6,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 14,
+			"y": 7,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 16,
+			"y": 7,
+			"text": "劍",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 18,
+			"y": 7,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 22,
+			"y": 7,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 24,
+			"y": 7,
+			"text": "来",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 26,
+			"y": 7,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 30,
+			"y": 7,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 1,
+			"y": 8,
+			"text": "勇",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 2,
+			"y": 8,
+			"text": "：",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 3,
+			"y": 8,
+			"text": "加",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 4,
+			"y": 8,
+			"text": "油",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 5,
+			"y": 8,
+			"text": "！",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 18,
+			"y": 8,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 22,
+			"y": 8,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 24,
+			"y": 8,
+			"text": "吧",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 26,
+			"y": 8,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 30,
+			"y": 8,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 12,
+			"y": 9,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 13,
+			"y": 9,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 14,
+			"y": 9,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 18,
+			"y": 9,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 22,
+			"y": 9,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 26,
+			"y": 9,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 30,
+			"y": 9,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 11,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 15,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 16,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 17,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 19,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 20,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 21,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 23,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 24,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 25,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 27,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 28,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 29,
+			"y": 10,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 11,
+			"y": 11,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 20,
+			"y": 11,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 30,
+			"y": 11,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 1,
+			"y": 12,
+			"text": "怜",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 2,
+			"y": 12,
+			"text": "爱",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 3,
+			"y": 12,
+			"text": "之",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 4,
+			"y": 12,
+			"text": "深",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 5,
+			"y": 12,
+			"text": "，",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 11,
+			"y": 12,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 20,
+			"y": 12,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 30,
+			"y": 12,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 1,
+			"y": 13,
+			"text": "责",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 2,
+			"y": 13,
+			"text": "求",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 3,
+			"y": 13,
+			"text": "之",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 4,
+			"y": 13,
+			"text": "切",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 5,
+			"y": 13,
+			"text": "，",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 12,
+			"y": 13,
+			"text": "逼",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 13,
+			"y": 13,
+			"text": "退",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 15,
+			"y": 13,
+			"text": "手",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 16,
+			"y": 13,
+			"text": "的",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 17,
+			"y": 13,
+			"text": "生",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 18,
+			"y": 13,
+			"text": "命",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 19,
+			"y": 13,
+			"text": "线",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 30,
+			"y": 13,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 1,
+			"y": 14,
+			"text": "勇",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 2,
+			"y": 14,
+			"text": "者",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 3,
+			"y": 14,
+			"text": "之",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 4,
+			"y": 14,
+			"text": "情",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 5,
+			"y": 14,
+			"text": "。",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"manual_edit"
+			]
+		},
+		{
+			"x": 13,
+			"y": 14,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 30,
+			"y": 14,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 13,
+			"y": 15,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 30,
+			"y": 15,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 1,
+			"y": 16,
+			"text": "勇",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 2,
+			"y": 16,
+			"text": "：",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 3,
+			"y": 16,
+			"text": "改",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 4,
+			"y": 16,
+			"text": "变",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 5,
+			"y": 16,
+			"text": "手",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 6,
+			"y": 16,
+			"text": "势",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 7,
+			"y": 16,
+			"text": "，",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 8,
+			"y": 16,
+			"text": "扭",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 9,
+			"y": 16,
+			"text": "转",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 10,
+			"y": 16,
+			"text": "守",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 11,
+			"y": 16,
+			"text": "势",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 12,
+			"y": 16,
+			"text": "！",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 30,
+			"y": 16,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": [
+				"palm_wall",
+				"zero_gesture"
+			]
+		},
+		{
+			"x": 15,
+			"y": 17,
+			"text": "俯",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 16,
+			"y": 17,
+			"text": "瞰",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 17,
+			"y": 17,
+			"text": "這",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 18,
+			"y": 17,
+			"text": "一",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 19,
+			"y": 17,
+			"text": "個",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 20,
+			"y": 17,
+			"text": "巨",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 21,
+			"y": 17,
+			"text": "大",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 22,
+			"y": 17,
+			"text": "手",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 23,
+			"y": 17,
+			"text": "掌",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 24,
+			"y": 17,
+			"text": "，",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 25,
+			"y": 17,
+			"text": "是",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 26,
+			"y": 17,
+			"text": "好",
+			"solid": true,
+			"pushable": true,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 27,
+			"y": 17,
+			"text": "的",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 28,
+			"y": 17,
+			"text": "手",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		},
+		{
+			"x": 29,
+			"y": 17,
+			"text": "勢",
+			"solid": true,
+			"pushable": false,
+			"deletable": false,
+			"splittable": false,
+			"interact_text": "",
+			"tags": []
+		}
+	],
+	"split_rules": {},
+	"merge_rules": {},
+	"sentence_rules": {
+		"巨大手掌，是好的手勢": {
+			"message": "已識別：好的手勢",
+			"switch": "ch3_好的手勢成立",
+			"state": {
+				"current_gesture": "好"
+			},
+			"caption_pos": "(18, 15)",
+			"spawn_entities": [
+				{
+					"text": "好手勢",
+					"pos": "(24, 8)",
+					"config": {
+						"solid": true
+					}
+				}
+			]
+		},
+		"巨大手掌，是二的手勢": {
+			"message": "已識別：二的手勢",
+			"switch": "ch3_二的手勢成立",
+			"state": {
+				"current_gesture": "二"
+			},
+			"caption_pos": "(18, 15)"
+		},
+		"巨大手掌，是讚的手勢": {
+			"message": "已識別：讚的手勢",
+			"switch": "ch3_讚的手勢成立",
+			"state": {
+				"current_gesture": "讚"
+			},
+			"caption_pos": "(18, 15)"
+		},
+		"巨大手掌，是贏的手勢": {
+			"message": "已識別：贏的手勢",
+			"switch": "ch3_贏的手勢成立",
+			"state": {
+				"current_gesture": "贏"
+			},
+			"caption_pos": "(18, 15)"
+		},
+		"會輕易放開": {
+			"message": "",
+			"switch": "ch3_會輕易放開成立",
+			"switches": {
+				"hero_trial_complete": true
+			},
+			"caption_pos": "(5, 15)"
+		},
+		"不會輕易放開": {
+			"message": "",
+			"switch": "ch3_不會輕易放開成立",
+			"caption_pos": "(5, 15)"
+		}
+	}
+}

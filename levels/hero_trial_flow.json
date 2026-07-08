@@ -5,36 +5,297 @@
 		"scene_02": "res://levels/hero_trial_fist_scene_02.json",
 		"life_line_without_good": "res://levels/hero_trial_fist_state_life_line_without_good.json",
 		"one_gesture": "res://levels/hero_trial_fist_state_one_gesture.json",
-		"zero_gesture": "res://levels/hero_trial_fist_state_zero_gesture.json"
+		"zero_gesture": "res://levels/hero_trial_fist_state_zero_gesture.json",
+		"good_gesture": "res://levels/hero_trial_fist_state_good_gesture.json",
+		"two_gesture": "res://levels/hero_trial_fist_state_two_gesture.json",
+		"win_gesture": "res://levels/hero_trial_fist_state_win_gesture.json",
+		"release_opened": "res://levels/hero_trial_fist_state_release_opened.json"
 	},
 	"on_load": {
 		"scene_02": [
-			{"type": "set_cell_flags", "pos": [14, 13], "solid": true, "pushable": true}
+			{
+				"type": "set_cell_flags",
+				"pos": [
+					14,
+					13
+				],
+				"solid": true,
+				"pushable": true
+			}
 		]
 	},
 	"rules": [
 		{
-			"from": ["scene_01"],
-			"trigger": {"type": "space"},
+			"from": [
+				"scene_01"
+			],
+			"trigger": {
+				"type": "space"
+			},
 			"to": "scene_02"
 		},
 		{
-			"from": ["scene_02", "life_line_without_good", "zero_gesture"],
-			"trigger": {"type": "cell_text", "pos": [26, 17], "text": "一"},
+			"from": [
+				"scene_02",
+				"life_line_without_good",
+				"zero_gesture",
+				"one_gesture",
+				"good_gesture",
+				"two_gesture",
+				"win_gesture"
+			],
+			"trigger": {
+				"type": "cell_not_text",
+				"pos": [
+					6,
+					3
+				],
+				"text": "不"
+			},
+			"to": "release_opened",
+			"preserve": [
+				"贏",
+				"赢",
+				"不",
+				"二",
+				"讚",
+				"赞",
+				"好",
+				"零",
+				"一",
+				"劍",
+				"剑"
+			]
+		},
+		{
+			"from": [
+				"scene_02",
+				"life_line_without_good",
+				"zero_gesture",
+				"good_gesture",
+				"two_gesture",
+				"win_gesture",
+				"release_opened"
+			],
+			"trigger": {
+				"type": "cell_text",
+				"pos": [
+					26,
+					17
+				],
+				"text": "一"
+			},
 			"to": "one_gesture",
-			"preserve": ["零", "好"]
+			"preserve": [
+				"贏",
+				"赢",
+				"不",
+				"二",
+				"讚",
+				"赞",
+				"好",
+				"零",
+				"一",
+				"劍",
+				"剑"
+			]
 		},
 		{
-			"from": ["one_gesture"],
-			"trigger": {"type": "cell_text", "pos": [26, 17], "text": "零"},
+			"from": [
+				"scene_02",
+				"life_line_without_good",
+				"zero_gesture",
+				"one_gesture",
+				"two_gesture",
+				"win_gesture",
+				"release_opened"
+			],
+			"trigger": {
+				"type": "cell_text",
+				"pos": [
+					26,
+					17
+				],
+				"text": "好"
+			},
+			"to": "good_gesture",
+			"preserve": [
+				"贏",
+				"赢",
+				"不",
+				"二",
+				"讚",
+				"赞",
+				"好",
+				"零",
+				"一",
+				"劍",
+				"剑"
+			]
+		},
+		{
+			"from": [
+				"scene_02",
+				"life_line_without_good",
+				"zero_gesture",
+				"one_gesture",
+				"good_gesture",
+				"win_gesture",
+				"release_opened"
+			],
+			"trigger": {
+				"type": "cell_text",
+				"pos": [
+					26,
+					17
+				],
+				"text": "二"
+			},
+			"to": "two_gesture",
+			"preserve": [
+				"贏",
+				"赢",
+				"不",
+				"二",
+				"讚",
+				"赞",
+				"好",
+				"零",
+				"一",
+				"劍",
+				"剑"
+			]
+		},
+		{
+			"from": [
+				"scene_02",
+				"life_line_without_good",
+				"zero_gesture",
+				"one_gesture",
+				"good_gesture",
+				"two_gesture",
+				"release_opened"
+			],
+			"trigger": {
+				"type": "cell_text",
+				"pos": [
+					26,
+					17
+				],
+				"text": "贏"
+			},
+			"to": "win_gesture",
+			"preserve": [
+				"贏",
+				"赢",
+				"不",
+				"二",
+				"讚",
+				"赞",
+				"好",
+				"零",
+				"一",
+				"劍",
+				"剑"
+			]
+		},
+		{
+			"from": [
+				"scene_02",
+				"life_line_without_good",
+				"zero_gesture",
+				"one_gesture",
+				"good_gesture",
+				"two_gesture",
+				"release_opened"
+			],
+			"trigger": {
+				"type": "cell_text",
+				"pos": [
+					26,
+					17
+				],
+				"text": "赢"
+			},
+			"to": "win_gesture",
+			"preserve": [
+				"贏",
+				"赢",
+				"不",
+				"二",
+				"讚",
+				"赞",
+				"好",
+				"零",
+				"一",
+				"劍",
+				"剑"
+			]
+		},
+		{
+			"from": [
+				"life_line_without_good",
+				"one_gesture",
+				"good_gesture",
+				"two_gesture",
+				"win_gesture",
+				"release_opened"
+			],
+			"trigger": {
+				"type": "cell_text",
+				"pos": [
+					26,
+					17
+				],
+				"text": "零"
+			},
 			"to": "zero_gesture",
-			"preserve": ["一", "好"]
+			"preserve": [
+				"贏",
+				"赢",
+				"不",
+				"二",
+				"讚",
+				"赞",
+				"好",
+				"零",
+				"一",
+				"劍",
+				"剑"
+			]
 		},
 		{
-			"from": ["scene_02", "life_line_without_good"],
-			"trigger": {"type": "cell_not_text", "pos": [14, 13], "text": "好"},
+			"from": [
+				"scene_02",
+				"zero_gesture",
+				"one_gesture",
+				"good_gesture",
+				"two_gesture",
+				"win_gesture",
+				"release_opened"
+			],
+			"trigger": {
+				"type": "cell_not_text",
+				"pos": [
+					14,
+					13
+				],
+				"text": "好"
+			},
 			"to": "life_line_without_good",
-			"preserve": ["好"]
+			"preserve": [
+				"贏",
+				"赢",
+				"不",
+				"二",
+				"讚",
+				"赞",
+				"好",
+				"零",
+				"一",
+				"劍",
+				"剑"
+			]
 		}
 	]
 }

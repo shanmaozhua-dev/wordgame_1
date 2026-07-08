@@ -14,6 +14,8 @@ func _init() -> void:
 	test_one_gesture_state_keeps_displaced_words()
 	test_pushing_one_into_zero_slot_displaces_zero_and_switches_state()
 	test_zero_returning_to_sentence_restores_zero_gesture()
+	test_good_two_and_win_gesture_states_are_registered_and_triggered()
+	test_deleting_not_opens_release_state()
 
 	if failures.is_empty():
 		print("hero_trial_flow tests passed")
@@ -27,9 +29,9 @@ func test_flow_config_loads_all_maps_and_rules() -> void:
 	var engine := FlowEngine.new()
 	assert_true(engine.load_config("res://levels/hero_trial_flow.json").success, "flow config loads")
 	assert_equal(engine.stage, "scene_01", "flow config declares scene one start")
-	for map_id in ["scene_01", "scene_02", "life_line_without_good", "one_gesture", "zero_gesture"]:
+	for map_id in ["scene_01", "scene_02", "life_line_without_good", "one_gesture", "zero_gesture", "good_gesture", "two_gesture", "win_gesture", "release_opened"]:
 		assert_true(engine.has_map(map_id), "flow config registers map %s" % map_id)
-	assert_true(engine.rule_count() >= 4, "flow config registers current hero trial transitions")
+	assert_true(engine.rule_count() >= 8, "flow config registers current hero trial transitions")
 
 func test_space_advances_from_scene_one_to_scene_two() -> void:
 	var world := GridWorld.new()
@@ -173,6 +175,42 @@ func test_zero_returning_to_sentence_restores_zero_gesture() -> void:
 	assert_equal(world.get_entity_at(Vector2i(26, 17)).text, zero_word, "zero stays in the gesture sentence")
 	assert_equal(world.get_entity_at(Vector2i(26, 18)).text, one_word, "displaced one stays at its actual position")
 	assert_equal(world.get_entity_at(Vector2i(28, 16)).text, good_word, "moved good remains after zero gesture restore")
+
+func test_good_two_and_win_gesture_states_are_registered_and_triggered() -> void:
+	var cases := [
+		{"text": char(0x597d), "stage": "good_gesture"},
+		{"text": char(0x4e8c), "stage": "two_gesture"},
+		{"text": char(0x8d0f), "stage": "win_gesture"}
+	]
+	for test_case in cases:
+		var world := GridWorld.new()
+		var flow := HeroTrialFlow.new()
+		flow.load_start_scene(world)
+		flow.handle_space(world)
+		var trigger_text := str(test_case.text)
+		var trigger_entity = find_pushable_entity_by_text(world, trigger_text)
+		if trigger_entity == null:
+			trigger_entity = world.add_entity(trigger_text, Vector2i(2, 15), {"solid": true, "pushable": true})
+		var slot_entity = world.get_entity_at(Vector2i(26, 17))
+		if slot_entity != null and slot_entity.id != trigger_entity.id:
+			world.move_entity_to(slot_entity.id, Vector2i(28, 15))
+		world.move_entity_to(trigger_entity.id, Vector2i(26, 17))
+		assert_true(flow.sync_after_player_action(world).success, "%s gesture state switch succeeds" % trigger_text)
+		assert_equal(flow.stage, str(test_case.stage), "%s reaches expected gesture state" % trigger_text)
+		assert_equal(world.get_entity_at(Vector2i(26, 17)).text, trigger_text, "%s remains in gesture sentence" % trigger_text)
+
+func test_deleting_not_opens_release_state() -> void:
+	var world := GridWorld.new()
+	var flow := HeroTrialFlow.new()
+	var not_word := char(0x4e0d)
+	flow.load_start_scene(world)
+	flow.handle_space(world)
+	world.player_pos = Vector2i(5, 3)
+	world.facing = Vector2i(1, 0)
+	assert_true(world.delete_front().success, "deleting not word succeeds")
+	assert_true(flow.sync_after_player_action(world).success, "release state switch succeeds")
+	assert_equal(flow.stage, "release_opened", "flow reaches release opened state")
+	assert_equal(world.get_entity_at(Vector2i(6, 3)), null, "not word remains absent after release state switch")
 
 func assert_equal(actual: Variant, expected: Variant, label: String) -> void:
 	if actual != expected:

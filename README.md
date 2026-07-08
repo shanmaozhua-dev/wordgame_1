@@ -83,6 +83,8 @@ powershell -ExecutionPolicy Bypass -File "E:\wordgame copy\勇者试炼\tools\ca
 - `levels/hero_trial_fist_state_life_line_without_good.json`: hand-edited gameplay state after moving `好` out of `逼退好手的生命線`; this is not a third scene
 - `levels/hero_trial_fist_state_one_gesture.json`: hand-edited static palm state for `巨大手掌，是一的手勢`; displaced movable words are restored by flow code
 - `levels/hero_trial_fist_state_zero_gesture.json`: static zero-palm state used when `零` returns to the gesture sentence
+- `levels/hero_trial_fist_state_good_gesture.json`, `levels/hero_trial_fist_state_two_gesture.json`, `levels/hero_trial_fist_state_win_gesture.json`: screenshot-driven palm states for `好/二/贏` in the gesture sentence
+- `levels/hero_trial_fist_state_release_opened.json`: screenshot-driven state after deleting `不` from `不会轻易放开`
 - `docs/交接文档.md`: handoff notes for the next developers
 - `docs/测试复用指南.md`: how to reuse the test framework for new screenshot-based levels
 - `Fonts/Zpix.ttf`: original-style pixel font used by the manual test scene
@@ -108,6 +110,9 @@ Implemented for this pass:
 - Runtime flow starts from `hero_trial_fist_scene_01.json`. Pressing Space loads `hero_trial_fist_scene_02.json`. When the movable `好` leaves `逼退好手的生命線`, the static map switches to `hero_trial_fist_state_life_line_without_good.json`, while that moved `好` remains at its current grid position.
 - When `一` enters the bottom gesture sentence and forms `巨大手掌，是一的手勢`, the static map switches to `hero_trial_fist_state_one_gesture.json`; displaced `零` and moved `好` are kept at their actual grid positions.
 - When `零` returns to the same gesture word slot from the one-gesture state, the static map switches back to `hero_trial_fist_state_zero_gesture.json`; displaced `一` and moved `好` are kept at their actual grid positions.
+- The batch document `批量文档.docx` was used to add states for `好/二/贏` in the gesture slot and for deleting `不` from `不会轻易放开`.
+- Flow rules preserve global dynamic words across state switches: `贏/赢/不/二/讚/赞/好/零/一/劍/剑`. A preserved word is restored only when its target cells are free, so static text in the destination map is not duplicated.
+- Review images for the 8 screenshot states are generated under `test-output/map-review/` as `<map_id>_grid.png`, `<map_id>_preview.png`, and `<map_id>_compare.png`.
 - The flow is configured by `levels/hero_trial_flow.json`; new screenshot states should be added as maps and rules there instead of hard-coding new branches.
 - Pushable words can push another pushable word one cell farther in the same direction, which supports replacing `零` with `一` in the gesture sentence.
 - Recognition for `巨大手掌，是好的手勢`, `巨大手掌，是二的手勢`, `巨大手掌，是讚的手勢`, `巨大手掌，是贏的手勢`.
