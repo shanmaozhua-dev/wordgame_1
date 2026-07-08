@@ -21,6 +21,7 @@ Controls:
 - Tab: split a splittable word in front
 - Alt + arrow key: pull a pushable word
 - F5: autoplay the demo route
+- F9: toggle runtime grid editor
 
 Pulling rule: while Alt is held, the player may only move away from the pulled word. For example, if `我` is above the word, only Alt + Up is valid. Alt + Left, Alt + Right, or Alt + Down are rejected until Alt is released.
 
@@ -29,6 +30,15 @@ Merging rule: configured word parts merge automatically when the player pushes o
 Sentence recognition rule: recognition captions such as `已识别` are spawned as map word entities. They have collision and can later receive interaction rules.
 
 Prompt rule: interaction prompts such as `手表可以查看人类世界的时间` are also spawned as persistent map word entities. They do not auto-disappear, have collision by default, and repeated triggering reuses the same prompt entity instead of spawning duplicates.
+
+Runtime map editor:
+
+- F9 enters or exits the 32 by 18 grid editor.
+- Left click selects a cell; type one Chinese character in the focused input to write it into that cell.
+- Backspace/Delete clears the selected cell; arrow keys move the selection.
+- Alt+P, Alt+D, and Alt+S toggle pushable, deletable, and solid flags for the selected word.
+- Ctrl+S saves to `res://levels/hero_trial_fist_edit.json`; Ctrl+R reloads that file.
+- F10 hides or shows the grid while staying in edit mode.
 
 ## Test
 
@@ -59,6 +69,7 @@ powershell -ExecutionPolicy Bypass -File "E:\wordgame copy\勇者试炼\tools\ca
 - `scripts/demo_runner.gd`: autoplay demo route
 - `tests/test_gameplay_core.gd`: gameplay regression tests
 - `tests/test_hero_trial_fist.gd`: 勇者试炼拳头关卡 regression tests
+- `tests/test_map_editor_io.gd`: runtime editor JSON round-trip tests
 - `tools/run_all_tests.ps1`: one-command automated verification
 - `tools/capture_visual_smoke.ps1`: launches Godot, captures a real screenshot, and checks visible text pixels
 - `docs/交接文档.md`: handoff notes for the next developers
