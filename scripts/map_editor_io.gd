@@ -78,6 +78,12 @@ static func load_editor_data(path: String) -> Dictionary:
 		return {"success": false, "message": "invalid editor json: %s" % path}
 	return {"success": true, "data": parsed}
 
+static func load_level_or_default(path: String, default_level: Dictionary) -> Dictionary:
+	var loaded := load_editor_data(path)
+	if not loaded.success:
+		return default_level
+	return editor_data_to_level(loaded.data)
+
 static func _array_to_vector2i(value: Variant, fallback: Vector2i) -> Vector2i:
 	if typeof(value) != TYPE_ARRAY or value.size() < 2:
 		return fallback

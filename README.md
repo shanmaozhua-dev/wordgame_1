@@ -39,6 +39,7 @@ Runtime map editor:
 - Alt+P, Alt+D, and Alt+S toggle pushable, deletable, and solid flags for the selected word.
 - Ctrl+S saves to `res://levels/hero_trial_fist_edit.json`; Ctrl+R reloads that file.
 - F10 hides or shows the grid while staying in edit mode.
+- Edited cells are first stored in the running `GridWorld`; the editor status shows `未保存` after a change. After Ctrl+S, the JSON is persisted and loaded automatically on the next run.
 
 ## Test
 

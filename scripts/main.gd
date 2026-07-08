@@ -26,9 +26,15 @@ var editor_canvas: CanvasLayer
 var editor_status: Label
 var cell_input: LineEdit
 var _syncing_input := false
+var editor_dirty := false
+var editor_notice := ""
 
 func _ready() -> void:
-	world.load_level(LevelLoader.build_hero_trial_fist_level())
+	var default_level := LevelLoader.build_hero_trial_fist_level()
+	var loaded_level := MapEditorIO.load_level_or_default(EDITOR_SAVE_PATH, default_level)
+	world.load_level(loaded_level)
+	if FileAccess.file_exists(EDITOR_SAVE_PATH):
+		editor_notice = "已读取保存地图：%s" % EDITOR_SAVE_PATH
 	page_camera.sync_to_world(world)
 	_build_scene()
 	_refresh_view()
@@ -242,10 +248,15 @@ func _set_editor_cell_text(text: String) -> void:
 	if clean.length() > 1:
 		clean = clean.substr(0, 1)
 	var existing := _find_entity_at_any(selected_cell)
+	var changed := false
 	if existing:
 		world.entities.erase(existing.id)
+		changed = true
 	if not clean.is_empty():
 		world.add_entity(clean, selected_cell, {"solid": true, "tags": ["manual_edit"]})
+		changed = true
+	if changed:
+		_mark_editor_dirty()
 	_refresh_view()
 	_syncing_input = true
 	cell_input.text = clean
@@ -276,26 +287,32 @@ func _toggle_selected_flag(flag: String) -> void:
 			entity.deletable = not entity.deletable
 		"solid":
 			entity.solid = not entity.solid
+	_mark_editor_dirty()
 	_refresh_view()
 
 func _save_editor_level() -> void:
 	_ensure_editor_save_dir()
 	var result := MapEditorIO.save_editor_data(EDITOR_SAVE_PATH, MapEditorIO.world_to_editor_data(world))
 	if result.success:
-		_update_editor_status("已保存：%s" % EDITOR_SAVE_PATH)
+		editor_dirty = false
+		editor_notice = "已保存：%s" % EDITOR_SAVE_PATH
+		_update_editor_status()
 	else:
-		_update_editor_status(str(result.get("message", "保存失败")))
+		editor_notice = str(result.get("message", "保存失败"))
+		_update_editor_status()
 
 func _load_editor_level() -> void:
 	var loaded := MapEditorIO.load_editor_data(EDITOR_SAVE_PATH)
 	if not loaded.success:
-		_update_editor_status(str(loaded.get("message", "读取失败")))
+		editor_notice = str(loaded.get("message", "读取失败"))
+		_update_editor_status()
 		return
 	world.load_level(MapEditorIO.editor_data_to_level(loaded.data))
+	editor_dirty = false
+	editor_notice = "已读取：%s" % EDITOR_SAVE_PATH
 	_rebuild_editor_grid()
 	_set_selected_cell(selected_cell)
 	_refresh_view()
-	_update_editor_status("已读取：%s" % EDITOR_SAVE_PATH)
 
 func _ensure_editor_save_dir() -> void:
 	var absolute_dir := ProjectSettings.globalize_path(EDITOR_SAVE_PATH.get_base_dir())
@@ -330,17 +347,20 @@ func _sync_editor_overlay() -> void:
 		cell_input.position = map_layer.position + _grid_to_pixels(selected_cell) + Vector2(0, world.cell_size + 2)
 	_update_editor_status()
 
-func _update_editor_status(extra := "") -> void:
+func _mark_editor_dirty() -> void:
+	editor_dirty = true
+	editor_notice = "未保存"
+
+func _update_editor_status() -> void:
 	if not editor_status:
 		return
 	var entity := _find_entity_at_any(selected_cell)
 	var flags := "空"
 	if entity:
 		flags = "字=%s solid=%s push=%s del=%s tags=%s" % [entity.text, entity.solid, entity.pushable, entity.deletable, ",".join(entity.tags)]
-	var suffix := ""
-	if not extra.is_empty():
-		suffix = " | %s" % extra
-	editor_status.text = "编辑模式 F9退出 F10网格 Ctrl+S保存 Ctrl+R读取 Alt+P/D/S属性 | 格子=(%s,%s) %s%s" % [selected_cell.x, selected_cell.y, flags, suffix]
+	var save_state := "未保存" if editor_dirty else "已保存"
+	var suffix := " | %s" % editor_notice if not editor_notice.is_empty() else ""
+	editor_status.text = "编辑模式 F9退出 F10网格 Ctrl+S保存 Ctrl+R读取 Alt+P/D/S属性 | %s | 格子=(%s,%s) %s%s" % [save_state, selected_cell.x, selected_cell.y, flags, suffix]
 
 func _make_word_label(text: String, font_color := Color.WHITE, bg_color := Color.BLACK) -> Label:
 	var label := Label.new()

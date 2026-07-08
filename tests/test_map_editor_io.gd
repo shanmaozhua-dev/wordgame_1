@@ -8,6 +8,8 @@ var failures: Array[String] = []
 
 func _init() -> void:
 	test_world_round_trips_through_editor_json()
+	test_saved_editor_json_overrides_default_level()
+	test_missing_editor_json_falls_back_to_default_level()
 
 	if failures.is_empty():
 		print("map_editor_io tests passed")
@@ -37,6 +39,30 @@ func test_world_round_trips_through_editor_json() -> void:
 	assert_equal(reloaded_world.player_pos, Vector2i(21, 16), "player start reloads")
 	assert_equal(reloaded_world.get_entity_at(Vector2i(1, 2)).text, "贏", "win word reloads")
 	assert_equal(reloaded_world.get_entity_at(Vector2i(15, 2)).text, "掌", "top palm reloads")
+
+func test_saved_editor_json_overrides_default_level() -> void:
+	var default_level := LevelLoader.build_hero_trial_fist_level()
+	var world := GridWorld.new()
+	world.load_level(default_level)
+	var data := MapEditorIO.world_to_editor_data(world)
+	for cell in data["cells"]:
+		if cell.get("x") == 1 and cell.get("y") == 5:
+			cell["text"] = "三"
+			cell["tags"] = ["manual_edit"]
+	var path := "user://map_editor_startup_override.json"
+	assert_true(MapEditorIO.save_editor_data(path, data).success, "save startup override json")
+
+	var loaded_level := MapEditorIO.load_level_or_default(path, default_level)
+	var loaded_world := GridWorld.new()
+	loaded_world.load_level(loaded_level)
+	assert_equal(loaded_world.get_entity_at(Vector2i(1, 5)).text, "三", "saved editor json overrides default level")
+
+func test_missing_editor_json_falls_back_to_default_level() -> void:
+	var default_level := LevelLoader.build_hero_trial_fist_level()
+	var loaded_level := MapEditorIO.load_level_or_default("user://missing_editor_level.json", default_level)
+	var loaded_world := GridWorld.new()
+	loaded_world.load_level(loaded_level)
+	assert_equal(loaded_world.get_entity_at(Vector2i(1, 5)).text, "二", "missing editor json uses default level")
 
 func assert_cell(data: Dictionary, text: String, x: int, y: int, solid: bool, pushable: bool, deletable: bool, label: String) -> void:
 	for cell in data.get("cells", []):
