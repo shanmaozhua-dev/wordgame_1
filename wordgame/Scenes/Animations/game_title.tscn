@@ -933,6 +933,7 @@ const vec2 size = vec2(96.0, 54.0);
 
 void fragment() {
 	vec2 uv = UV;
+	uv.y = 1.-uv.y;
 	uv *= size;
 	vec2 id = floor(uv);
 	
@@ -953,6 +954,7 @@ const vec2 size = vec2(96.0, 54.0);
 
 void fragment() {
 	vec2 uv = UV;
+	uv.y = 1.-uv.y;
 	uv *= size;
 	vec2 id = floor(uv);
 	
@@ -1013,6 +1015,7 @@ const vec2 size = vec2(96.0, 54.0);
 
 void fragment() {
 	vec2 uv = UV;
+	uv.y = 1.-uv.y;
 	uv *= size;
 	vec2 id = floor(uv);
 	
@@ -1090,6 +1093,7 @@ __meta__ = {
 [node name="Title" type="Node2D" parent="Title LT/SubViewport"]
 
 [node name="WordSprite" parent="Title LT/SubViewport/Title" instance=ExtResource( 9 )]
+visible = false
 position = Vector2( 210, 270 )
 scale = Vector2( 0.333, 0.333 )
 texture = null
@@ -1194,6 +1198,7 @@ __meta__ = {
 [node name="Title" type="Node2D" parent="Title RB/SubViewport"]
 
 [node name="WordSprite" parent="Title RB/SubViewport/Title" instance=ExtResource( 9 )]
+visible = false
 position = Vector2( 210, 270 )
 scale = Vector2( 0.333, 0.333 )
 texture = null

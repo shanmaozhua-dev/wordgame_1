@@ -1,0 +1,123 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Scenes/Events/WordSprite.tscn" type="PackedScene" id=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "@tool
+extends \"res://Scripts/Event.gd\"
+
+func move_straight(d):
+	$Princess/AnimationPlayer2.play(\"walk\")
+	super.move_straight(d)
+	
+
+const PushAniResourse = preload(\"res://Scenes/Animations/Push.tscn\")
+
+# override
+func check_event_trigger_touch(x,y):
+	if through:
+		return
+	
+	var events = tileMap.get_events_by_pos(Vector2(x,y))
+	for e in events:
+		if e.layer == 1 && e.can_push:
+			# 是否推成功
+			if e.be_push(direction):
+				push_animation()
+				# 推完東西需加行動冷卻時間
+				cooldown_count += 3
+
+func push_animation():
+	play_push_se()
+	var push_ani = PushAniResourse.instantiate()
+	add_child(push_ani)
+	push_ani.get_node(\"AnimationPlayer\").play(str(direction))
+	await push_ani.get_node(\"AnimationPlayer\").animation_finished
+	push_ani.queue_free()
+
+
+func play_push_se():
+	var r = randi()%4+1
+	Sound.play_se(\"res://Sounds/se/push_low_\"+str(r)+\".wav\", -6, 0)
+"
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 30, 30 )
+
+[sub_resource type="Animation" id=3]
+resource_name = "Setup"
+length = 0.001
+step = 0.25
+tracks/0/type = "value"
+tracks/0/path = NodePath("Gong:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Vector2( 0, -60 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "walk"
+length = 0.3
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Gong:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.15, 0.3 ),
+"transitions": PackedFloat32Array( 1.5, 0.75, 1 ),
+"update": 0,
+"values": [ -60.0, -55.0, -60.0 ]
+}
+
+[node name="Event" type="Node2D" groups=[
+"events",
+]]
+z_index = 10
+z_as_relative = false
+script = SubResource( 1 )
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="WordSprite" parent="." instance=ExtResource( 2 )]
+visible = false
+position = Vector2( 30, 30 )
+
+[node name="Area2D" type="Area2D" parent="."]
+visible = false
+position = Vector2( 30, 30 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+scale = Vector2( 0.99, 0.99 )
+shape = SubResource( 2 )
+
+[node name="RayCast2D" type="RayCast2D" parent="Area2D"]
+visible = false
+enabled = true
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="Princess" parent="." instance=ExtResource( 2 )]
+position = Vector2( 30, 90 )
+text = "主"
+
+[node name="Gong" parent="Princess" instance=ExtResource( 2 )]
+position = Vector2( 0, -60 )
+text = "公"
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Princess"]
+autoplay = "Setup"
+anims/Setup = SubResource( 3 )
+anims/walk = SubResource( 4 )

@@ -1,0 +1,491 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Sprites/loop_map_test/top.png" type="Texture2D" id=1]
+[ext_resource path="res://Scenes/Events/SnakeHouse.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/Events/Event.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Scenes/Events/BigEvent.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Events/TriggerEvent.tscn" type="PackedScene" id=5]
+
+[node name="SnakeTopMapPart" type="Node2D"]
+
+[node name="loop" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource( 1 )
+centered = false
+
+[node name="山丘" parent="." groups=[
+"ch2_山丘",
+] instance=ExtResource( 4 )]
+z_index = 20
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+big_text = "山山丘丘山山山丘丘山山山丘丘山山丘＿＿＿＿丘丘山丘丘山山山丘丘山
+山山丘丘山山丘丘丘丘山山山丘丘山山丘＿＿丘丘山山丘丘山山山丘丘山
+山山山丘丘山丘丘山丘丘山山山丘丘山丘＿＿丘丘山丘丘山山山丘丘山山
+山山山丘丘山丘丘山山丘丘山山山丘山丘＿丘丘山山丘丘山山山丘丘山山
+山山山山丘丘丘山山山丘丘山山山丘山山丘丘山山山丘丘山山山丘丘山山
+山山山山丘丘山山山山山丘丘山山丘山山山丘山山山丘丘山山丘丘山山山
+山山山山山丘丘山山山山山丘丘山丘山山山丘山山丘丘山山山丘丘山山山
+山山山山山丘丘山山山山山丘丘山丘山洞山丘山山丘山山山丘丘山山山山
+山山山山山丘丘山山山山山丘丘山山丘＿丘山山山丘山山山丘山山山山山
+＿＿山山山山丘丘山山山山丘＿＿＿＿＿＿＿＿＿丘山山丘山山山山山山
+＿＿＿＿山山丘丘山山＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿丘山山山山山山
+＿＿＿＿＿山丘丘＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿山山山
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿山山"
+
+[node name="跑到山洞" parent="." instance=ExtResource( 5 )]
+position = Vector2( 0, 720 )
+z_index = 0
+now_pos = Vector2( 0, 12 )
+event_trigger_action = 2
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+layer = 0
+commands = "@[call_method] {
+	\"target\": \"Load\", 
+	\"target_type\": \"path\",
+	\"method\": \"preload_scene\",
+	\"arg_array\": [\"res://Scenes/Maps/第二章/05_聖劍寶庫.tscn\"]
+}
+
+@[move_route] {\"target\":\"player\", \"wait\":true}
+	@[move_to_event] \"山洞口\"
+@[end_move_route]
+
+@[call_method] {
+	\"target\": \"Sound\", 
+	\"target_type\": \"path\",
+	\"method\": \"crossfade_bgm\",
+	\"arg_array\": [\"res://Sounds/bgm/ch2/BGM_2_16_snake_fight_C.ogg\"]
+}
+@[call_method] {
+	\"target\": \"Node/MainMap\", 
+	\"target_type\": \"path\",
+	\"method\": \"set_bgm\",
+	\"arg_array\": [true, \"res://Sounds/bgm/ch2/BGM_2_16_snake_fight_C.ogg\", false]
+}
+
+@[play_se] {
+	\"path\": \"res://Sounds/se/第二章 音效/SE_2_17_move_dusty_E.wav\", 
+	\"db\": 6, 
+	\"pan\": 0
+}
+
+@[tween_parameter] {
+	\"parameter\": \"position:y\", 
+	\"add\": 30, 
+	\"time_sec\": 0,
+	\"target\": \"Node/MainMap/SnakeTopMapPart/洞/WordSprite\",
+	\"target_type\": \"path\",
+	\"wait\": false
+}
+
+@[play_sprite_animation] {
+	\"target\": \"Node/MainMap/SnakeTopMapPart/洞\",
+	\"target_type\": \"path\",
+	\"path\": \"res://Sprites/into_cave/cave.png\", 
+	\"frame_count\": 75, 
+	\"width\": 15,
+	\"time_sec\": 2.5, 
+	\"reverse\": false, 
+	\"wait\": false,
+}
+
+@[wait] 90
+
+@[fade_out_env] 1.3
+
+@[fade_screen] {
+	\"color\": \"ff000000\",
+	\"time_sec\": 1.5
+}
+
+
+@[map_transport] {
+	\"map\": \"第二章/05_聖劍寶庫\", 
+	\"pos\": [0,0], 
+	\"need_to_save_map_status\": false, 
+	\"transition_type\": \"fade\", ##fade/whirl(漩渦)/none
+	\"opacity\": 1
+}
+
+## @[fade_black_screen] true"
+big_text = "跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑跑"
+
+[node name="山洞口" parent="." instance=ExtResource( 5 )]
+position = Vector2( 1020, 480 )
+z_index = 0
+now_pos = Vector2( 17, 8 )
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+layer = 0
+
+[node name="洞" parent="." instance=ExtResource( 3 )]
+position = Vector2( 1020, 420 )
+z_index = 20
+now_pos = Vector2( 17, 7 )
+text = "洞"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+layer = 2
+
+[node name="屋" parent="." instance=ExtResource( 2 )]
+position = Vector2( 120, 1080 )
+text = "坊"
+sentence = "作坊的工具好難用。"
+
+[node name="屋2" parent="." instance=ExtResource( 2 )]
+position = Vector2( 1800, 1080 )
+text = "棧"
+sentence = "所有角色要傷心了。"
+
+[node name="樹" type="Node2D" parent="."]
+position = Vector2( 60, 600 )
+
+[node name="Event" parent="樹" instance=ExtResource( 3 )]
+now_pos = Vector2( 1, 10 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event2" parent="樹" instance=ExtResource( 3 )]
+position = Vector2( -60, 60 )
+now_pos = Vector2( 0, 11 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event3" parent="樹" instance=ExtResource( 3 )]
+position = Vector2( 0, 60 )
+now_pos = Vector2( 1, 11 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event4" parent="樹" instance=ExtResource( 3 )]
+position = Vector2( 60, 60 )
+now_pos = Vector2( 2, 11 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event5" parent="樹" instance=ExtResource( 3 )]
+position = Vector2( 0, 120 )
+now_pos = Vector2( 1, 12 )
+text = "木"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="樹2" type="Node2D" parent="."]
+position = Vector2( 240, 1080 )
+
+[node name="Event" parent="樹2" instance=ExtResource( 3 )]
+now_pos = Vector2( 4, 18 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event2" parent="樹2" instance=ExtResource( 3 )]
+position = Vector2( -60, 60 )
+now_pos = Vector2( 3, 19 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event3" parent="樹2" instance=ExtResource( 3 )]
+position = Vector2( 0, 60 )
+now_pos = Vector2( 4, 19 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event4" parent="樹2" instance=ExtResource( 3 )]
+position = Vector2( 60, 60 )
+now_pos = Vector2( 5, 19 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event5" parent="樹2" instance=ExtResource( 3 )]
+position = Vector2( 0, 120 )
+now_pos = Vector2( 4, 20 )
+text = "木"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="樹3" type="Node2D" parent="."]
+position = Vector2( 1620, 1080 )
+
+[node name="Event" parent="樹3" instance=ExtResource( 3 )]
+now_pos = Vector2( 27, 18 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event2" parent="樹3" instance=ExtResource( 3 )]
+position = Vector2( -60, 60 )
+now_pos = Vector2( 26, 19 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event3" parent="樹3" instance=ExtResource( 3 )]
+position = Vector2( 0, 60 )
+now_pos = Vector2( 27, 19 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event4" parent="樹3" instance=ExtResource( 3 )]
+position = Vector2( 60, 60 )
+now_pos = Vector2( 28, 19 )
+text = "樹"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="Event5" parent="樹3" instance=ExtResource( 3 )]
+position = Vector2( 0, 120 )
+now_pos = Vector2( 27, 20 )
+text = "木"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="貨" type="Node2D" parent="."]
+position = Vector2( 1800, 1140 )
+
+[node name="Event" parent="貨" instance=ExtResource( 3 )]
+now_pos = Vector2( 30, 19 )
+text = "貨"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+commands = "@[clear_typed] \"v:ch2_村y\"
+@[type] {
+	\"texts\": \"就快要過期了。\", 
+	\"pos\": [\"v:ch2_村x\", \"v:ch2_村y\"], 
+	\"tags\": [\"v:ch2_村y\"],
+	\"is_dialog_end\": true
+}"
+
+[node name="Event2" parent="貨" instance=ExtResource( 3 )]
+position = Vector2( 60, 0 )
+now_pos = Vector2( 31, 19 )
+text = "貨"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+commands = "@[clear_typed] \"v:ch2_村y\"
+@[type] {
+	\"texts\": \"就快要過期了。\", 
+	\"pos\": [\"v:ch2_村x\", \"v:ch2_村y\"], 
+	\"tags\": [\"v:ch2_村y\"],
+	\"is_dialog_end\": true
+}"
+
+[node name="Event3" parent="貨" instance=ExtResource( 3 )]
+position = Vector2( 0, 60 )
+now_pos = Vector2( 30, 20 )
+text = "貨"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+commands = "@[clear_typed] \"v:ch2_村y\"
+@[type] {
+	\"texts\": \"就快要過期了。\", 
+	\"pos\": [\"v:ch2_村x\", \"v:ch2_村y\"], 
+	\"tags\": [\"v:ch2_村y\"],
+	\"is_dialog_end\": true
+}"
+
+[node name="Event4" parent="貨" instance=ExtResource( 3 )]
+position = Vector2( 60, 60 )
+now_pos = Vector2( 31, 20 )
+text = "貨"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+commands = "@[clear_typed] \"v:ch2_村y\"
+@[type] {
+	\"texts\": \"就快要過期了。\", 
+	\"pos\": [\"v:ch2_村x\", \"v:ch2_村y\"], 
+	\"tags\": [\"v:ch2_村y\"],
+	\"is_dialog_end\": true
+}"
+
+[node name="箱" parent="." instance=ExtResource( 3 )]
+position = Vector2( 240, 720 )
+now_pos = Vector2( 4, 12 )
+text = "箱"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+commands = "@[clear_typed] \"v:ch2_村y\"
+@[type] {
+	\"texts\": \"箱子沒有份量。\", 
+	\"pos\": [\"v:ch2_村x\", \"v:ch2_村y\"], 
+	\"tags\": [\"v:ch2_村y\"],
+	\"is_dialog_end\": true
+}"
+
+[node name="箱2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 240, 780 )
+now_pos = Vector2( 4, 13 )
+text = "箱"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+commands = "@[clear_typed] \"v:ch2_村y\"
+@[type] {
+	\"texts\": \"箱子沒有份量。\", 
+	\"pos\": [\"v:ch2_村x\", \"v:ch2_村y\"], 
+	\"tags\": [\"v:ch2_村y\"],
+	\"is_dialog_end\": true
+}"
+
+[node name="箱3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 1740, 1080 )
+now_pos = Vector2( 29, 18 )
+text = "箱"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+commands = "@[clear_typed] \"v:ch2_村y\"
+@[type] {
+	\"texts\": \"箱子沒有份量。\", 
+	\"pos\": [\"v:ch2_村x\", \"v:ch2_村y\"], 
+	\"tags\": [\"v:ch2_村y\"],
+	\"is_dialog_end\": true
+}"
+
+[node name="牆" parent="." instance=ExtResource( 3 )]
+position = Vector2( 60, 1200 )
+now_pos = Vector2( 1, 20 )
+text = "牆"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+commands = "@[clear_typed] \"v:ch2_村y\"
+@[type] {
+	\"texts\": \"牆壁不會堅持到底。\", 
+	\"pos\": [\"v:ch2_村x\", \"v:ch2_村y\"], 
+	\"tags\": [\"v:ch2_村y\"],
+	\"is_dialog_end\": true
+}"
+
+[node name="牆2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 120, 1200 )
+now_pos = Vector2( 2, 20 )
+text = "牆"
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+commands = "@[clear_typed] \"v:ch2_村y\"
+@[type] {
+	\"texts\": \"牆壁不會堅持到底。\", 
+	\"pos\": [\"v:ch2_村x\", \"v:ch2_村y\"], 
+	\"tags\": [\"v:ch2_村y\"],
+	\"is_dialog_end\": true
+}"

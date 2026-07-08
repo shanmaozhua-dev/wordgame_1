@@ -1,0 +1,381 @@
+[gd_scene load_steps=8 format=2]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node2D
+
+signal finished
+
+var has_fade_bgm = false
+
+func _ready():
+	$Legal.material = $Legal.material.duplicate()
+
+func play(text_count, is_h = true, sentence_width = null, progress = 0, level = 5, start_offset = 0):
+	text_count += start_offset
+	
+	if sentence_width == null:
+		sentence_width = text_count
+	
+	var thickness = ceil(float(text_count)/sentence_width)
+	
+	var w = min(text_count, sentence_width)
+	var h = ceil(float(text_count)/sentence_width)
+	var tail = w*h - text_count
+	
+	$Legal.material.set_shader_parameter(\"start_from\", start_offset)
+	$Legal.material.set_shader_parameter(\"end_at\", tail)
+	
+	if is_h:
+		$Legal.material.set_shader_parameter(\"size\", Vector2(w,h))
+		$Legal.size = Vector2(w,h)*60
+		$ColorRect.size = Vector2(w,h)*60
+	else:
+		$Legal.material.set_shader_parameter(\"size\", Vector2(h,w))
+		$Legal.material.set_shader_parameter(\"is_vertical\", true)
+		$Legal.size = Vector2(h,w)*60
+		$ColorRect.size = Vector2(h,w)*60
+
+	for i in range(text_count):
+		if i < start_offset: continue
+		
+		var light = load(\"res://Scenes/Animations/LoopLight.tscn\").instantiate()
+		$lights.add_child(light)
+		
+		var col = i % int(sentence_width)
+		var row = floor(i/sentence_width)
+		
+		if is_h:
+			light.position.x += 60*col
+			light.position.y += 60*row
+		else:
+			light.position.y += 60*col
+			light.position.x += 60*row
+		
+#		light.get_node(\"AnimationPlayer\").play(\"light_up\")
+		
+	
+	if level == 5:
+		$CanvasLayer/ColorRect/AnimationPlayer.play(\"light_up\")
+		
+	var need_quiet = false
+	if Global.get_game_switch(\"ch3_勇者之路開始\") && !Global.get_game_switch(\"ch3_添譜來堂完成\"):
+		need_quiet = true
+	
+	if progress != -3 && !need_quiet:
+		Sound.fade_bgm(0.5, null, 0.3)
+		has_fade_bgm = true
+	
+	$Legal/AnimationPlayer.play(\"Legal\")
+	
+	var db = 0
+	
+	if need_quiet:
+		match progress:
+			0:
+				Sound.play_se(\"res://Sounds/se/MEL/SFX_Legal Answer_NoMelo.wav\", db)
+			1,2,3:
+				Sound.play_se(\"res://Sounds/se/MEL/SFX_process_noMelo_\"+str(progress)+\".wav\", db)
+	else:
+		match progress:
+			0:
+				Sound.play_se(\"res://Sounds/se/complete.wav\", db)
+			1,2,3,4,5:
+				Sound.play_se(\"res://Sounds/se/progress_\"+str(progress)+\".wav\", db)
+			-1:
+				Sound.play_se(\"res://Sounds/se/MEL/MEL_Iegal_egg_4.wav\", 10)
+			-2:
+				Sound.play_se(\"res://Sounds/se/MEL/MEL_Iegal_egg_3.wav\", 15)
+			-3:
+				pass
+
+#	yield($Legal/AnimationPlayer, \"animation_finished\")
+		
+	await get_tree().create_timer(1).timeout
+#	over()
+	
+	emit_signal(\"finished\")
+
+func over():
+	if has_fade_bgm:
+		Sound.fade_bgm(0.5, null, 1)
+	
+	
+	Sound.play_se(\"res://Sounds/se/typerwriter_return.wav\")
+	$Legal/AnimationPlayer.play(\"Finish\")
+	$lights/AnimationPlayer.play(\"fade\")
+	
+	await $Legal/AnimationPlayer.animation_finished
+	emit_signal(\"finished\")
+"
+
+[sub_resource type="Shader" id=2]
+code = "shader_type canvas_item;
+
+uniform float t :hint_range(0., 1.) = 0.;
+uniform float t_2 :hint_range(0., 1.) = 0.;
+uniform bool is_vertical = false;
+uniform vec2 size = vec2(1,1);
+uniform float thickness :hint_range(0., 1.) = .05;
+
+uniform int start_from = 0;
+uniform int end_at = 0;
+
+uniform bool border_2 = true;
+uniform bool border_4 = true;
+uniform bool border_6 = true;
+uniform bool border_8 = true;
+
+void vertex() {
+	VERTEX += -60. + 120. * UV;
+}
+
+float map(vec2 input, vec2 output, float v) {
+	return (v-input.x)/(input.y-input.x)*(output.y-output.x)+output.x;
+}
+
+float clampmap(vec2 input, vec2 output, vec2 clmp, float v) {
+	return clamp(map(input, output, v), clmp.x, clmp.y);
+}
+
+float circle(float radius_in, float radius_out, vec2 center, vec2 uv) {
+	return smoothstep(radius_out, radius_in, distance(center, uv));
+}
+
+float box(vec2 left_top, vec2 right_btm, vec2 uv) {
+	float col = step(left_top, uv).x * step(left_top, uv).y;
+	col *= step(uv, right_btm).x * step(uv, right_btm).y;
+	return col;
+}
+
+float line_h(vec2 start, vec2 end, float width, vec2 uv) {
+	return box(start + vec2(0., -.5 * width), end + vec2(0., .5 * width), uv);
+}
+
+float line_v(vec2 start, vec2 end, float width, vec2 uv) {
+	return box(start + vec2(-.5 * width, 0.), end + vec2(.5 * width, 0.), uv);
+}
+
+float lines(float width, vec2 id, vec2 uv) {
+	vec2 my_size = size + vec2(2.);
+	float t1 = clampmap(vec2(0., .25), vec2(0., 1.), vec2(0., 1.), t);
+	//float t2 = clampmap(vec2(.35, .55), vec2(0., 1.), vec2(0., 1.), t);
+	t1 = sin(.5 * PI * t1);
+	//t2 = sin(.5 * PI * t2);
+	float t2 = t_2;
+	float x = .5*width+.001;
+	float y = 1.-.5*width-.001;
+	
+	uv.x = (1. - float(is_vertical)) * map(vec2(0., 1.), vec2(id.y, id.y+3.) / (my_size.y+0.), uv.x) + float(is_vertical) * (uv.x + box(vec2(0.), vec2(0., float(start_from-1)), id) + box(vec2(size.x-1.0001, size.y-float(end_at)-.0001), vec2(size), id));
+	uv.y = float(is_vertical) * map(vec2(0., 1.), vec2(id.x, id.x+3.) / (my_size.x+0.), uv.y) + (1. - float(is_vertical)) * uv.y * (1.-box(vec2(0.), vec2(float(start_from-1), 0.), id)-box(vec2(size.x-float(end_at)-.0001, size.y-1.0001), vec2(size), id));
+	uv = clamp(uv, 0., 1.);
+	
+	float col = (1. - float(is_vertical)) * line_h(vec2(t2, y), vec2(t1, y), width, uv) + float(is_vertical) * line_v(vec2(x, t2), vec2(x, t1), width, uv);
+	//col = uv.y;
+	return col;
+}
+
+float border(vec2 l_t, vec2 r_b, vec2 uv) {
+	vec2 my_size = size + vec2(2, 2);
+	vec2 thick = 1. / my_size * thickness;
+	float t1 = clampmap(vec2(0., .2), vec2(0., 1.), vec2(0., 1.), t);
+	float t2 = clampmap(vec2(.15, .4), vec2(0., 1.), vec2(0., 1.), t);
+	t1 = sin(.5 * PI * t1);
+	t2 = sin(.5 * PI * t2);
+	
+	float tp = box(vec2((l_t.x - thick.x * .5) * t1 + (r_b.x + thick.x * .5) * (1. - t1), l_t.y - thick.y * .5), vec2((l_t.x - thick.x * .5) * t2 + (r_b.x + thick.x * .5) * (1. - t2), l_t.y + thick.y * .5), uv);
+	float bm = box(vec2((l_t.x - thick.x * .5) * (1. - t2) + (r_b.x + thick.x * .5) * t2, r_b.y - thick.y * .5), vec2((l_t.x - thick.x * .5) * (1. - t1) + (r_b.x + thick.x * .5) * t1, r_b.y + thick.y * .5), uv);
+	float lt = box(vec2(l_t.x - thick.x * .5, (l_t.y - thick.y * .5) * (1. - t2) + (r_b.y + thick.y * .5) * t2), vec2(l_t.x + thick.x * .5, (l_t.y - thick.y * .5) * (1. - t1) + (r_b.y + thick.y * .5) * t1), uv);
+	float rt = box(vec2(r_b.x - thick.x * .5, (l_t.y - thick.y * .5) * t1 + (r_b.y + thick.y * .5) * (1. - t1)), vec2(r_b.x + thick.x * .5, (r_b.y + thick.y * .5) * (1. - t2) + (l_t.y - thick.y * .5) * t2), uv);
+	return tp * float(border_8) + bm * float(border_2) + lt * float(border_4) + rt * float(border_6);
+}
+
+/*
+float glow(vec2 gv, vec2 id, vec2 uv) {
+	vec2 my_size = size + vec2(2.);
+	float t1 = clampmap(vec2(.1, .25), vec2(0., 1.), vec2(0., 1.), t);
+	float t2 = clampmap(vec2(.65, .95), vec2(0., 1.), vec2(0., 1.), t);
+	t1 = pow(sin(.5 * PI * t1), 2.);
+	t2 = pow(sin(.5 * PI * t2), 2.);
+	float radius = .5 * (t1 - t2);
+	float count = (1.-float(is_vertical)) * (box(vec2(float(start_from), 0.), vec2(size.x-1., 0.), id) + box(vec2(0., 1.), vec2(size.x-1., size.y-2.), id) + box(vec2(0., size.y-1.), vec2(size.x-1.-float(end_at), size.y-1.), id));
+	count += float(is_vertical) * (box(vec2(0., float(start_from)), vec2(0., size.y-1.), id) + box(vec2(1., 0.), vec2(size.x-2., size.y-1.), id) + box(vec2(size.x-1., 0.), vec2(size.x-1., size.y-1.-float(end_at)), id));
+	
+	float col = count * circle(0., radius, vec2(.5), gv);
+	return col;
+}
+*/
+
+float backlight(vec2 id, vec2 uv) {
+	vec2 my_size = size + vec2(2.);
+	float t1 = clampmap(vec2(0., .25), vec2(0., 1.), vec2(0., 1.), t);
+	float t2 = clampmap(vec2(.4, .6), vec2(0., 1.), vec2(0., 1.), t);
+	t1 = 1.15 * sin(.5 * PI * t1);
+	t2 = 1.5 * sin(.5 * PI * t2);
+	
+	float h_count = id.y * size.x + id.x + 1.;
+	float hv = h_count / (size.x * size.y);
+	float v_count = id.x * size.y + id.y + 1.;
+	float vv = v_count / (size.x * size.y);
+	
+	float col = hv * (1. - float(is_vertical)) + vv * float(is_vertical);
+	col = smoothstep(t1, t1-.15, col) * smoothstep(t2-.5, t2, col);
+	
+	return col;
+}
+
+void fragment() {
+	vec2 my_size = size + vec2(2,2);
+	vec2 width = thickness / my_size;
+	vec2 uv = UV;
+	
+	uv *= my_size;
+	vec2 hv = box(vec2(1.), my_size-1., uv) * vec2(map(vec2(1., my_size.x-1.), vec2(0., 1.), uv.x), fract(uv.y));
+	vec2 vv = box(vec2(1.), my_size-1., uv) * vec2(fract(uv.x), map(vec2(1., my_size.y-1.), vec2(0., 1.), uv.y));
+	vec2 gv = fract(uv);
+	vec2 id = floor(uv);
+	id *= box(vec2(1.), vec2(my_size-1.), uv);
+	id -= 1.;
+	
+	COLOR.a = lines(thickness, id, (1.-float(is_vertical)) * hv + float(is_vertical) * vv);
+	COLOR.a += border(1./my_size, 1.-(1./my_size), UV);
+	COLOR.a += .5 * backlight(id, (1.-float(is_vertical)) * hv + float(is_vertical) * vv) * box(vec2(0.), vec2(size), id);
+	//COLOR.a += glow(gv, id, (1.-float(is_vertical)) * hv + float(is_vertical) * vv);
+	
+	COLOR.a = clamp(COLOR.a, 0., 1.);
+	COLOR.rgb = vec3(1.);
+}"
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
+shader_parameter/t = 0.0
+shader_parameter/t_2 = 0.0
+shader_parameter/is_vertical = false
+shader_parameter/size = Vector2( 8, 2 )
+shader_parameter/thickness = 0.1
+shader_parameter/start_from = 0
+shader_parameter/end_at = 0
+shader_parameter/border_2 = true
+shader_parameter/border_4 = true
+shader_parameter/border_6 = true
+shader_parameter/border_8 = true
+
+[sub_resource type="Animation" id=4]
+resource_name = "Finish"
+length = 0.25
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/path = NodePath(".:material:shader_parameter/t")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 1, 0, 0, 0, 0 ),
+"times": PackedFloat32Array( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath(".:material:shader_parameter/t_2")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 0, 0, 0, 0.1, 0, 1, -0.15, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 0.25 )
+}
+
+[sub_resource type="Animation" id=5]
+length = 3.0
+tracks/0/type = "bezier"
+tracks/0/path = NodePath(".:material:shader_parameter/t")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 0, 0, 0, 0.25, 0, 1, -1, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 3 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath(".:material:shader_parameter/t_2")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 0, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "fade"
+length = 0.25
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.25 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.2, 0.4 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.741176 ), Color( 1, 1, 1, 0 ) ]
+}
+
+[node name="SentenceLegal" type="Node2D" groups=["sentence_legal"]]
+process_mode = 3
+z_index = 21
+script = SubResource( 1 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+color = Color( 0, 1, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Legal" type="ColorRect" parent="."]
+material = SubResource( 3 )
+offset_right = 480.0
+offset_bottom = 120.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Legal"]
+anims/Finish = SubResource( 4 )
+anims/Legal = SubResource( 5 )
+
+[node name="lights" type="Node2D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="lights"]
+anims/fade = SubResource( 6 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 1, 1, 1, 0 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/ColorRect"]
+anims/light_up = SubResource( 7 )

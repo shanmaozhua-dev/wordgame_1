@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://Scripts/BigEvent.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Events/WordSprite.tscn" type="PackedScene" id=2]
+
+[node name="BigEvent" type="Node2D" groups=[
+"big_event",
+"events",
+]]
+z_index = 10
+script = ExtResource( 1 )
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+
+[node name="WordSprite" parent="." instance=ExtResource( 2 )]
+position = Vector2( 30, 30 )
+
+[node name="Area2D" type="Area2D" parent="."]

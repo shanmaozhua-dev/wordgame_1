@@ -1,0 +1,305 @@
+[gd_scene load_steps=9 format=2]
+
+[sub_resource type="Animation" id=7]
+resource_name = "2A"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0, 0, -30, -0.364, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.364, 0, -30, 0, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 1 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [ "2A" ],
+"method": "after_lock_rotate"
+} ]
+}
+
+[sub_resource type="Animation" id=8]
+resource_name = "2B"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0, 0, 90, -0.364, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.364, 0, -30, 0, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 1 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [ "2B" ],
+"method": "after_lock_rotate"
+} ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "4A"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.364, 0, 90, 0, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0, 0, -30, -0.364, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 1 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [ "4A" ],
+"method": "after_lock_rotate"
+} ]
+}
+
+[sub_resource type="Animation" id=10]
+resource_name = "4B"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.364, 0, 90, 0, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0, 0, 90, -0.364, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 1 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [ "4B" ],
+"method": "after_lock_rotate"
+} ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "6A"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.364, 0, -30, 0, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0, 0, 90, -0.364, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 1 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [ "6A" ],
+"method": "after_lock_rotate"
+} ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "6B"
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.364, 0, -30, 0, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0, 0, -30, -0.364, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 1 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [ "6B" ],
+"method": "after_lock_rotate"
+} ]
+}
+
+[sub_resource type="Animation" id=12]
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0, 0, 90, -0.364, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.364, 0, 90, 0, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 1 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [ "8A" ],
+"method": "after_lock_rotate"
+} ]
+}
+
+[sub_resource type="Animation" id=13]
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0, 0, -30, -0.364, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.364, 0, 90, 0, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 1 )
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 1 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [ "8B" ],
+"method": "after_lock_rotate"
+} ]
+}
+
+[node name="lock_rotate" type="AnimationPlayer"]
+anims/2A = SubResource( 7 )
+anims/2B = SubResource( 8 )
+anims/4A = SubResource( 9 )
+anims/4B = SubResource( 10 )
+anims/6A = SubResource( 11 )
+anims/6B = SubResource( 6 )
+anims/8A = SubResource( 12 )
+anims/8B = SubResource( 13 )

@@ -1,7 +1,7 @@
 @tool
 extends Sprite2D
 
-const CELL_SIZE := 60.0
+const CELL_SIZE := float(GameConfigRules.CELL_SIZE.x)
 const FONT_SIZE := 54
 const FONT_SCALE := 1.12
 
@@ -62,7 +62,7 @@ func _draw() -> void:
 
 
 func draw_text() -> void:
-	var glyph_size := FONT_SIZE * FONT_SCALE
+	var cell_size := Vector2(CELL_SIZE, CELL_SIZE)
 	var lines := text.replace("\r\n", "\n").split("\n")
 	text_wh = Vector2.ZERO
 	text_wh.y = lines.size()
@@ -72,16 +72,17 @@ func draw_text() -> void:
 		text_wh.x = max(text_wh.x, line.length())
 		for x in line.length():
 			var character := line[x]
-			if character == "":
-				continue
-
-			var origin := Vector2(CELL_SIZE * x, CELL_SIZE * y)
+			var cell_origin := Vector2(CELL_SIZE * x, CELL_SIZE * y)
+			var glyph_origin := cell_origin + cell_size / 2.0
 			if has_background:
-				draw_rect(Rect2(origin - Vector2(glyph_size, glyph_size) / 2.0, Vector2(glyph_size, glyph_size)), Color.BLACK)
+				draw_rect(Rect2(cell_origin, cell_size), Color.BLACK)
+
+			if _is_blank_placeholder(character):
+				continue
 
 			draw_string(
 				font,
-				origin + Vector2(FONT_SIZE * (FONT_SCALE - 1.1) / 2.0 - FONT_SIZE * FONT_SCALE / 2.0, FONT_SIZE * (FONT_SCALE / 2.0 + 0.26) - FONT_SIZE * FONT_SCALE / 2.0),
+				glyph_origin + Vector2(FONT_SIZE * (FONT_SCALE - 1.1) / 2.0 - FONT_SIZE * FONT_SCALE / 2.0, FONT_SIZE * (FONT_SCALE / 2.0 + 0.26) - FONT_SIZE * FONT_SCALE / 2.0),
 				character,
 				HORIZONTAL_ALIGNMENT_LEFT,
 				-1,
@@ -95,6 +96,10 @@ func draw_text() -> void:
 func draw_text_to_sprite() -> void:
 	update_draw()
 	draw_text_to_sprite_complete.emit()
+
+
+func _is_blank_placeholder(character: String) -> bool:
+	return character in ["", "＿", "_", "　", " "]
 
 
 func dissolve(_time := 1.0) -> void:

@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Sprites/unzip/unzip_split.png" type="Texture2D" id=1]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+void fragment(){
+
+}"
+custom_defines = ""
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+
+[node name="split_particle" type="Sprite2D"]
+material = SubResource( 2 )
+position = Vector2( 30, 30 )
+z_index = 21
+z_as_relative = false
+texture = ExtResource( 1 )
+vframes = 3
+hframes = 5

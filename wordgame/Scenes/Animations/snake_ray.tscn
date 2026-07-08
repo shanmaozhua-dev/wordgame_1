@@ -1,0 +1,347 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://Sprites/ch2_snake/ray.png" type="Texture2D" id=1]
+[ext_resource path="res://Sprites/ch2_snake/ray2.png" type="Texture2D" id=2]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+
+uniform float val;
+uniform float speed;
+uniform float tilt;
+uniform int split;
+
+uniform float p_size;
+uniform float p_lifetime;
+
+vec4 pix(float size, float lifetime, float u_t, vec2 u_uv) {
+	float t_id = floor(u_t/lifetime);
+	float t_gv = fract(u_t/lifetime);
+	
+	vec2 pos = vec2(0.25 * sin(t_id * 22.5696578) + 0.5, 0.25 * sin(t_id * 83.465753) + 0.5);
+	size = size * sin(t_gv * PI);
+	
+	float grey = 0.6 * step(pos.x-size/2., u_uv.x) * step(u_uv.x, pos.x+size/2.) * step(pos.y-size/2., u_uv.y) * step(u_uv.y, pos.y+size/2.);
+	
+	return vec4(vec3(grey), 0.);
+}
+
+void fragment() {
+	vec2 uv = UV;
+	vec2 gv = fract(uv);
+	
+	float yv = uv.y * float(split);
+	float level = floor(yv);
+	float dir = 2.0 * (mod(level, 2.0) - 0.5);
+	
+	gv.x += dir * val * sin(gv.y * tilt + TIME * speed);
+	COLOR = abs(texture(TEXTURE, gv) - pix(p_size, p_lifetime, TIME, UV) - pix(p_size, p_lifetime, TIME+8.5*p_lifetime, UV) - pix(p_size, p_lifetime, TIME+10.2*p_lifetime, UV));
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_parameter/val = 0.025
+shader_parameter/speed = 10.0
+shader_parameter/tilt = 6.283
+shader_parameter/split = 60
+shader_parameter/p_size = 0.25
+shader_parameter/p_lifetime = 0.5
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 1 )
+shader_parameter/val = 0.025
+shader_parameter/speed = 10.0
+shader_parameter/tilt = 6.283
+shader_parameter/split = 60
+shader_parameter/p_size = 0.25
+shader_parameter/p_lifetime = 0.3
+
+[sub_resource type="Shader" id=4]
+code = "shader_type canvas_item;
+
+
+uniform float t = .99;
+uniform float p1_seed = 404.;
+uniform float p2_seed = 426.;
+uniform float p3_seed = 420.;
+uniform float p4_seed = 1198.;
+
+float stonelight(float l_deep, float l_wide, float u_time, vec2 u_uv) {
+	u_time = sin(fract(u_time) * PI);
+	
+	float wide = 1. - abs(u_uv.x - 0.5) * 2. / l_wide;
+	wide = clamp(wide, 0., 1.);
+	
+	float deep = 1. - smoothstep(.25, .25 + l_deep, u_uv.y);
+	deep = clamp(deep, 0., 1.) * step(.25, u_uv.y);
+	
+	return u_time * wide * deep;
+}
+
+float pix(float seed, float u_time, vec2 u_uv) {
+	u_time = fract(u_time);
+	
+	float size = .2 - u_time * .2;
+	size = clamp(size, .0, .1);
+	
+	vec2 pos = vec2(.5, .25);
+	float ang = PI/2. + PI/2. * sin(seed*258.478932679);
+	float dist = 0.5 * abs(sin(seed*578.742536));
+	pos = pos + sqrt(u_time) * vec2(dist * cos(ang), dist * sin(ang));
+	
+	float alpha = step(u_uv, pos+vec2(size/2.)).x * step(u_uv, pos+vec2(size/2.)).y * step(pos-vec2(size/2.), u_uv).x * step(pos-vec2(size/2.), u_uv).y;
+	return alpha;
+}
+
+void fragment() {
+	
+	COLOR.a = stonelight(.25, .75, t, UV);
+	COLOR.a += pix(p1_seed, t, UV);
+	COLOR.a += pix(p2_seed, t, UV);
+	COLOR.a += pix(p3_seed, t, UV);
+	COLOR.a += pix(p4_seed, t, UV);
+	COLOR.a = clamp(COLOR.a, 0., 1.);
+}"
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 4 )
+shader_parameter/t = 0.99
+shader_parameter/p1_seed = 404.0
+shader_parameter/p2_seed = 444.0
+shader_parameter/p3_seed = 1198.0
+shader_parameter/p4_seed = 4396.0
+
+[sub_resource type="Animation" id=6]
+length = 0.5
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_parameter/t")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.01, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.99, 0.0, 0.99 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+
+[sub_resource type="Animation" id=7]
+length = 0.5
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_parameter/t")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.01, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.99, 0.0, 0.99 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 90.0 ]
+}
+
+[sub_resource type="Animation" id=8]
+length = 0.5
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_parameter/t")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.01, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.99, 0.0, 0.99 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ -90.0 ]
+}
+
+[sub_resource type="Animation" id=9]
+length = 0.5
+step = 0.01
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_parameter/t")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.01, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.99, 0.0, 0.99 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 180.0 ]
+}
+
+[sub_resource type="Animation" id=10]
+resource_name = "hit"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite2D:region_rect")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.25 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ Rect2( 0, 0, 60, 60 ), Rect2( 0, 60, 60, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite2:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 0.25 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 60 ), Vector2( 0, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite2:region_rect")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 0.25, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ Rect2( 0, 0, 60, 60 ), Rect2( 0, 0, 60, 60 ), Rect2( 0, 60, 60, 0 ) ]
+}
+tracks/3/type = "animation"
+tracks/3/path = NodePath("ColorRect/AnimationPlayer")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"clips": PackedStringArray( "2" ),
+"times": PackedFloat32Array( 0 )
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("CollisionShape2D:shape:extents")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PackedFloat32Array( 0, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 30, 70 ), Vector2( 30, 0 ) ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("CollisionShape2D:position")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PackedFloat32Array( 0, 0.5 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 60 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="RectangleShape2D" id=11]
+extents = Vector2( 30, 70 )
+
+[node name="媚眼" type="Area2D" groups=["ray"]]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource( 2 )
+texture = ExtResource( 1 )
+centered = false
+offset = Vector2( -30, 0 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 60, 60 )
+
+[node name="Sprite2" type="Sprite2D" parent="."]
+material = SubResource( 3 )
+position = Vector2( 0, 60 )
+texture = ExtResource( 2 )
+centered = false
+offset = Vector2( -30, 0 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 60, 60 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource( 5 )
+offset_left = -60.0
+offset_top = -30.0
+offset_right = 60.0
+offset_bottom = 90.0
+pivot_offset = Vector2( 60, 60 )
+color = Color( 0.501961, 0.501961, 0.501961, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ColorRect"]
+anims/2 = SubResource( 6 )
+anims/4 = SubResource( 7 )
+anims/6 = SubResource( 8 )
+anims/8 = SubResource( 9 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/hit = SubResource( 10 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 60 )
+shape = SubResource( 11 )
+disabled = true

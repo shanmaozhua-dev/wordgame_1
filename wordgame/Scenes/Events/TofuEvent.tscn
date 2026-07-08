@@ -1,0 +1,624 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://Scripts/Use_once/TofuEvent.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Events/WordSprite.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Sprites/ch7_tofu/tofu.png" type="Texture2D" id=3]
+
+[sub_resource type="Animation" id=1]
+resource_name = "Furie"
+length = 2.0
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1, 1.05, 1.1, 1.15, 1.2, 1.25, 1.3, 2 ),
+"transitions": PackedFloat32Array( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ 30.0, 30.0, 33.0, 27.0, 33.0, 27.0, 33.0, 27.0, 33.0, 28.0, 32.0, 28.0, 32.0, 28.0, 32.0, 29.0, 31.0, 29.0, 30.0, 30.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 2 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 0.35, 0.45, 0.65, 1.3, 2 ),
+"transitions": PackedFloat32Array( -2, 1, -2, 2, 0.5, -2 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0.85, 1.25 ), Vector2( 0.85, 1.25 ), Vector2( 1.25, 0.85 ), Vector2( 1.05, 0.95 ), Vector2( 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:position:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PackedFloat32Array( 0, 0.35, 0.45, 0.65, 1.3, 2 ),
+"transitions": PackedFloat32Array( -2, 1, -2, 2, 0.5, -2 ),
+"update": 0,
+"values": [ 30.0, 22.5, 22.5, 34.5, 31.5, 30.0 ]
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "FurieJoin"
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1 ),
+"transitions": PackedFloat32Array( -2, -2, -2, -2, -2, -2, 2, 1 ),
+"update": 0,
+"values": [ Vector2( 30, 30 ), Vector2( 30, 24 ), Vector2( 30, 36 ), Vector2( 30, 24 ), Vector2( 30, 36 ), Vector2( 30, 24 ), Vector2( 30, 36 ), Vector2( 30, 30 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 1 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1 ),
+"transitions": PackedFloat32Array( -2, -2, -2, -2, -2, -2, 2, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 0.8, 1.2 ), Vector2( 1.2, 0.8 ), Vector2( 0.8, 1.2 ), Vector2( 1.2, 0.8 ), Vector2( 0.8, 1.2 ), Vector2( 1.2, 0.8 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+length = 2.0
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.3, 0.4, 0.55, 0.85, 1, 1.3, 1.4, 1.55, 1.85, 2 ),
+"transitions": PackedFloat32Array( -2, 0.5, -2, 0.5, 2, 1, 0.5, -2, 0.5, 2, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.1, 0.9 ), Vector2( 0.75, 1.15 ), Vector2( 1.05, 0.95 ), Vector2( 0.95, 1.05 ), Vector2( 1, 1 ), Vector2( 1.1, 0.9 ), Vector2( 0.75, 1.15 ), Vector2( 1.05, 0.95 ), Vector2( 0.95, 1.05 ), Vector2( 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 0.3, 0.4, 0.7, 1, 1.3, 1.4, 1.7, 2 ),
+"transitions": PackedFloat32Array( -2, 0.5, 1, 1, 1, 0.5, 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0, -5.0, 0.0, 0.0, 0.0, 5.0, 0.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 0.3, 0.4, 0.7, 0.85, 1, 1.3, 1.4, 1.7, 1.85, 2 ),
+"transitions": PackedFloat32Array( -2, 0.5, 1, 0.5, 2, 1, 0.5, 1, 0.5, 2, 1 ),
+"update": 0,
+"values": [ Vector2( 30, 30 ), Vector2( 30, 33 ), Vector2( 25, 15 ), Vector2( 25, 30 ), Vector2( 27.5, 25 ), Vector2( 30, 30 ), Vector2( 30, 33 ), Vector2( 35, 15 ), Vector2( 35, 30 ), Vector2( 32.5, 25 ), Vector2( 30, 30 ) ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "HoppieJoin"
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.3, 0.55, 0.8, 0.9, 1 ),
+"transitions": PackedFloat32Array( -2, 0.5, 2, 0.5, 2, 1 ),
+"update": 0,
+"values": [ Vector2( 30, 30 ), Vector2( 30, 36 ), Vector2( 30, 0 ), Vector2( 30, 30 ), Vector2( 30, 25 ), Vector2( 30, 30 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 1 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 0.3, 0.55, 0.8, 1 ),
+"transitions": PackedFloat32Array( -2, 0.5, 2, 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.25, 0.8 ), Vector2( 0.75, 1.2 ), Vector2( 1, 1 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=5]
+length = 0.1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Vector2( 30, 30 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 4.0
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.4, 0.8, 1, 1.4, 1.8, 2, 2.4, 2.8, 3, 3.4, 3.8, 4 ),
+"transitions": PackedFloat32Array( 0.5, -2, 1, 0.5, -2, 0.5, 0.5, -2, 0.5, 0.5, -2, 0.5, 0.5 ),
+"update": 0,
+"values": [ Vector2( 30, 30 ), Vector2( 35, 34.5 ), Vector2( 40, 30 ), Vector2( 40, 30 ), Vector2( 35, 34.5 ), Vector2( 30, 30 ), Vector2( 30, 30 ), Vector2( 25, 34.5 ), Vector2( 20, 30 ), Vector2( 20, 30 ), Vector2( 25, 34.5 ), Vector2( 30, 30 ), Vector2( 30, 30 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 0.4, 0.8, 1, 1.4, 1.8, 2, 2.4, 2.8, 3, 3.4, 3.8, 4 ),
+"transitions": PackedFloat32Array( 0.5, -2, 1, 0.5, -2, 0.5, 0.5, -2, 0.5, 0.5, -2, 0.5, 0.5 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1.15, 0.85 ), Vector2( 1, 1 ), Vector2( 1, 1 ), Vector2( 1.15, 0.85 ), Vector2( 1, 1 ), Vector2( 1, 1 ), Vector2( 1.15, 0.85 ), Vector2( 1, 1 ), Vector2( 1, 1 ), Vector2( 1.15, 0.85 ), Vector2( 1, 1 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "SloppieJoin"
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.25, 0.5, 0.75, 1 ),
+"transitions": PackedFloat32Array( 0.5, 2, 0.5, 2, -2 ),
+"update": 0,
+"values": [ Vector2( 30, 30 ), Vector2( 24, 25 ), Vector2( 30, 30 ), Vector2( 36, 25 ), Vector2( 30, 30 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 0.25, 0.5, 0.75, 1 ),
+"transitions": PackedFloat32Array( 0.5, 2, 0.5, 2, -2 ),
+"update": 0,
+"values": [ 0.0, -10.0, 0.0, 10.0, 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 1 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ), Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Shader" id=17]
+code = "shader_type canvas_item;
+
+uniform vec2 pos;
+uniform float t :hint_range(0., 1.) = 0.;
+uniform int subdivide :hint_range(0, 60) = 20;
+uniform int level :hint_range(0, 10) = 5;
+
+
+float rand(vec2 co){
+    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
+}
+
+float rail(vec2 uv) {
+	float col = 0.;
+	float my_level = floor((1.-uv.y) * float(level));
+	col += my_level / float(level);
+	col += uv.x / float(level) * float(int(my_level)%2);
+	col += (1.-uv.x) / float(level) * float(int(my_level+1.)%2);
+	return col;
+}
+
+vec2 rotateUV(float rotation, vec2 uv) {
+	float sine = sin(rotation);
+	float cosine = cos(rotation);
+
+	uv -= .5;
+	uv = vec2(
+		uv.x * cosine - uv.y * sine, 
+		uv.x * sine + uv.y * cosine
+		);
+	uv += .5;
+
+	return uv;
+}
+
+void fragment() {
+	vec2 uv = UV;
+	uv *= float(subdivide);
+	vec2 uv_by_id = floor(uv)/float(subdivide);
+	uv_by_id = (uv_by_id-.5)*.7+.5;
+	
+	float r = (rand(pos) - .5) * PI * .5;
+	float col = rail(rotateUV(r, uv_by_id));
+	col = clamp(col, .001, .999);
+	col = step(col, t);
+	
+	COLOR = texture(TEXTURE, UV);
+	COLOR.a *= col;
+}"
+
+[sub_resource type="ShaderMaterial" id=20]
+shader = SubResource( 17 )
+shader_parameter/pos = Vector2( 1.74, 0 )
+shader_parameter/t = 0.0
+shader_parameter/subdivide = 20
+shader_parameter/level = 8
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 30, 30 )
+
+[sub_resource type="Animation" id=11]
+length = 0.65
+loop_mode = 1
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.05, 0, 33.5, -0.05, 0, 0.05, 0, 28, -0.05, 0, 0.05, 0, 32, -0.05, 0, 0.05, 0, 28, -0.05, 0, 0.05, 0, 33, -0.05, 0, 0.05, 0, 29, -0.05, 0, 0.05, 0, 30, -0.05, 0, 0.05, 0 ),
+"times": PackedFloat32Array( 0, 0.06, 0.14, 0.24, 0.32, 0.38, 0.45, 0.56 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
+}
+
+[sub_resource type="Animation" id=12]
+length = 0.1
+step = 0.01
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("WordSprite:position:x")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 30, 0, 0, 0.05, 0 ),
+"times": PackedFloat32Array( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("WordSprite:position:y")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 30, -0.25, 0, 0.25, 0 ),
+"times": PackedFloat32Array( 0 )
+}
+
+[sub_resource type="Animation" id=13]
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:is_tofu")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 0.1 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("erase_tofu:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 1 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("erase_tofu:material:shader_parameter/t")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 1 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ 1.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=14]
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("WordSprite:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0.05, 0.2, 0.35 ),
+"transitions": PackedFloat32Array( 0.5, 2, 1 ),
+"update": 0,
+"values": [ 30.0, 0.0, 30.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:modulate:a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 0.05, 1 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 1,
+"values": [ 0.0, 1.0, 0.0 ]
+}
+
+[sub_resource type="Shader" id=19]
+code = "shader_type canvas_item;
+uniform bool isIce;
+uniform float t :hint_range(0., 1.) = 0.;
+uniform vec2 size;
+uniform int complexity = 10;
+uniform int sub = 13;
+uniform int OCTAVES = 6;
+render_mode unshaded, blend_mul;
+
+float rand(vec2 st) {
+    return fract(sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123);
+}
+
+float noise (in vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+
+    // Four corners in 2D of a tile
+    float a = rand(i);
+    float b = rand(i + vec2(1.0, 0.0));
+    float c = rand(i + vec2(0.0, 1.0));
+    float d = rand(i + vec2(1.0, 1.0));
+
+    vec2 u = f * f * (3.0 - 2.0 * f);
+
+    return mix(a, b, u.x) +
+            (c - a)* u.y * (1.0 - u.x) +
+            (d - b) * u.x * u.y;
+}
+
+float fbm (in vec2 st) {
+    // Initial values
+    float value = 0.0;
+    float amplitude = .5;
+    float frequency = 0.;
+    //
+    // Loop of octaves
+    for (int i = 0; i < OCTAVES; i++) {
+        value += amplitude * noise(st);
+        st *= 2.;
+        amplitude *= .5;
+    }
+    return value * (float(OCTAVES)+1.) / float(OCTAVES);
+}
+
+void fragment() {
+	vec2 uv = UV+.1+size;
+	uv *= float(complexity);
+	float com_by_sub = float(sub)/float(complexity);
+	vec2 id = floor(uv*com_by_sub)/com_by_sub;
+	
+	float t1 = clamp(t*1.2, 0., 1.);
+	float t2 = clamp(t*1.2-.2, 0., 1.);
+	
+	vec4 iced = vec4(vec3(step(fbm(id),t1)),1.) * vec4(vec3(.5),1.) + vec4(vec3(step(fbm(id),t2)), 0.)*vec4(-1.,1.,1.,0.);
+	iced = clamp(iced, 0., 1.);
+	
+	vec4 stoned = vec4(vec3(step(fbm(id),t1)),1.) * vec4(vec3(.15),1.) + vec4(vec3(step(fbm(id),t2)), 0.)*vec4(.15,.15,.15,0.);
+	stoned = clamp(stoned, 0., 1.);
+	
+	COLOR.rgb = float(isIce) * (iced.rgb * texture(TEXTURE,UV).rgb + texture(TEXTURE,UV).rgb * (1.-step(fbm(id),t1)));
+	COLOR.rgb += (1.-float(isIce)) * (stoned.rgb * texture(TEXTURE,UV).rgb + texture(TEXTURE,UV).rgb * (1.-step(fbm(id),t1)));
+}"
+
+[sub_resource type="ShaderMaterial" id=16]
+shader = SubResource( 19 )
+shader_parameter/isIce = true
+shader_parameter/t = 1.0
+shader_parameter/size = Vector2( 4, 4 )
+shader_parameter/complexity = 3
+shader_parameter/sub = 13
+shader_parameter/OCTAVES = 1
+
+[node name="Event" type="Node2D" groups=["events"]]
+z_index = 10
+z_as_relative = false
+script = ExtResource( 1 )
+loop_sprite_animation = {
+"frame_count": 0,
+"keyframes": "",
+"path": "",
+"time": 0.0
+}
+need_be_saved = false
+
+[node name="WordSprite" parent="." instance=ExtResource( 2 )]
+position = Vector2( 30, 30 )
+
+[node name="movement" type="AnimationPlayer" parent="WordSprite"]
+autoplay = "Setup"
+playback_default_blend_time = 0.1
+anims/Furie = SubResource( 1 )
+anims/FurieJoin = SubResource( 2 )
+anims/Hoppie = SubResource( 3 )
+anims/HoppieJoin = SubResource( 4 )
+anims/Setup = SubResource( 5 )
+anims/Sloppie = SubResource( 6 )
+anims/SloppieJoin = SubResource( 7 )
+
+[node name="erase_tofu" type="Sprite2D" parent="."]
+visible = false
+material = SubResource( 20 )
+position = Vector2( 30, 30 )
+texture = ExtResource( 3 )
+
+[node name="Area2D" type="Area2D" parent="."]
+visible = false
+position = Vector2( 30, 30 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+scale = Vector2( 0.99, 0.99 )
+shape = SubResource( 10 )
+
+[node name="RayCast2D" type="RayCast2D" parent="Area2D"]
+visible = false
+enabled = true
+collide_with_areas = true
+collide_with_bodies = false
+
+[node name="shake" type="AnimationPlayer" parent="."]
+playback_default_blend_time = 0.1
+anims/shake = SubResource( 11 )
+anims/stop = SubResource( 12 )
+
+[node name="transform" type="AnimationPlayer" parent="."]
+anims/transform = SubResource( 13 )
+
+[node name="notice" type="Node2D" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+position = Vector2( 0, -60 )
+z_index = 20
+z_as_relative = false
+
+[node name="WordSprite" parent="notice" instance=ExtResource( 2 )]
+position = Vector2( 30, 30 )
+text = "！"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="notice"]
+anims/Hop = SubResource( 14 )
+
+[node name="ice" type="Node2D" parent="."]
+visible = false
+
+[node name="冰凍遮罩" type="ColorRect" parent="ice"]
+material = SubResource( 16 )
+offset_right = 60.0
+offset_bottom = 60.0
+__meta__ = {
+"_edit_use_anchors_": false
+}

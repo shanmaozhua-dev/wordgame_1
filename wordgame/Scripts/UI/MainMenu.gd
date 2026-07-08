@@ -1,66 +1,57 @@
 extends Control
 
-const TITLE_TEXTURES := [
-	"res://Sprites/title/title_word_b_1.png",
-	"res://Sprites/title/title_word_b_2.png",
-	"res://Sprites/title/title_word_b_3.png",
-	"res://Sprites/title/title_word_b_4.png",
-]
+const TITLE_SCENE := preload("res://Scenes/Animations/game_title.tscn")
 const TITLE_FONT := preload("res://Fonts/Zpix.ttf")
+
 const DEFAULT_START_SCENE := "res://Scenes/Maps/第一章/00_第一章字卡.tscn"
 const BGM_PATH := "res://Sounds/bgm/ch1/BGM_title.ogg"
 const CLICK_SE_PATH := "res://Sounds/se/menu_click.wav"
-const SAVE_PATH := "user://save.wg"
+const SETTINGS_PATH := "user://main_menu.cfg"
 
-const CHAPTERS := [
-	{"name": "第一章", "entry": "字卡", "scene": "res://Scenes/Maps/第一章/00_第一章字卡.tscn"},
-	{"name": "第二章", "entry": "字卡", "scene": "res://Scenes/Maps/第二章/00_第二章字卡.tscn"},
-	{"name": "第三章", "entry": "字卡", "scene": "res://Scenes/Maps/第三章/00_第三章字卡.tscn"},
-	{"name": "第四章", "entry": "字卡", "scene": "res://Scenes/Maps/第四章/00_第四章字卡.tscn"},
-	{"name": "第五章", "entry": "字卡", "scene": "res://Scenes/Maps/第五章/00_第五章字卡.tscn"},
-	{"name": "第六章", "entry": "假标题", "scene": "res://Scenes/Maps/第六章/01_1_偽結局_假標題.tscn"},
-	{"name": "第七章", "entry": "字卡", "scene": "res://Scenes/Maps/第七章/00_第七章字卡.tscn"},
-	{"name": "第八章", "entry": "心智打字机", "scene": "res://Scenes/Maps/第八章/心智打字機/MindTyper.tscn"},
-]
+const TITLE_TEXT := "這是一段關於　的故事"
+const START_TEXT := "我開始冒險"
+const SETTINGS_TEXT := "調整設定"
 
-var _continue_button: Button
-var _status_label: Label
-var _chapter_panel: PanelContainer
-var _settings_panel: PanelContainer
-var _quit_panel: PanelContainer
+const TITLE_POSITION := Vector2(0, -60)
+const CAPTION_RECT := Rect2(0, 780, 1920, 84)
+const MESSAGE_RECT := Rect2(0, 1050, 1920, 44)
+const OPTIONS_POSITION := Vector2(0, 900)
+const OPTIONS_SIZE := Vector2(1920, 96)
+
+var _title_logo: Node2D
+var _start_button: Button
+var _settings_button: Button
+var _settings_panel: Control
 var _fade_panel: ColorRect
+var _message_label: Label
 var _bgm_player: AudioStreamPlayer
 var _se_player: AudioStreamPlayer
 var _bgm_slider: HSlider
 var _se_slider: HSlider
 var _fullscreen_toggle: CheckButton
-var _first_focus_button: Button
 
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
-	focus_mode = Control.FOCUS_NONE
+	focus_mode = Control.FOCUS_ALL
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	Input.set_custom_mouse_cursor(null)
+
 	_build_audio()
 	_build_screen()
 	_load_settings()
-	_refresh_continue_button()
 	_play_bgm()
 	_fade_in()
-	if _first_focus_button:
-		_first_focus_button.grab_focus()
+	_play_title_animation()
+	_start_button.grab_focus()
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
-		if _chapter_panel.visible:
-			_hide_panel(_chapter_panel)
-		elif _settings_panel.visible:
-			_hide_panel(_settings_panel)
-		elif _quit_panel.visible:
-			_hide_panel(_quit_panel)
+		if _settings_panel.visible:
+			_hide_settings()
 		else:
-			_show_panel(_quit_panel)
+			get_tree().quit()
 
 
 func _build_audio() -> void:
@@ -78,52 +69,31 @@ func _build_audio() -> void:
 func _build_screen() -> void:
 	var background := ColorRect.new()
 	background.name = "Background"
-	background.color = Color("#070705")
+	background.color = Color.BLACK
 	background.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(background)
 
-	_add_word_grid(background)
+	_title_logo = TITLE_SCENE.instantiate()
+	_title_logo.name = "Logo"
+	_title_logo.position = TITLE_POSITION
+	add_child(_title_logo)
 
-	var margin := MarginContainer.new()
-	margin.name = "SafeArea"
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
-	margin.add_theme_constant_override("margin_left", 120)
-	margin.add_theme_constant_override("margin_top", 96)
-	margin.add_theme_constant_override("margin_right", 120)
-	margin.add_theme_constant_override("margin_bottom", 88)
-	add_child(margin)
+	var caption := _make_label(TITLE_TEXT, 54, Color(0.78, 0.78, 0.78, 1.0))
+	caption.name = "Caption"
+	caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	caption.position = CAPTION_RECT.position
+	caption.size = CAPTION_RECT.size
+	add_child(caption)
 
-	var columns := HBoxContainer.new()
-	columns.name = "Columns"
-	columns.add_theme_constant_override("separation", 80)
-	margin.add_child(columns)
+	_build_menu()
+	_build_settings_panel()
 
-	var left := VBoxContainer.new()
-	left.name = "Primary"
-	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	left.add_theme_constant_override("separation", 32)
-	columns.add_child(left)
-
-	left.add_child(_build_title())
-	left.add_spacer(false)
-	left.add_child(_build_menu())
-
-	var right := VBoxContainer.new()
-	right.name = "SideRail"
-	right.custom_minimum_size = Vector2(430, 0)
-	right.add_theme_constant_override("separation", 24)
-	columns.add_child(right)
-	right.add_child(_build_info_panel())
-
-	_chapter_panel = _build_chapter_panel()
-	add_child(_chapter_panel)
-
-	_settings_panel = _build_settings_panel()
-	add_child(_settings_panel)
-
-	_quit_panel = _build_quit_panel()
-	add_child(_quit_panel)
+	_message_label = _make_label("", 24, Color(0.55, 0.55, 0.55, 1.0))
+	_message_label.name = "Message"
+	_message_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_message_label.position = MESSAGE_RECT.position
+	_message_label.size = MESSAGE_RECT.size
+	add_child(_message_label)
 
 	_fade_panel = ColorRect.new()
 	_fade_panel.name = "Fade"
@@ -133,248 +103,91 @@ func _build_screen() -> void:
 	add_child(_fade_panel)
 
 
-func _build_title() -> Control:
-	var wrap := VBoxContainer.new()
-	wrap.name = "Title"
-	wrap.add_theme_constant_override("separation", 18)
+func _build_menu() -> void:
+	var options := HBoxContainer.new()
+	options.name = "Options"
+	options.alignment = BoxContainer.ALIGNMENT_CENTER
+	options.add_theme_constant_override("separation", 170)
+	options.position = OPTIONS_POSITION
+	options.size = OPTIONS_SIZE
+	add_child(options)
 
-	var row := HBoxContainer.new()
-	row.name = "TitleWords"
-	row.add_theme_constant_override("separation", 12)
-	wrap.add_child(row)
+	_start_button = _make_menu_button(START_TEXT)
+	_start_button.pressed.connect(_on_start_pressed)
+	options.add_child(_start_button)
 
-	for texture_path in TITLE_TEXTURES:
-		var tile := TextureRect.new()
-		tile.custom_minimum_size = Vector2(126, 156)
-		tile.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
-		tile.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		if ResourceLoader.exists(texture_path):
-			tile.texture = load(texture_path)
-		row.add_child(tile)
-
-	var subtitle := Label.new()
-	subtitle.text = "这是一段闯入文字的故事"
-	subtitle.add_theme_font_override("font", TITLE_FONT)
-	subtitle.add_theme_font_size_override("font_size", 36)
-	subtitle.add_theme_color_override("font_color", Color("#f4ead2"))
-	wrap.add_child(subtitle)
-
-	var prompt := Label.new()
-	prompt.text = "Enter / Space 确认    Esc 返回"
-	prompt.add_theme_font_override("font", TITLE_FONT)
-	prompt.add_theme_font_size_override("font_size", 24)
-	prompt.add_theme_color_override("font_color", Color("#8f8a80"))
-	wrap.add_child(prompt)
-
-	return wrap
+	_settings_button = _make_menu_button(SETTINGS_TEXT)
+	_settings_button.pressed.connect(_show_settings)
+	options.add_child(_settings_button)
 
 
-func _build_menu() -> Control:
-	var box := VBoxContainer.new()
-	box.name = "Menu"
-	box.custom_minimum_size = Vector2(470, 0)
-	box.add_theme_constant_override("separation", 14)
+func _play_title_animation() -> void:
+	var player := _title_logo.get_node_or_null("AnimationPlayer") as AnimationPlayer
+	if not player:
+		return
 
-	_continue_button = _make_button("继续冒险")
-	_continue_button.pressed.connect(_on_continue_pressed)
-	box.add_child(_continue_button)
-
-	var new_game := _make_button("开始新冒险")
-	new_game.pressed.connect(_on_new_game_pressed)
-	_first_focus_button = new_game
-	box.add_child(new_game)
-
-	var chapters := _make_button("选择章节")
-	chapters.pressed.connect(func(): _show_panel(_chapter_panel))
-	box.add_child(chapters)
-
-	var settings := _make_button("调整设定")
-	settings.pressed.connect(func(): _show_panel(_settings_panel))
-	box.add_child(settings)
-
-	var quit := _make_button("离开游戏")
-	quit.pressed.connect(func(): _show_panel(_quit_panel))
-	box.add_child(quit)
-
-	return box
+	player.play("Start")
+	await player.animation_finished
+	player.play("Loop")
 
 
-func _build_info_panel() -> Control:
-	var panel := PanelContainer.new()
-	panel.name = "SavePanel"
-	panel.add_theme_stylebox_override("panel", _panel_style(Color("#11100d"), Color("#ded0aa"), 2))
+func _build_settings_panel() -> void:
+	_settings_panel = Control.new()
+	_settings_panel.name = "SettingsPanel"
+	_settings_panel.visible = false
+	_settings_panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(_settings_panel)
 
-	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 28)
-	margin.add_theme_constant_override("margin_top", 26)
-	margin.add_theme_constant_override("margin_right", 28)
-	margin.add_theme_constant_override("margin_bottom", 26)
-	panel.add_child(margin)
+	var background := ColorRect.new()
+	background.color = Color.BLACK
+	background.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_settings_panel.add_child(background)
 
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 18)
-	margin.add_child(box)
+	var title := _make_label(SETTINGS_TEXT, 64, Color(0.82, 0.82, 0.82, 1.0))
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.position = Vector2(0, 180)
+	title.size = Vector2(1920, 90)
+	_settings_panel.add_child(title)
 
-	var title := Label.new()
-	title.text = "主界面"
-	title.add_theme_font_override("font", TITLE_FONT)
-	title.add_theme_font_size_override("font_size", 32)
-	title.add_theme_color_override("font_color", Color("#f4ead2"))
-	box.add_child(title)
+	var panel := VBoxContainer.new()
+	panel.position = Vector2(540, 376)
+	panel.size = Vector2(840, 440)
+	panel.add_theme_constant_override("separation", 38)
+	_settings_panel.add_child(panel)
 
-	_status_label = Label.new()
-	_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_status_label.add_theme_font_override("font", TITLE_FONT)
-	_status_label.add_theme_font_size_override("font_size", 22)
-	_status_label.add_theme_color_override("font_color", Color("#b9b09d"))
-	box.add_child(_status_label)
-
-	return panel
-
-
-func _build_chapter_panel() -> PanelContainer:
-	var panel := _overlay_panel("ChapterPanel", Vector2(940, 640))
-	var box := _panel_body(panel, "选择章节")
-
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 18)
-	grid.add_theme_constant_override("v_separation", 18)
-	box.add_child(grid)
-
-	for chapter in CHAPTERS:
-		var button := _make_button("%s  %s" % [chapter.name, chapter.entry])
-		button.custom_minimum_size = Vector2(380, 72)
-		button.pressed.connect(_change_scene.bind(String(chapter.scene)))
-		grid.add_child(button)
-
-	var back := _make_button("返回")
-	back.pressed.connect(func(): _hide_panel(panel))
-	box.add_child(back)
-	return panel
-
-
-func _build_settings_panel() -> PanelContainer:
-	var panel := _overlay_panel("SettingsPanel", Vector2(780, 520))
-	var box := _panel_body(panel, "调整设定")
-
-	_bgm_slider = _make_slider("音乐", box)
-	_se_slider = _make_slider("音效", box)
+	_bgm_slider = _make_slider_row(panel, "背景音樂")
+	_se_slider = _make_slider_row(panel, "系統音效")
 
 	_fullscreen_toggle = CheckButton.new()
-	_fullscreen_toggle.text = "全屏"
-	_style_text_control(_fullscreen_toggle, 26)
+	_fullscreen_toggle.text = "全螢幕"
+	_fullscreen_toggle.toggle_mode = true
+	_style_text_control(_fullscreen_toggle, 42, Color(0.78, 0.78, 0.78, 1.0))
 	_fullscreen_toggle.toggled.connect(_on_fullscreen_toggled)
-	box.add_child(_fullscreen_toggle)
+	panel.add_child(_fullscreen_toggle)
 
-	var buttons := HBoxContainer.new()
-	buttons.add_theme_constant_override("separation", 16)
-	box.add_child(buttons)
+	var actions := HBoxContainer.new()
+	actions.alignment = BoxContainer.ALIGNMENT_CENTER
+	actions.add_theme_constant_override("separation", 120)
+	panel.add_child(actions)
 
-	var apply := _make_button("套用")
+	var apply := _make_menu_button("套用")
+	apply.custom_minimum_size = Vector2(220, 78)
 	apply.pressed.connect(_save_settings)
-	buttons.add_child(apply)
+	actions.add_child(apply)
 
-	var back := _make_button("返回")
-	back.pressed.connect(func(): _hide_panel(panel))
-	buttons.add_child(back)
-
-	return panel
-
-
-func _build_quit_panel() -> PanelContainer:
-	var panel := _overlay_panel("QuitPanel", Vector2(680, 330))
-	var box := _panel_body(panel, "离开游戏")
-
-	var label := Label.new()
-	label.text = "确定要离开吗？"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_style_text_control(label, 30)
-	box.add_child(label)
-
-	var buttons := HBoxContainer.new()
-	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
-	buttons.add_theme_constant_override("separation", 16)
-	box.add_child(buttons)
-
-	var yes := _make_button("确定")
-	yes.pressed.connect(func():
-		_play_click()
-		get_tree().quit()
-	)
-	buttons.add_child(yes)
-
-	var no := _make_button("取消")
-	no.pressed.connect(func(): _hide_panel(panel))
-	buttons.add_child(no)
-
-	return panel
+	var back := _make_menu_button("返回畫面")
+	back.custom_minimum_size = Vector2(300, 78)
+	back.pressed.connect(_hide_settings)
+	actions.add_child(back)
 
 
-func _overlay_panel(node_name: String, min_size: Vector2) -> PanelContainer:
-	var panel := PanelContainer.new()
-	panel.name = node_name
-	panel.visible = false
-	panel.anchor_left = 0.5
-	panel.anchor_top = 0.5
-	panel.anchor_right = 0.5
-	panel.anchor_bottom = 0.5
-	panel.offset_left = -min_size.x / 2.0
-	panel.offset_top = -min_size.y / 2.0
-	panel.offset_right = min_size.x / 2.0
-	panel.offset_bottom = min_size.y / 2.0
-	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
-	panel.add_theme_stylebox_override("panel", _panel_style(Color("#11100df2"), Color("#f4ead2"), 2))
-	return panel
-
-
-func _panel_body(panel: PanelContainer, title_text: String) -> VBoxContainer:
-	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 38)
-	margin.add_theme_constant_override("margin_top", 34)
-	margin.add_theme_constant_override("margin_right", 38)
-	margin.add_theme_constant_override("margin_bottom", 34)
-	panel.add_child(margin)
-
-	var box := VBoxContainer.new()
-	box.add_theme_constant_override("separation", 22)
-	margin.add_child(box)
-
-	var title := Label.new()
-	title.text = title_text
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.add_theme_font_override("font", TITLE_FONT)
-	title.add_theme_font_size_override("font_size", 36)
-	title.add_theme_color_override("font_color", Color("#f4ead2"))
-	box.add_child(title)
-	return box
-
-
-func _make_button(text: String) -> Button:
-	var button := Button.new()
-	button.text = text
-	button.custom_minimum_size = Vector2(420, 64)
-	button.focus_mode = Control.FOCUS_ALL
-	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	_style_text_control(button, 28)
-	button.add_theme_stylebox_override("normal", _panel_style(Color("#14120f"), Color("#81775f"), 1))
-	button.add_theme_stylebox_override("hover", _panel_style(Color("#272016"), Color("#d7c58d"), 2))
-	button.add_theme_stylebox_override("pressed", _panel_style(Color("#3a2b17"), Color("#f4ead2"), 2))
-	button.add_theme_stylebox_override("focus", _panel_style(Color("#201914"), Color("#f4ead2"), 3))
-	button.add_theme_color_override("font_disabled_color", Color("#5d574b"))
-	return button
-
-
-func _make_slider(label_text: String, parent: VBoxContainer) -> HSlider:
+func _make_slider_row(parent: VBoxContainer, label_text: String) -> HSlider:
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 18)
+	row.add_theme_constant_override("separation", 32)
 	parent.add_child(row)
 
-	var label := Label.new()
-	label.text = label_text
-	label.custom_minimum_size = Vector2(120, 42)
-	_style_text_control(label, 26)
+	var label := _make_label(label_text, 42, Color(0.78, 0.78, 0.78, 1.0))
+	label.custom_minimum_size = Vector2(360, 62)
 	row.add_child(label)
 
 	var slider := HSlider.new()
@@ -382,68 +195,75 @@ func _make_slider(label_text: String, parent: VBoxContainer) -> HSlider:
 	slider.max_value = 1.0
 	slider.step = 0.05
 	slider.value = 0.7
+	slider.custom_minimum_size = Vector2(420, 62)
 	slider.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(slider)
 	return slider
 
 
-func _style_text_control(control: Control, size: int) -> void:
+func _make_menu_button(text: String) -> Button:
+	var button := Button.new()
+	button.text = text
+	button.flat = true
+	button.custom_minimum_size = Vector2(360, 86)
+	button.focus_mode = Control.FOCUS_ALL
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	_style_text_control(button, 58, Color(0.78, 0.78, 0.78, 1.0))
+	button.add_theme_color_override("font_hover_color", Color.WHITE)
+	button.add_theme_color_override("font_focus_color", Color.WHITE)
+	button.add_theme_color_override("font_pressed_color", Color(0.92, 0.92, 0.92, 1.0))
+	button.add_theme_stylebox_override("normal", _empty_style())
+	button.add_theme_stylebox_override("hover", _empty_style())
+	button.add_theme_stylebox_override("pressed", _empty_style())
+	button.add_theme_stylebox_override("focus", _focus_style())
+	return button
+
+
+func _make_label(text: String, size: int, color: Color) -> Label:
+	var label := Label.new()
+	label.text = text
+	_style_text_control(label, size, color)
+	label.add_theme_color_override("font_shadow_color", Color(1, 1, 1, 0.20))
+	label.add_theme_constant_override("shadow_outline_size", 6)
+	return label
+
+
+func _style_text_control(control: Control, size: int, color: Color) -> void:
 	control.add_theme_font_override("font", TITLE_FONT)
 	control.add_theme_font_size_override("font_size", size)
-	control.add_theme_color_override("font_color", Color("#f4ead2"))
+	control.add_theme_color_override("font_color", color)
 
 
-func _panel_style(bg: Color, border: Color, width: int) -> StyleBoxFlat:
+func _empty_style() -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = bg
-	style.border_color = border
-	style.set_border_width_all(width)
-	style.set_corner_radius_all(4)
-	style.content_margin_left = 14
-	style.content_margin_right = 14
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
+	style.bg_color = Color(0, 0, 0, 0)
+	style.border_color = Color(0, 0, 0, 0)
+	style.content_margin_left = 8
+	style.content_margin_right = 8
+	style.content_margin_top = 4
+	style.content_margin_bottom = 4
 	return style
 
 
-func _add_word_grid(parent: Control) -> void:
-	for i in range(0, 18):
-		var line := ColorRect.new()
-		line.color = Color(1, 1, 1, 0.035)
-		line.anchor_left = 0.0
-		line.anchor_right = 1.0
-		line.offset_left = 0
-		line.offset_right = 0
-		line.offset_top = 84 + i * 60
-		line.offset_bottom = line.offset_top + 1
-		parent.add_child(line)
+func _focus_style() -> StyleBoxFlat:
+	var style := _empty_style()
+	style.border_color = Color(1, 1, 1, 0.45)
+	style.set_border_width_all(2)
+	return style
 
 
-func _refresh_continue_button() -> void:
-	var has_save := FileAccess.file_exists(SAVE_PATH)
-	_continue_button.disabled = not has_save
-	_status_label.text = "检测到存档，可以继续冒险。" if has_save else "还没有检测到存档，可以从新冒险开始。"
-
-
-func _on_continue_pressed() -> void:
+func _on_start_pressed() -> void:
 	_play_click()
-	if has_node("/root/Global") and get_node("/root/Global").has_method("load_game"):
-		get_node("/root/Global").load_game()
+	if has_node("/root/Global") and get_node("/root/Global").has_method("start_game"):
+		get_node("/root/Global").start_game()
+		return
+	if ResourceLoader.exists(DEFAULT_START_SCENE):
+		_change_scene(DEFAULT_START_SCENE)
 	else:
-		_status_label.text = "找到存档，但读取逻辑还没有接入。"
-
-
-func _on_new_game_pressed() -> void:
-	_play_click()
-	_change_scene(DEFAULT_START_SCENE)
+		_message_label.text = "冒險入口尚未接入。"
 
 
 func _change_scene(scene_path: String) -> void:
-	_play_click()
-	if not ResourceLoader.exists(scene_path):
-		_status_label.text = "场景不存在：%s" % scene_path
-		return
-
 	_fade_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	var tween := create_tween()
 	tween.tween_property(_fade_panel, "modulate:a", 1.0, 0.35).from(_fade_panel.modulate.a)
@@ -451,19 +271,19 @@ func _change_scene(scene_path: String) -> void:
 	get_tree().change_scene_to_file(scene_path)
 
 
-func _show_panel(panel: PanelContainer) -> void:
+func _show_settings() -> void:
 	_play_click()
-	_chapter_panel.visible = false
+	_message_label.text = ""
+	_settings_panel.visible = true
+	_settings_panel.modulate.a = 0.0
+	create_tween().tween_property(_settings_panel, "modulate:a", 1.0, 0.15)
+	_bgm_slider.grab_focus()
+
+
+func _hide_settings() -> void:
+	_play_click()
 	_settings_panel.visible = false
-	_quit_panel.visible = false
-	panel.visible = true
-	panel.modulate.a = 0.0
-	create_tween().tween_property(panel, "modulate:a", 1.0, 0.12)
-
-
-func _hide_panel(panel: PanelContainer) -> void:
-	_play_click()
-	panel.visible = false
+	_start_button.grab_focus()
 
 
 func _fade_in() -> void:
@@ -485,7 +305,7 @@ func _play_click() -> void:
 
 func _load_settings() -> void:
 	var cfg := ConfigFile.new()
-	if cfg.load("user://main_menu.cfg") == OK:
+	if cfg.load(SETTINGS_PATH) == OK:
 		_bgm_slider.value = float(cfg.get_value("audio", "bgm", 0.7))
 		_se_slider.value = float(cfg.get_value("audio", "se", 0.8))
 		_fullscreen_toggle.button_pressed = bool(cfg.get_value("video", "fullscreen", false))
@@ -499,9 +319,8 @@ func _save_settings() -> void:
 	cfg.set_value("audio", "bgm", _bgm_slider.value)
 	cfg.set_value("audio", "se", _se_slider.value)
 	cfg.set_value("video", "fullscreen", _fullscreen_toggle.button_pressed)
-	cfg.save("user://main_menu.cfg")
-	_status_label.text = "设定已保存。"
-	_hide_panel(_settings_panel)
+	cfg.save(SETTINGS_PATH)
+	_hide_settings()
 
 
 func _apply_audio_settings() -> void:

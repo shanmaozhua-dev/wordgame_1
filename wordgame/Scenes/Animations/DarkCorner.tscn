@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Sprites/jail/dark_angle.png" type="Texture2D" id=1]
+[ext_resource path="res://Shader/screen_dark_ani.gdshader" type="Shader" id=2]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 2 )
+
+[node name="Dark" type="CanvasLayer"]
+offset = Vector2( 0, 60 )
+transform = Transform2D( 1, 0, 0, 1, 0, 60 )
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource( 1 )
+texture = ExtResource( 1 )
+centered = false

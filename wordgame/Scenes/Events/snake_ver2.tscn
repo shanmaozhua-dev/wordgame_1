@@ -1,0 +1,1331 @@
+[gd_scene load_steps=39 format=2]
+
+[ext_resource path="res://Sprites/ch2_snake/snake.png" type="Texture2D" id=1]
+[ext_resource path="res://Sprites/ch2_snake/snake_angry.png" type="Texture2D" id=2]
+[ext_resource path="res://Sprites/ch2_snake/snake_enlarge.png" type="Texture2D" id=3]
+[ext_resource path="res://Scenes/Animations/snake_ray.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Shader/dissolve_filter_circle.gdshader" type="Shader" id=5]
+[ext_resource path="res://Sprites/ch2_snake/snake_sep.png" type="Texture2D" id=6]
+[ext_resource path="res://Sprites/base.png" type="Texture2D" id=7]
+[ext_resource path="res://Sprites/ch2_snake/ray2.png" type="Texture2D" id=8]
+[ext_resource path="res://Sprites/ch2_snake/ray.png" type="Texture2D" id=9]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Area2D
+
+var is_pausing = false #全暫停
+var is_idling = false #停在原地扭、不射光線
+var is_scrolling = false #畫面捲動
+
+var can_shoot_ray = false
+var can_speed_up = false
+
+var distance = 7
+var speed = 2
+var interval = 0.3
+
+var follow_duration = 0.8
+
+var seg_x = [0,0,0,0,0,0,0,0,0]
+var twist_offset_x = [0,0,0,0,0,0,0,0,0]
+
+var time = 0;
+
+var target_x = 0
+
+var is_ready = false
+var is_showing_up = false
+var showing_offset = 640
+
+var scroll_speed = 120 * 0.5
+var is_chasing = false
+
+var is_following_target = true
+var is_twisting = true
+var twist_amount = 1
+
+var is_going_center = false
+var has_moving_delay = true
+
+var last_target_x = 960
+
+var is_shooting_ray = false
+var shoot_ray_interval = 5.0
+var shoot_ray_counter = 0
+
+var shit_talk_counter = 0
+var shit_talk_interval = 15
+
+var camera
+
+func _ready():
+#	return
+	
+	
+	for i in range(1,9):
+		seg_x[i] = position.x
+#		get_node(\"CollisionShape2D\"+str(i)).disabled = true
+	
+#	is_following_target = true
+
+	if Global.game_map != null && Global.game_map.player != null:
+		camera = Global.game_map.player.get_node(\"Camera3D\")
+		
+		camera.is_follow_player = true
+		
+		if Global.now_game_section == \"2-11-1\":
+			Global.game_map.player.transport_to(Vector2(15,-20))
+			await get_tree().process_frame
+		
+		if Global.now_game_section == \"2-11-2\":
+			Global.game_map.player.transport_to(Vector2(15,-45))
+			$\"石化/AnimationPlayer\".current_animation = \"石化\"
+			$\"石化/AnimationPlayer\".seek(4, true)
+			await get_tree().process_frame
+		
+		camera.is_follow_player = false
+		
+		
+		if Global.now_game_section == \"2-11-2\":
+			var s = [0,3,3,4,4,5,5,5,4]
+			for i in range(1,9):
+				get_node(\"body/\"+str(i)+\"/part\").region_rect.size.x = s[i]*60
+				get_node(\"CollisionShape2D\"+str(i)).shape.extents.x = s[i]*30
+			start_twist()
+			be_faster()
+			can_shoot_ray = true
+			$'石化'.material.set_shader_parameter(\"burn_position\", 0.625)
+		
+		
+	is_following_target = false
+	twist_amount = 0
+	
+	if camera:
+		is_following_target = false
+		twist_amount = 0
+		
+		Global.game_map.player.transport_to(Vector2(15,-21-6))
+#		camera.constant_shake(0.7, 3)
+		
+		if Global.now_game_section == \"2-11-2\":
+			Global.game_map.player.transport_to(Vector2(15,-46-6))
+
+		await get_tree().create_timer(2).timeout
+		
+		
+		start_twist()
+		is_following_target = true
+		is_scrolling = true
+
+#	UI.start_shake(20, 0.2)
+	
+	
+	
+	return
+	
+#	yield(get_tree().create_timer(0.3),\"timeout\")
+#	Global.game_map.player.get_node(\"Camera\").is_follow_player = false
+
+func show_snake():
+	visible = true
+	is_showing_up = true
+	for i in range(1,9):
+		get_node(\"CollisionShape2D\"+str(i)).disabled = false
+	
+	var tween = create_tween()
+	
+	tween.set_parallel(true)
+	tween.tween_property(self, \"showing_offset\", 0, 4).from(640).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	await tween.finished
+func start_chase():
+	is_following_target = true
+#	Global.game_map.player.get_node(\"Camera\").is_follow_player = false
+
+
+func show_body():
+	for i in range(1,9):
+		get_node(\"body/\"+str(i)).visible = true
+func hide_body():
+	for i in range(1,9):
+		get_node(\"body/\"+str(i)).visible = false
+
+
+func _process(delta):
+#	return
+	
+	if EscMenu.is_open: return
+	if is_pausing: return
+	
+	
+#	if !is_showing_up: 
+#		if Global.get_game_switch(\"ch2_蛇妖出現\"):
+#			show_snake()
+#	if !is_ready:
+#		if Global.get_game_switch(\"ch2_蛇妖開追\"):
+#			start_chase()
+	
+	time += delta
+	
+	if camera:
+		if is_scrolling:
+			move_camera(delta)
+		else:
+			stop_camera_at_grid(delta)
+		
+		set_player_wall()
+	
+	if camera:
+		position.y = camera.position.y + 60
+		position.x = camera.position.x
+	
+	target_x = get_viewport().get_mouse_position().x
+	
+	if camera:
+		target_x = Global.game_map.player.global_position.x
+#
+	
+	if !is_following_target:
+#		target_x = last_target_x
+		target_x = $'body'.global_position.x
+		
+	if is_going_center:
+		target_x = 960
+	
+
+	
+	follow_target(delta)
+	
+	twist()
+	
+	collision_shape_follow()
+	
+	if is_scrolling:
+		if can_shoot_ray:
+			shoot_ray_counter += delta
+		if Global.get_game_switch(\"ch2_蛇妖進二階\"):
+			shit_talk_counter += delta
+	else:
+		shoot_ray_counter = 0
+		shit_talk_counter = 14
+	
+	if can_shoot_ray && shoot_ray_counter >= shoot_ray_interval:
+		shoot_ray_counter = 0
+		shoot_ray()
+		
+	if Global.get_game_switch(\"ch2_蛇妖進二階\") && shit_talk_counter >= shit_talk_interval:
+		shit_talk_counter = 0
+		shit_talk()
+
+	move_ray(delta)
+	
+	last_target_x = target_x
+	
+	if camera:
+		Global.set_game_variable(\"ch2_攻擊蛇頭位置_x\", floor($body.global_position.x/60))
+		Global.set_game_variable(\"ch2_攻擊蛇頭位置_y\", floor($body.global_position.y/60) - 1)
+
+func follow_target(delta):
+	if Global.game_map.player.global_position.y > global_position.y:
+		follow_duration = 0.4
+	else:
+		follow_duration = 0.8
+	
+	var moved_percent = (delta/follow_duration)
+	var moving_pos = Vector2($body.global_position.x, 0).lerp(Vector2(target_x, 0), moved_percent)
+	$body.global_position.x = moving_pos.x
+	
+	if !has_moving_delay || is_going_center: 
+		for i in range(1,9):
+			get_node(\"body/\"+str(i)).position.x -= twist_offset_x[i]
+			moved_percent = delta*5/follow_duration
+			moving_pos = Vector2(get_node(\"body/\"+str(i)).position.x, 0).lerp(Vector2(0, 0), moved_percent)
+			get_node(\"body/\"+str(i)).position.x = moving_pos.x
+			seg_x[i] = get_node(\"body/\"+str(i)).global_position.x
+	else:
+		for i in range(1,9):
+			moved_percent = (delta/follow_duration) * ((101.0-float(i))/100.0)
+			moving_pos = Vector2(seg_x[i], 0).lerp(Vector2(target_x, 0), moved_percent)
+			get_node(\"body/\"+str(i)).global_position.x = moving_pos.x
+			seg_x[i] = moving_pos.x
+	
+func twist():
+	for i in range(5,9):
+		var offset = cos(time*speed + interval*i) * distance * (i-4)*2 * twist_amount
+		twist_offset_x[i] = offset
+		get_node(\"body/\"+str(i)).position.x += offset
+
+func collision_shape_follow():
+	for i in range(1,9):
+		get_node(\"CollisionShape2D\"+str(i)).global_position = get_node(\"body/\"+str(i)).global_position
+
+func _on__area_entered(area):
+	if area.get_parent().is_in_group(\"player\"):
+		#死
+		play_kill_se()
+		is_pausing = true
+		Global.kill_player(\"被撞死了。\")
+		return
+	if area.is_in_group(\"ray\"):
+		return
+	
+	if !is_instance_valid(area.get_parent()):
+		return
+	
+	if \"time\" in area.get_parent():
+		if area.get_parent().time == 0:
+			play_crash_se()
+			area.get_parent().been_snake_crash()
+	else:
+		play_crash_se()
+		area.get_parent().been_snake_crash()
+
+func _unhandled_input(event):
+	return
+	
+	if event is InputEventKey:
+		if event.pressed and event.keycode == KEY_P:
+			is_pausing = !is_pausing
+		if event.pressed and event.keycode == KEY_O:
+			is_twisting = !is_twisting
+			if is_twisting:
+				start_twist()
+			else:
+				stop_twist()
+		if event.pressed and event.keycode == KEY_I:
+#			is_going_center = !is_going_center
+#			has_moving_delay = !has_moving_delay
+			is_following_target = !is_following_target
+		if event.pressed and event.keycode == KEY_H:
+			hurt()
+			await $body/AnimationPlayer.animation_finished
+			after_hurt()
+		if event.pressed and event.keycode == KEY_A:
+			angry()
+		if event.pressed and event.keycode == KEY_E:
+			enlarge()
+		if event.pressed and event.keycode == KEY_S:
+			shoot_ray()
+		if event.pressed and event.keycode == KEY_Q:
+			sep()
+		if event.pressed and event.keycode == KEY_C:
+			is_scrolling = !is_scrolling
+
+func stand_by():
+#	stop_twist()
+#	is_going_center = true
+	is_following_target = false
+	
+
+
+func stop_twist():
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(self, \"twist_amount\", 0, 1).from(twist_amount).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	await tween.finished
+func start_twist():
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(self, \"twist_amount\", 1, 1).from(twist_amount).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
+	await tween.finished
+func hurt():
+	Sound.play_se(\"res://Sounds/se/第二章 音效/SE_2_42_snake_hurt.wav\", 6)
+	$body/AnimationPlayer.play(\"really_hurt\")
+
+func after_hurt():
+	$body/AnimationPlayer.play(\"after_hurt\")
+	
+func after_hurt_quick():
+	$body/AnimationPlayer.play(\"after_hurt_quick\")
+	
+func back_little():
+	$body/AnimationPlayer.play(\"back_little\")
+	
+func forward_little():
+	$body/AnimationPlayer.play(\"forward_little\")
+
+func angry():
+	stop_twist()
+	is_following_target = false
+	has_moving_delay = false
+#	is_going_center = true
+	
+	await get_tree().create_timer(1.5).timeout
+	$body/snake_angry/AnimationPlayer.play(\"angry\")
+
+func enlarge():
+	$body/snake_angry/AnimationPlayer.get_animation(\"angry\").loop_mode = Animation.LOOP_NONE
+	await $body/snake_angry/AnimationPlayer.animation_finished
+	
+	$body/snake_enlarge/AnimationPlayer.play(\"enlarge\")
+	await $body/snake_enlarge/AnimationPlayer.animation_finished
+	var s = [0,3,3,4,4,5,5,5,4]
+	for i in range(1,9):
+		get_node(\"body/\"+str(i)+\"/part\").region_rect.size.x = s[i]*60
+		get_node(\"CollisionShape2D\"+str(i)).shape.extents.x = s[i]*30
+	start_twist()
+#	is_following_target = true
+#	is_going_center = false
+
+	be_faster()
+	can_shoot_ray = true
+
+func sep():
+	
+	stop_twist()
+	is_following_target = false
+#	is_going_center = true
+	await get_tree().create_timer(1).timeout
+	
+	$body/snake_sep/AnimationPlayer.play(\"sep\")
+	
+	await get_tree().create_timer(0.2).timeout
+	var s = [0,2,3,3,4,4,3,3,3]
+	for i in range(1,9):
+		get_node(\"body/\"+str(i)+\"/part\").region_rect.size.x = s[i]*60
+		get_node(\"CollisionShape2D\"+str(i)).shape.extents.x = s[i]*30
+	await $body/snake_sep/AnimationPlayer.animation_finished
+	
+#	start_twist()
+#	is_following_target = true
+#	is_going_center = false
+
+func be_faster():
+	scroll_speed *= 2
+	
+func be_slower():
+	scroll_speed *= 0.5
+
+
+func shoot_ray():
+	Sound.play_se(\"res://Sounds/se/第二章 音效/SE_2_36_wink_A.wav\")
+#	connect(\"area_entered\", $'媚眼', \"on_ray_hit\")
+	$'媚眼/Sprite2D'.region_rect = Rect2(0,0,60,60)
+	$'媚眼/Sprite2'.region_rect = Rect2(0,0,60,60)
+	$'媚眼/Sprite2'.position.y = 60
+	$'媚眼'.position = $body.position
+	$'媚眼/CollisionShape2D'.disabled = false
+	print(\"媚眼/CollisionShape2D.disabled:\", $'媚眼/CollisionShape2D'.disabled)
+	$'媚眼/CollisionShape2D'.shape.extents.y = 73
+	$'媚眼/CollisionShape2D'.position.y = 60
+	$'媚眼'.visible = true
+	is_shooting_ray = true
+	
+func move_ray(delta):
+	var dur = 1.5
+#	1s to -780
+	if is_shooting_ray:
+		$'媚眼'.position.y -= (delta / dur) * 780
+		
+	if $'媚眼'.position.y < -780:
+		$'媚眼'.visible = false
+		$'媚眼'.position = Vector2(-1000,0)
+		is_shooting_ray = false
+	
+	if is_ray_hitting:
+		var chase_speed = scroll_speed
+		$'媚眼'.position.y += delta*chase_speed
+
+var is_ray_hitting = false
+func on_ray_hit(area):
+	if area.get_parent().is_in_group(\"player\"):
+		$'媚眼/CollisionShape2D'.set_deferred(\"disabled\", true)
+		#死
+		play_kill_se()
+		is_pausing = true
+		Global.kill_player(\"被射死了。\")
+	if area.get_parent().is_in_group(\"events\") || area.get_parent().is_in_group(\"house\"):
+		$'媚眼/CollisionShape2D'.set_deferred(\"disabled\", true)
+#		print(area.get_parent().name)
+		
+#		var overlap = (area.get_parent().global_position.y) - ($'媚眼'.global_position.y - 60)
+#		print(overlap)
+#		$'媚眼'.global_position.y += overlap
+		
+		Sound.play_se(\"res://Sounds/se/第二章 音效/SE_2_37_stonelize.wav\", -10)
+		
+		is_shooting_ray = false
+		is_ray_hitting = true
+		$'媚眼/AnimationPlayer'.play(\"hit\")
+		await $'媚眼/AnimationPlayer'.animation_finished
+		is_ray_hitting = false
+		
+		$'媚眼'.visible = false
+		$'媚眼'.position = Vector2(-1000,0)
+
+
+func move_camera(delta):
+	var chase_speed = scroll_speed
+	camera.position.y -= delta*chase_speed
+
+func stop_camera_at_grid(delta):
+	var now_y = camera.position.y
+	var offset_y = now_y - floor(now_y/60)*60
+	var near_percent = (60-offset_y)/60
+	if near_percent >= 1:
+		return
+	
+	var chase_speed = scroll_speed * (1-near_percent) + 5
+	var move = delta*chase_speed
+	move = min(move, offset_y)
+	
+	camera.position.y -= move
+
+func set_player_wall():
+	var player = Global.game_map.player
+	var wall_pos_y = (camera.position.y - (1080/2)) / 60
+	player.move_dead_zone = [0, wall_pos_y-1, 32, wall_pos_y]
+
+func stone_all():
+	$\"石化/AnimationPlayer\".play(\"石化\")
+
+func shit_talk():
+	if Global.get_game_variable(\"ch2_蛇妖幹話反轉次數\") >= 3: return
+	print(\"shit_talk\")
+	var text_y = floor(camera.position.y/60.0) - 8 - 6
+	var text_x = 11
+	text_y = text_y - int(text_y) % 4
+
+	var i = (int(-text_y - 28) % 32) / 4
+	text_x = text_x + [1,2,1,0,-1,-2,-1,0][i]
+	
+	var shit_talks = [
+		\"本蛇只是甩一甩尾巴，&你{'can_delete': true}卻自己摔得鼻青臉腫。\",
+		\"任何抵抗都是徒勞，註定&是走{'can_delete': true}向勇者投降的結局。\",
+		\"名為勇者的傢伙，在本蛇&眼中不過{'can_delete': true}是虛有其表。\"
+	]
+	
+	var r = randi()%3
+	while Global.get_game_switch(\"ch2_蛇妖幹話\"+str(r+1)+\"_完成\"):
+		r = randi()%3
+	
+	Typewriter.type_writer({
+		\"texts\": shit_talks[r],
+		\"pos\": [text_x, text_y], 
+		\"tags\": [\"shit_talk\"], 
+		\"has_defalut_tag\": true, 
+		\"need_accept\": false, 
+		\"has_animation\": false,
+		\"z_index\": 15
+	})
+	
+	Global.set_game_variable(\"ch2_蛇妖幹話位置_x\", text_x)
+	Global.set_game_variable(\"ch2_蛇妖幹話位置_y\", text_y)
+	Global.player_status.has_backspace_power = true
+
+func before_dead():
+	stop_twist()
+	is_following_target = false
+	has_moving_delay = false
+	is_going_center = true
+	$\"石化/AnimationPlayer\".play(\"黑幕\")
+
+
+func play_crash_se():
+	var r = \"ABCD\"[randi()%4]
+	Sound.play_se(\"res://Sounds/se/第二章 音效/SE_2_12_word_crash_\"+r+\".wav\", 0) 
+
+func play_kill_se():
+	Sound.play_se(\"res://Sounds/se/第二章 音效/SE_2_6_slime_dead_B.wav\", 10)
+"
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 60, 30 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 90, 30 )
+
+[sub_resource type="GDScript" id=4]
+script/source = "extends Node2D
+
+func beam(angle, t):
+	var fort = duplicate()
+	get_parent().add_child(fort)
+	var beam = fort.get_node(\"媚\")
+	var tw = create_tween()
+	tw.set_parallel(true)
+	fort.rotation_degrees = angle
+	tw.tween_property(beam, \"position:y\", beam.position.y-1440, t).from(beam.position.y).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN)
+	await tw.finished
+	fort.queue_free()
+
+func beam_8(t):
+	for i in 8:
+		beam(45*i, 3)
+"
+
+[sub_resource type="Shader" id=5]
+code = "shader_type canvas_item;
+
+
+uniform float val;
+uniform float speed;
+uniform float tilt;
+uniform int split;
+
+uniform float p_size;
+uniform float p_lifetime;
+
+vec4 pix(float size, float lifetime, float u_t, vec2 u_uv) {
+	float t_id = floor(u_t/lifetime);
+	float t_gv = fract(u_t/lifetime);
+	
+	vec2 pos = vec2(0.25 * sin(t_id * 22.5696578) + 0.5, 0.25 * sin(t_id * 83.465753) + 0.5);
+	size = size * sin(t_gv * PI);
+	
+	float grey = 0.6 * step(pos.x-size/2., u_uv.x) * step(u_uv.x, pos.x+size/2.) * step(pos.y-size/2., u_uv.y) * step(u_uv.y, pos.y+size/2.);
+	
+	return vec4(vec3(grey), 0.);
+}
+
+void fragment() {
+	vec2 uv = UV;
+	vec2 gv = fract(uv);
+	
+	float yv = uv.y * float(split);
+	float level = floor(yv);
+	float dir = 2.0 * (mod(level, 2.0) - 0.5);
+	
+	gv.x += dir * val * sin(gv.y * tilt + TIME * speed);
+	COLOR = abs(texture(TEXTURE, gv) - pix(p_size, p_lifetime, TIME, UV) - pix(p_size, p_lifetime, TIME+8.5*p_lifetime, UV) - pix(p_size, p_lifetime, TIME+10.2*p_lifetime, UV));
+}"
+
+[sub_resource type="ShaderMaterial" id=6]
+shader = SubResource( 5 )
+shader_parameter/val = 0.025
+shader_parameter/speed = 10.0
+shader_parameter/tilt = 6.283
+shader_parameter/split = 60
+shader_parameter/p_size = 0.25
+shader_parameter/p_lifetime = 0.5
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = SubResource( 5 )
+shader_parameter/val = 0.025
+shader_parameter/speed = 10.0
+shader_parameter/tilt = 6.283
+shader_parameter/split = 60
+shader_parameter/p_size = 0.25
+shader_parameter/p_lifetime = 0.5
+
+[sub_resource type="CanvasItemMaterial" id=8]
+blend_mode = 3
+
+[sub_resource type="CanvasItemMaterial" id=9]
+blend_mode = 3
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 90, 30 )
+
+[sub_resource type="RectangleShape2D" id=11]
+extents = Vector2( 120, 30 )
+
+[sub_resource type="RectangleShape2D" id=12]
+extents = Vector2( 120, 30 )
+
+[sub_resource type="RectangleShape2D" id=13]
+extents = Vector2( 90, 30 )
+
+[sub_resource type="RectangleShape2D" id=14]
+extents = Vector2( 90, 30 )
+
+[sub_resource type="RectangleShape2D" id=15]
+extents = Vector2( 90, 30 )
+
+[sub_resource type="Animation" id=16]
+length = 0.5
+step = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("part:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PackedFloat32Array( 0, 0, 0, 0.008, 0, -30, -0.134, 0, 0.134, 0, 0, -0.008, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 0.167, 0.333 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("part:scale:x")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PackedFloat32Array( 1, 0, 0, 0.008, 0, 1.2, -0.134, 0, 0.134, 0, 1, -0.008, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 0.167, 0.333 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("part:scale:y")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PackedFloat32Array( 1, 0, 0, 0.008, 0, 1.2, -0.134, 0, 0.134, 0, 1, -0.008, 0, 0, 0 ),
+"times": PackedFloat32Array( 0, 0.167, 0.333 )
+}
+
+[sub_resource type="Animation" id=17]
+length = 4.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 4 ),
+"transitions": PackedFloat32Array( 0.5, 1 ),
+"update": 0,
+"values": [ 180.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=18]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 2 ),
+"transitions": PackedFloat32Array( 0.5, 1 ),
+"update": 0,
+"values": [ 180.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=19]
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 1 ),
+"transitions": PackedFloat32Array( 1.31951, 1 ),
+"update": 0,
+"values": [ 0.0, 60.0 ]
+}
+
+[sub_resource type="Animation" id=20]
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 1 ),
+"transitions": PackedFloat32Array( 0.5, 1 ),
+"update": 0,
+"values": [ 60.0, 0.0 ]
+}
+
+[sub_resource type="Animation" id=21]
+step = 0.001
+tracks/0/type = "animation"
+tracks/0/path = NodePath("8/AnimationPlayer")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"clips": PackedStringArray( "hurt" ),
+"times": PackedFloat32Array( 0.105 )
+}
+tracks/1/type = "animation"
+tracks/1/path = NodePath("7/AnimationPlayer")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"clips": PackedStringArray( "hurt" ),
+"times": PackedFloat32Array( 0.09 )
+}
+tracks/2/type = "animation"
+tracks/2/path = NodePath("6/AnimationPlayer")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"clips": PackedStringArray( "hurt" ),
+"times": PackedFloat32Array( 0.075 )
+}
+tracks/3/type = "animation"
+tracks/3/path = NodePath("5/AnimationPlayer")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"clips": PackedStringArray( "hurt" ),
+"times": PackedFloat32Array( 0.06 )
+}
+tracks/4/type = "animation"
+tracks/4/path = NodePath("4/AnimationPlayer")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"clips": PackedStringArray( "hurt" ),
+"times": PackedFloat32Array( 0.045 )
+}
+tracks/5/type = "animation"
+tracks/5/path = NodePath("3/AnimationPlayer")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"clips": PackedStringArray( "hurt" ),
+"times": PackedFloat32Array( 0.03 )
+}
+tracks/6/type = "animation"
+tracks/6/path = NodePath("2/AnimationPlayer")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"clips": PackedStringArray( "hurt" ),
+"times": PackedFloat32Array( 0.015 )
+}
+tracks/7/type = "animation"
+tracks/7/path = NodePath("1/AnimationPlayer")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"clips": PackedStringArray( "hurt" ),
+"times": PackedFloat32Array( 0 )
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath(".:modulate")
+tracks/8/interp = 0
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PackedFloat32Array( 0, 0.08, 0.16, 0.24, 0.32, 0.4, 0.48, 0.56, 0.64, 0.72, 0.8 ),
+"transitions": PackedFloat32Array( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.501961, 0.501961, 0.501961, 1 ), Color( 1, 1, 1, 1 ), Color( 0.501961, 0.501961, 0.501961, 1 ), Color( 1, 1, 1, 1 ), Color( 0.501961, 0.501961, 0.501961, 1 ), Color( 1, 1, 1, 1 ), Color( 0.501961, 0.501961, 0.501961, 1 ), Color( 1, 1, 1, 1 ), Color( 0.501961, 0.501961, 0.501961, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath(".:position:y")
+tracks/9/interp = 2
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PackedFloat32Array( 0.001, 0.594 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ 60.0, 180.0 ]
+}
+
+[sub_resource type="Animation" id=22]
+length = 2.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 2 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ 0, 59 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 2 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=23]
+length = 8.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 8 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ 0, 239 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("../../white/ColorRect:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 2.5, 4, 5, 7 ),
+"transitions": PackedFloat32Array( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("../../white/ColorRect:visible")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 8 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath(".:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PackedFloat32Array( 0, 8 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+
+[sub_resource type="Animation" id=24]
+length = 4.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ 0, 119 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0, 4 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath("../..")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0.1, 3.9 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "hide_body"
+}, {
+"args": [  ],
+"method": "show_body"
+} ]
+}
+
+[sub_resource type="FastNoiseLite" id=25]
+
+[sub_resource type="NoiseTexture2D" id=26]
+noise = SubResource( 25 )
+
+[sub_resource type="ShaderMaterial" id=27]
+shader = ExtResource( 5 )
+shader_parameter/burn_position = 0.0
+shader_parameter/speed = 0.183
+shader_parameter/size = Vector2( 2040, 1200 )
+shader_parameter/start_position = Vector2( 0.5, 0.5 )
+shader_parameter/pixels = 30
+shader_parameter/noise_tex = SubResource( 26 )
+
+[sub_resource type="Animation" id=28]
+length = 6.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:material:shader_parameter/burn_position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 2.1, 6 ),
+"transitions": PackedFloat32Array( 1, 1, 1 ),
+"update": 0,
+"values": [ 0.0, 0.0, 0.625 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.737255 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("../CollisionShape2D2/紅眼/眼:color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0, 0.2, 4.3, 5.8 ),
+"transitions": PackedFloat32Array( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("../CollisionShape2D2/紅眼2/眼:color")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PackedFloat32Array( 0, 0.2, 4.3, 5.8 ),
+"transitions": PackedFloat32Array( 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 0, 0, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/4/type = "method"
+tracks/4/path = NodePath("../CollisionShape2D2/掃略")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PackedFloat32Array( 0.4 ),
+"transitions": PackedFloat32Array( 1 ),
+"values": [ {
+"args": [ 3.0 ],
+"method": "beam_8"
+} ]
+}
+
+[sub_resource type="Animation" id=29]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PackedFloat32Array( 0, 2 ),
+"transitions": PackedFloat32Array( 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0.737255 ), Color( 1, 1, 1, 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("../CollisionShape2D2/紅眼/眼:color")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("../CollisionShape2D2/紅眼2/眼:color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PackedFloat32Array( 0 ),
+"transitions": PackedFloat32Array( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="蛇妖" type="Area2D"]
+position = Vector2( 960, 660 )
+z_index = 15
+z_as_relative = false
+script = SubResource( 1 )
+
+[node name="CollisionShape2D1" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 30 )
+z_index = 1
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 90 )
+z_index = 1
+shape = SubResource( 3 )
+
+[node name="掃略" type="Node2D" parent="CollisionShape2D2"]
+position = Vector2( 0, 90 )
+z_index = -1
+script = SubResource( 4 )
+
+[node name="媚" type="Sprite2D" parent="CollisionShape2D2/掃略"]
+material = SubResource( 6 )
+position = Vector2( 0, -60 )
+texture = ExtResource( 9 )
+centered = false
+offset = Vector2( -30, 0 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 60, 60 )
+
+[node name="眼" type="Sprite2D" parent="CollisionShape2D2/掃略/媚"]
+material = SubResource( 7 )
+position = Vector2( 0, 60 )
+texture = ExtResource( 8 )
+centered = false
+offset = Vector2( -30, 0 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 60, 60 )
+
+[node name="紅眼" type="Node2D" parent="CollisionShape2D2"]
+position = Vector2( -90, -30 )
+scale = Vector2( 34, 20 )
+z_index = 20
+
+[node name="眼" type="ColorRect" parent="CollisionShape2D2/紅眼"]
+material = SubResource( 8 )
+offset_right = 1.74
+offset_bottom = 3.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="紅眼2" type="Node2D" parent="CollisionShape2D2"]
+position = Vector2( 30, -30 )
+scale = Vector2( 34, 20 )
+z_index = 20
+
+[node name="眼" type="ColorRect" parent="CollisionShape2D2/紅眼2"]
+material = SubResource( 9 )
+offset_right = 1.74
+offset_bottom = 3.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 150 )
+z_index = 1
+shape = SubResource( 10 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 210 )
+z_index = 1
+shape = SubResource( 11 )
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 270 )
+z_index = 1
+shape = SubResource( 12 )
+
+[node name="CollisionShape2D6" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 330 )
+z_index = 1
+shape = SubResource( 13 )
+
+[node name="CollisionShape2D7" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 390 )
+z_index = 1
+shape = SubResource( 14 )
+
+[node name="CollisionShape2D8" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 450 )
+z_index = 1
+shape = SubResource( 15 )
+
+[node name="媚眼" parent="." instance=ExtResource( 4 )]
+visible = false
+
+[node name="body" type="Node2D" parent="."]
+
+[node name="1" type="Node2D" parent="body"]
+position = Vector2( 0, 30 )
+
+[node name="part" type="Sprite2D" parent="body/1"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 120, 60 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/1"]
+anims/hurt = SubResource( 16 )
+
+[node name="2" type="Node2D" parent="body"]
+position = Vector2( 0, 90 )
+
+[node name="part" type="Sprite2D" parent="body/2"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 180, 60 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/2"]
+anims/hurt = SubResource( 16 )
+
+[node name="3" type="Node2D" parent="body"]
+position = Vector2( 0, 150 )
+
+[node name="part" type="Sprite2D" parent="body/3"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 180, 60 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/3"]
+anims/hurt = SubResource( 16 )
+
+[node name="4" type="Node2D" parent="body"]
+position = Vector2( 0, 210 )
+
+[node name="part" type="Sprite2D" parent="body/4"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 240, 60 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/4"]
+anims/hurt = SubResource( 16 )
+
+[node name="5" type="Node2D" parent="body"]
+position = Vector2( 0, 270 )
+
+[node name="part" type="Sprite2D" parent="body/5"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 240, 60 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/5"]
+anims/hurt = SubResource( 16 )
+
+[node name="6" type="Node2D" parent="body"]
+position = Vector2( 0, 330 )
+
+[node name="part" type="Sprite2D" parent="body/6"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 180, 60 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/6"]
+anims/hurt = SubResource( 16 )
+
+[node name="7" type="Node2D" parent="body"]
+position = Vector2( 0, 390 )
+
+[node name="part" type="Sprite2D" parent="body/7"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 180, 60 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/7"]
+anims/hurt = SubResource( 16 )
+
+[node name="8" type="Node2D" parent="body"]
+position = Vector2( 0, 450 )
+
+[node name="part" type="Sprite2D" parent="body/8"]
+texture = ExtResource( 1 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 180, 60 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/8"]
+anims/hurt = SubResource( 16 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body"]
+anims/after_hurt = SubResource( 17 )
+anims/after_hurt_quick = SubResource( 18 )
+anims/back_little = SubResource( 19 )
+anims/forward_little = SubResource( 20 )
+anims/really_hurt = SubResource( 21 )
+
+[node name="snake_angry" type="Sprite2D" parent="body"]
+visible = false
+position = Vector2( 0, 180 )
+texture = ExtResource( 2 )
+hframes = 10
+vframes = 6
+frame = 59
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/snake_angry"]
+anims/angry = SubResource( 22 )
+
+[node name="snake_enlarge" type="Sprite2D" parent="body"]
+visible = false
+position = Vector2( 0, 180 )
+texture = ExtResource( 3 )
+hframes = 16
+vframes = 15
+frame = 239
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/snake_enlarge"]
+anims/enlarge = SubResource( 23 )
+
+[node name="snake_sep" type="Sprite2D" parent="body"]
+visible = false
+position = Vector2( 0, 180 )
+texture = ExtResource( 6 )
+hframes = 10
+vframes = 12
+frame = 119
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="body/snake_sep"]
+anims/sep = SubResource( 24 )
+
+[node name="white" type="Node2D" parent="."]
+z_index = 30
+
+[node name="ColorRect" type="ColorRect" parent="white"]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+offset_left = -960.0
+offset_top = -720.0
+offset_right = 960.0
+offset_bottom = 480.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="石化" type="Sprite2D" parent="."]
+modulate = Color( 1, 1, 1, 0.737255 )
+show_behind_parent = true
+material = SubResource( 27 )
+position = Vector2( 0, -60 )
+scale = Vector2( 34, 20 )
+z_index = 14
+z_as_relative = false
+texture = ExtResource( 7 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="石化"]
+"anims/石化" = SubResource( 28 )
+"anims/黑幕" = SubResource( 29 )
+
+[connection signal="area_entered" from="." to="." method="_on__area_entered"]
+[connection signal="area_entered" from="媚眼" to="." method="on_ray_hit"]

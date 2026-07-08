@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Sprites/pull/pull_line.png" type="Texture2D" id=1]
+
+[node name="PullLine" type="Sprite2D"]
+position = Vector2( 60, 30 )
+rotation = 1.5708
+scale = Vector2( 1, 1.8 )
+z_as_relative = false
+texture = ExtResource( 1 )
