@@ -16,6 +16,7 @@ func _init() -> void:
 	test_pushing_one_into_zero_slot_displaces_zero_and_switches_state()
 	test_zero_returning_to_sentence_restores_zero_gesture()
 	test_good_two_and_win_gesture_states_are_registered_and_triggered()
+	test_json_sentence_spawn_positions_are_parsed()
 	test_deleting_not_opens_release_state()
 
 	if failures.is_empty():
@@ -219,6 +220,34 @@ func test_good_two_and_win_gesture_states_are_registered_and_triggered() -> void
 		assert_true(flow.sync_after_player_action(world).success, "%s gesture state switch succeeds" % trigger_text)
 		assert_equal(flow.stage, str(test_case.stage), "%s reaches expected gesture state" % trigger_text)
 		assert_equal(world.get_entity_at(Vector2i(26, 17)).text, trigger_text, "%s remains in gesture sentence" % trigger_text)
+
+func test_json_sentence_spawn_positions_are_parsed() -> void:
+	var world := GridWorld.new()
+	var flow := HeroTrialFlow.new()
+	var good_word := char(0x597d)
+	var zero_word := char(0x96f6)
+	flow.load_start_scene(world)
+	flow.handle_space(world)
+
+	var zero = world.find_first_entity_by_text(zero_word)
+	var good = world.get_entity_at(Vector2i(14, 13))
+	assert_true(zero != null, "json scene has zero before sentence spawn parse check")
+	assert_true(good != null, "json scene has good before sentence spawn parse check")
+	if not zero or not good:
+		return
+	world.move_entity_to(zero.id, Vector2i(28, 15))
+	world.move_entity_to(good.id, Vector2i(26, 17))
+
+	var result := world.check_sentence_rules()
+	assert_true(result.has("巨大手掌，是好的手勢"), "json-loaded good gesture sentence is recognized")
+	var marker = world.find_first_entity_by_text("好手勢")
+	assert_true(marker != null, "json string spawn position creates hand marker")
+	if marker:
+		assert_equal(marker.grid_pos, Vector2i(24, 8), "json string spawn position is parsed")
+	var caption = world.find_first_entity_by_text("已識別：好的手勢")
+	assert_true(caption != null, "json string caption position creates caption")
+	if caption:
+		assert_equal(caption.grid_pos, Vector2i(18, 15), "json string caption position is parsed")
 
 func test_deleting_not_opens_release_state() -> void:
 	var world := GridWorld.new()

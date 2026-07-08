@@ -224,7 +224,7 @@ func _apply_sentence_effects(_sentence: String, config: Dictionary) -> void:
 			continue
 		if find_first_entity_by_text(text):
 			continue
-		add_entity(text, spawn.get("pos", Vector2i.ZERO), _default_config_for(text, spawn_config))
+		add_entity(text, _to_vector2i(spawn.get("pos", Vector2i.ZERO)), _default_config_for(text, spawn_config))
 
 func update_page() -> void:
 	current_page_origin = Vector2i(
@@ -261,7 +261,7 @@ func spawn_map_caption(text: String, near_pos: Vector2i, config := {}) -> WordEn
 		return entities[_map_caption_ids[text]]
 	var pos := near_pos
 	if config.has("caption_pos"):
-		pos = config.caption_pos
+		pos = _to_vector2i(config.caption_pos)
 	else:
 		pos = _find_free_caption_pos(near_pos, text.length())
 	var caption := add_entity(text, pos, {
@@ -279,6 +279,19 @@ func _spawn_sentence_caption(sentence: String, config: Dictionary, cells: Array[
 	if caption_text.is_empty():
 		return
 	spawn_map_caption(caption_text, cells[0] + Vector2i(0, 1), config)
+
+func _to_vector2i(value: Variant) -> Vector2i:
+	if value is Vector2i:
+		return value
+	if typeof(value) == TYPE_ARRAY and value.size() >= 2:
+		return Vector2i(int(value[0]), int(value[1]))
+	if typeof(value) == TYPE_STRING:
+		var cleaned := str(value).strip_edges()
+		cleaned = cleaned.trim_prefix("(").trim_suffix(")")
+		var parts := cleaned.split(",", false)
+		if parts.size() >= 2:
+			return Vector2i(int(str(parts[0]).strip_edges()), int(str(parts[1]).strip_edges()))
+	return Vector2i.ZERO
 
 func _find_free_caption_pos(start: Vector2i, text_length: int) -> Vector2i:
 	for distance in range(0, 8):
