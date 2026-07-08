@@ -76,6 +76,9 @@ powershell -ExecutionPolicy Bypass -File "E:\wordgame copy\勇者试炼\tools\ca
 - `tests/test_map_editor_ops.gd`: bulk grid editor operation tests
 - `tools/run_all_tests.ps1`: one-command automated verification
 - `tools/capture_visual_smoke.ps1`: launches Godot, captures a real screenshot, and checks visible text pixels
+- `levels/hero_trial_fist_scene_01.json`: hand-edited reference layout for the first captured scene
+- `levels/hero_trial_fist_scene_02.json`: hand-edited reference layout for the second captured scene
+- `levels/hero_trial_fist_state_life_line_without_good.json`: hand-edited gameplay state after moving `好` out of `逼退好手的生命線`; this is not a third scene
 - `docs/交接文档.md`: handoff notes for the next developers
 - `docs/测试复用指南.md`: how to reuse the test framework for new screenshot-based levels
 - `Fonts/Zpix.ttf`: original-style pixel font used by the manual test scene
@@ -97,6 +100,7 @@ Implemented for this pass:
 - Initial key words from source: `贏`, `不`, `二`, `讚`, `一`, `零`, `劍`, `勇`. The source also has `好`, but it is hidden behind `ch3_生命線敘述出現` and is not spawned in the initial layout.
 - Upper narration and lower hand-gesture sentence as collision map text.
 - Initial visible palm walls are locked against the source `零的手勢`, `生命線`, and `拇指下收` `big_text` coordinates.
+- Saved hand-edited JSON maps under `levels/` preserve manual layouts and intermediate states. The life-line state file intentionally has no standalone `好` entity, because `好` has already been moved out of `逼退好手的生命線`.
 - Recognition for `巨大手掌，是好的手勢`, `巨大手掌，是二的手勢`, `巨大手掌，是讚的手勢`, `巨大手掌，是贏的手勢`.
 - Recognition for deleting `不` to form `會輕易放開`, which sets `hero_trial_complete`. No invented tail text is spawned by the prototype.
 

@@ -10,6 +10,7 @@ func _init() -> void:
 	test_world_round_trips_through_editor_json()
 	test_saved_editor_json_overrides_default_level()
 	test_missing_editor_json_falls_back_to_default_level()
+	test_life_line_without_good_state_loads_without_good_word()
 
 	if failures.is_empty():
 		print("map_editor_io tests passed")
@@ -55,14 +56,26 @@ func test_saved_editor_json_overrides_default_level() -> void:
 	var loaded_level := MapEditorIO.load_level_or_default(path, default_level)
 	var loaded_world := GridWorld.new()
 	loaded_world.load_level(loaded_level)
-	assert_equal(loaded_world.get_entity_at(Vector2i(1, 5)).text, "三", "saved editor json overrides default level")
+	assert_equal(loaded_world.get_entity_at(Vector2i(1, 5)).text, char(0x4e09), "saved editor json overrides default level")
 
 func test_missing_editor_json_falls_back_to_default_level() -> void:
 	var default_level := LevelLoader.build_hero_trial_fist_level()
 	var loaded_level := MapEditorIO.load_level_or_default("user://missing_editor_level.json", default_level)
 	var loaded_world := GridWorld.new()
 	loaded_world.load_level(loaded_level)
-	assert_equal(loaded_world.get_entity_at(Vector2i(1, 5)).text, "二", "missing editor json uses default level")
+	assert_equal(loaded_world.get_entity_at(Vector2i(1, 5)).text, char(0x4e8c), "missing editor json uses default level")
+
+func test_life_line_without_good_state_loads_without_good_word() -> void:
+	var loaded := MapEditorIO.load_editor_data("res://levels/hero_trial_fist_state_life_line_without_good.json")
+	assert_true(loaded.success, "life-line state json loads")
+	if not loaded.success:
+		return
+	var good_word := char(0x597d)
+	for cell in loaded.data.get("cells", []):
+		assert_true(str(cell.get("text", "")) != good_word, "life-line state has no standalone good word")
+	var world := GridWorld.new()
+	world.load_level(MapEditorIO.editor_data_to_level(loaded.data))
+	assert_equal(world.find_first_entity_by_text(good_word), null, "life-line state world has no good word entity")
 
 func assert_cell(data: Dictionary, text: String, x: int, y: int, solid: bool, pushable: bool, deletable: bool, label: String) -> void:
 	for cell in data.get("cells", []):
