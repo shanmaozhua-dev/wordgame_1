@@ -6,6 +6,7 @@ var stage := ""
 var maps: Dictionary = {}
 var rules: Array = []
 var on_load: Dictionary = {}
+var _observed_rule_cells: Dictionary = {}
 
 func load_config(path: String) -> Dictionary:
 	var parsed := _load_json(path)
@@ -40,6 +41,7 @@ func sync_after_player_action(world: RefCounted) -> Dictionary:
 	for rule in rules:
 		if _rule_matches_stage(rule) and _trigger_matches_world(world, rule.get("trigger", {})):
 			return _apply_rule(world, rule)
+	_remember_rule_cells(world)
 	return {"success": false, "message": ""}
 
 func load_map(world: RefCounted, map_id: String) -> Dictionary:
@@ -51,6 +53,7 @@ func load_map(world: RefCounted, map_id: String) -> Dictionary:
 	world.load_level(MapEditorIO.editor_data_to_level(loaded.data))
 	stage = map_id
 	_apply_on_load(world, map_id)
+	_remember_rule_cells(world)
 	return {"success": true, "message": map_id}
 
 func _apply_rule(world: RefCounted, rule: Dictionary) -> Dictionary:
@@ -66,6 +69,7 @@ func _apply_rule(world: RefCounted, rule: Dictionary) -> Dictionary:
 		if _can_restore_snapshot(world, snapshot):
 			world.add_entity(str(snapshot.text), snapshot.pos, snapshot.config)
 	world.update_page()
+	_remember_rule_cells(world)
 	return {"success": true, "message": str(rule.get("to", ""))}
 
 func _rule_matches_stage(rule: Dictionary) -> bool:
@@ -73,14 +77,34 @@ func _rule_matches_stage(rule: Dictionary) -> bool:
 	return from.has(stage)
 
 func _trigger_matches_world(world: RefCounted, trigger: Dictionary) -> bool:
+	var pos := _array_to_vector2i(trigger.get("pos", []))
+	var target_text := str(trigger.get("text", ""))
+	var current_text := _cell_text_at(world, pos)
+	var previous_text := str(_observed_rule_cells.get(_cell_key(pos), ""))
 	match str(trigger.get("type", "")):
 		"cell_text":
-			var entity = world.get_entity_at(_array_to_vector2i(trigger.get("pos", [])))
-			return entity != null and entity.text == str(trigger.get("text", ""))
+			return current_text == target_text and previous_text != target_text
 		"cell_not_text":
-			var entity = world.get_entity_at(_array_to_vector2i(trigger.get("pos", [])))
-			return entity == null or entity.text != str(trigger.get("text", ""))
+			return current_text != target_text and previous_text == target_text
 	return false
+
+func _remember_rule_cells(world: RefCounted) -> void:
+	for rule in rules:
+		var trigger: Dictionary = rule.get("trigger", {})
+		var trigger_type := str(trigger.get("type", ""))
+		if trigger_type != "cell_text" and trigger_type != "cell_not_text":
+			continue
+		var pos := _array_to_vector2i(trigger.get("pos", []))
+		_observed_rule_cells[_cell_key(pos)] = _cell_text_at(world, pos)
+
+func _cell_text_at(world: RefCounted, pos: Vector2i) -> String:
+	var entity = world.get_entity_at(pos)
+	if entity == null:
+		return ""
+	return entity.text
+
+func _cell_key(pos: Vector2i) -> String:
+	return "%d,%d" % [pos.x, pos.y]
 
 func _snapshot_preserved_words(world: RefCounted, words: Array) -> Array:
 	var snapshots: Array = []

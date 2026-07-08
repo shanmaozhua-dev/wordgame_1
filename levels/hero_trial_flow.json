@@ -234,6 +234,7 @@
 		},
 		{
 			"from": [
+				"life_line_without_good",
 				"one_gesture",
 				"good_gesture",
 				"two_gesture",
@@ -265,13 +266,7 @@
 		},
 		{
 			"from": [
-				"scene_02",
-				"zero_gesture",
-				"one_gesture",
-				"good_gesture",
-				"two_gesture",
-				"win_gesture",
-				"release_opened"
+				"scene_02"
 			],
 			"trigger": {
 				"type": "cell_not_text",
