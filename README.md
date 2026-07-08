@@ -16,7 +16,7 @@ Open this folder in Godot 4.7 and run `Main.tscn`. The default scene loads the �
 Controls:
 
 - Arrow keys: move the player word `我`
-- Space: interact with the word in front
+- Space: advance from the first 勇者试炼 scene to the second scene; outside that scripted step, interact with the word in front
 - Backspace: delete a deletable word in front
 - Tab: split a splittable word in front
 - Alt + arrow key: pull a pushable word
@@ -68,6 +68,7 @@ powershell -ExecutionPolicy Bypass -File "E:\wordgame copy\勇者试炼\tools\ca
 - `scripts/grid_world.gd`: core grid rules, collision, push/pull/delete/split/merge/sentence recognition, sentence effects
 - `scripts/word_entity.gd`: data object for every word entity
 - `scripts/level_loader.gd`: AI-friendly text-map data, including `build_hero_trial_fist_level()`
+- `scripts/hero_trial_flow.gd`: 勇者试炼 scene/state flow, including Space scene advance and the life-line state switch
 - `scripts/page_camera.gd`: page-based camera offset
 - `scripts/demo_runner.gd`: autoplay demo route
 - `tests/test_gameplay_core.gd`: gameplay regression tests
@@ -101,6 +102,7 @@ Implemented for this pass:
 - Upper narration and lower hand-gesture sentence as collision map text.
 - Initial visible palm walls are locked against the source `零的手勢`, `生命線`, and `拇指下收` `big_text` coordinates.
 - Saved hand-edited JSON maps under `levels/` preserve manual layouts and intermediate states. The life-line state file intentionally has no standalone `好` entity, because `好` has already been moved out of `逼退好手的生命線`.
+- Runtime flow starts from `hero_trial_fist_scene_01.json`. Pressing Space loads `hero_trial_fist_scene_02.json`. When the movable `好` leaves `逼退好手的生命線`, the static map switches to `hero_trial_fist_state_life_line_without_good.json`, while that moved `好` remains at its current grid position.
 - Recognition for `巨大手掌，是好的手勢`, `巨大手掌，是二的手勢`, `巨大手掌，是讚的手勢`, `巨大手掌，是贏的手勢`.
 - Recognition for deleting `不` to form `會輕易放開`, which sets `hero_trial_complete`. No invented tail text is spawned by the prototype.
 

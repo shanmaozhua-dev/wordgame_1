@@ -6,12 +6,14 @@ const MapEditorIO = preload("res://scripts/map_editor_io.gd")
 const MapEditorOps = preload("res://scripts/map_editor_ops.gd")
 const PageCamera = preload("res://scripts/page_camera.gd")
 const DemoRunner = preload("res://scripts/demo_runner.gd")
+const HeroTrialFlow = preload("res://scripts/hero_trial_flow.gd")
 const OriginalFont = preload("res://Fonts/Zpix.tres")
 
 const FONT_SIZE_RATIO := 0.78
 const EDITOR_SAVE_PATH := "res://levels/hero_trial_fist_edit.json"
 
 var world := GridWorld.new()
+var hero_trial_flow := HeroTrialFlow.new()
 var page_camera := PageCamera.new()
 var demo := DemoRunner.new()
 var entity_labels: Dictionary = {}
@@ -38,11 +40,10 @@ var editor_dirty := false
 var editor_notice := ""
 
 func _ready() -> void:
-	var default_level := LevelLoader.build_hero_trial_fist_level()
-	var loaded_level := MapEditorIO.load_level_or_default(EDITOR_SAVE_PATH, default_level)
-	world.load_level(loaded_level)
-	if FileAccess.file_exists(EDITOR_SAVE_PATH):
-		editor_notice = "已读取保存地图：%s" % EDITOR_SAVE_PATH
+	var result := hero_trial_flow.load_start_scene(world)
+	if not result.success:
+		world.load_level(LevelLoader.build_hero_trial_fist_level())
+		editor_notice = str(result.get("message", "读取勇者试炼起始场景失败"))
 	page_camera.sync_to_world(world)
 	_build_scene()
 	_refresh_view()
@@ -70,17 +71,21 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if direction != Vector2i.ZERO:
 		if key_event.alt_pressed:
-			_apply_result(world.pull_front(direction))
+			_apply_player_result(world.pull_front(direction))
 		else:
-			_apply_result(world.try_move_player(direction))
+			_apply_player_result(world.try_move_player(direction))
 		return
 	match key_event.keycode:
 		KEY_SPACE:
-			_apply_result(world.interact_front())
+			var flow_result := hero_trial_flow.handle_space(world)
+			if flow_result.success:
+				_apply_result(flow_result)
+			else:
+				_apply_result(world.interact_front())
 		KEY_BACKSPACE:
-			_apply_result(world.delete_front())
+			_apply_player_result(world.delete_front())
 		KEY_TAB:
-			_apply_result(world.split_front())
+			_apply_player_result(world.split_front())
 
 func _build_scene() -> void:
 	map_layer = Node2D.new()
@@ -158,6 +163,13 @@ func _sync_entity_labels() -> void:
 			entity_labels.erase(id)
 
 func _apply_result(result: Dictionary) -> void:
+	_refresh_view(str(result.get("message", "")))
+
+func _apply_player_result(result: Dictionary) -> void:
+	if result.success:
+		var flow_result := hero_trial_flow.sync_after_player_action(world)
+		if flow_result.success:
+			result = flow_result
 	_refresh_view(str(result.get("message", "")))
 
 func _run_demo_step() -> void:
