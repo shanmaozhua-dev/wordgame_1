@@ -3,6 +3,7 @@ extends Node2D
 const GridWorld = preload("res://scripts/grid_world.gd")
 const LevelLoader = preload("res://scripts/level_loader.gd")
 const MapEditorIO = preload("res://scripts/map_editor_io.gd")
+const MapEditorOps = preload("res://scripts/map_editor_ops.gd")
 const PageCamera = preload("res://scripts/page_camera.gd")
 const DemoRunner = preload("res://scripts/demo_runner.gd")
 const OriginalFont = preload("res://Fonts/Zpix.tres")
@@ -20,6 +21,13 @@ var demo_timer: Timer
 var edit_mode := false
 var grid_visible := true
 var selected_cell := Vector2i.ZERO
+var selection_anchor := Vector2i.ZERO
+var selection_start := Vector2i.ZERO
+var selection_end := Vector2i.ZERO
+var selecting_rect := false
+var dragging_selection := false
+var drag_start_cell := Vector2i.ZERO
+var drag_preview_origin := Vector2i.ZERO
 var grid_layer: Node2D
 var selection_rect: ColorRect
 var editor_canvas: CanvasLayer
@@ -188,9 +196,33 @@ func _toggle_edit_mode() -> void:
 func _handle_editor_input(event: InputEvent) -> bool:
 	if event is InputEventMouseButton:
 		var mouse_event := event as InputEventMouseButton
-		if mouse_event.button_index == MOUSE_BUTTON_LEFT and mouse_event.pressed:
-			var local := mouse_event.position - map_layer.position
-			_set_selected_cell(Vector2i(floori(local.x / world.cell_size), floori(local.y / world.cell_size)))
+		if mouse_event.button_index == MOUSE_BUTTON_LEFT:
+			var cell := _mouse_to_cell(mouse_event.position)
+			if mouse_event.pressed:
+				if _selection_cells().has(cell):
+					dragging_selection = true
+					drag_start_cell = cell
+					drag_preview_origin = _selection_min()
+				else:
+					selecting_rect = true
+					selection_anchor = cell
+					_set_selection(cell, cell)
+			else:
+				if dragging_selection:
+					var target_origin := _selection_min() + (cell - drag_start_cell)
+					_move_selection_to(target_origin)
+				selecting_rect = false
+				dragging_selection = false
+			return true
+	if event is InputEventMouseMotion:
+		var motion_event := event as InputEventMouseMotion
+		var cell := _mouse_to_cell(motion_event.position)
+		if selecting_rect:
+			_set_selection(selection_anchor, cell)
+			return true
+		if dragging_selection:
+			drag_preview_origin = _selection_min() + (cell - drag_start_cell)
+			_sync_editor_overlay()
 			return true
 	if not event is InputEventKey or not event.pressed or event.echo:
 		return false
@@ -208,55 +240,66 @@ func _handle_editor_input(event: InputEvent) -> bool:
 	if key_event.alt_pressed:
 		match key_event.keycode:
 			KEY_P:
-				_toggle_selected_flag("pushable")
+				_toggle_selection_flag("pushable")
 				return true
 			KEY_D:
-				_toggle_selected_flag("deletable")
+				_toggle_selection_flag("deletable")
 				return true
 			KEY_S:
-				_toggle_selected_flag("solid")
+				_toggle_selection_flag("solid")
 				return true
 	var direction := _direction_from_key(key_event.keycode)
 	if direction != Vector2i.ZERO:
-		_set_selected_cell(selected_cell + direction)
+		_set_selection(selection_start + direction, selection_end + direction)
 		return true
 	if key_event.keycode == KEY_BACKSPACE or key_event.keycode == KEY_DELETE:
-		_set_editor_cell_text("")
+		_set_selection_text("")
 		return true
 	return false
 
 func _set_selected_cell(cell: Vector2i) -> void:
-	selected_cell = Vector2i(
+	var clamped := Vector2i(
 		clampi(cell.x, 0, world.screen_size.x - 1),
 		clampi(cell.y, 0, world.screen_size.y - 1)
 	)
+	_set_selection(clamped, clamped)
+
+func _set_selection(a: Vector2i, b: Vector2i) -> void:
+	selection_start = _clamp_cell(a)
+	selection_end = _clamp_cell(b)
+	selected_cell = selection_end
 	_syncing_input = true
-	cell_input.text = _selected_cell_text()
-	cell_input.position = map_layer.position + _grid_to_pixels(selected_cell) + Vector2(0, world.cell_size + 2)
+	cell_input.text = _selection_text_for_input()
+	cell_input.position = map_layer.position + _grid_to_pixels(_selection_min()) + Vector2(0, _selection_size().y * world.cell_size + 2)
 	_syncing_input = false
 	cell_input.grab_focus()
 	cell_input.select_all()
 	_sync_editor_overlay()
 
+func _clamp_cell(cell: Vector2i) -> Vector2i:
+	return Vector2i(
+		clampi(cell.x, 0, world.screen_size.x - 1),
+		clampi(cell.y, 0, world.screen_size.y - 1)
+	)
+
+func _mouse_to_cell(mouse_pos: Vector2) -> Vector2i:
+	var local := mouse_pos - map_layer.position
+	return _clamp_cell(Vector2i(floori(local.x / world.cell_size), floori(local.y / world.cell_size)))
+
 func _on_editor_text_changed(new_text: String) -> void:
 	if _syncing_input:
 		return
-	_set_editor_cell_text(new_text)
+	_set_selection_text(new_text)
 
-func _set_editor_cell_text(text: String) -> void:
+func _set_selection_text(text: String) -> void:
 	var clean := text.strip_edges()
 	if clean.length() > 1:
 		clean = clean.substr(0, 1)
-	var existing := _find_entity_at_any(selected_cell)
-	var changed := false
-	if existing:
-		world.entities.erase(existing.id)
-		changed = true
-	if not clean.is_empty():
-		world.add_entity(clean, selected_cell, {"solid": true, "tags": ["manual_edit"]})
-		changed = true
-	if changed:
-		_mark_editor_dirty()
+	if clean.is_empty():
+		MapEditorOps.clear_cells(world, _selection_cells())
+	else:
+		MapEditorOps.fill_cells(world, _selection_cells(), clean)
+	_mark_editor_dirty()
 	_refresh_view()
 	_syncing_input = true
 	cell_input.text = clean
@@ -264,7 +307,9 @@ func _set_editor_cell_text(text: String) -> void:
 	cell_input.grab_focus()
 	cell_input.select_all()
 
-func _selected_cell_text() -> String:
+func _selection_text_for_input() -> String:
+	if _selection_cells().size() != 1:
+		return ""
 	var entity := _find_entity_at_any(selected_cell)
 	if entity:
 		return entity.text
@@ -276,19 +321,42 @@ func _find_entity_at_any(pos: Vector2i) -> RefCounted:
 			return entity
 	return null
 
-func _toggle_selected_flag(flag: String) -> void:
-	var entity := _find_entity_at_any(selected_cell)
-	if not entity:
-		return
-	match flag:
-		"pushable":
-			entity.pushable = not entity.pushable
-		"deletable":
-			entity.deletable = not entity.deletable
-		"solid":
-			entity.solid = not entity.solid
+func _toggle_selection_flag(flag: String) -> void:
+	MapEditorOps.toggle_flag(world, _selection_cells(), flag)
 	_mark_editor_dirty()
 	_refresh_view()
+
+func _move_selection_to(target_origin: Vector2i) -> void:
+	var clamped_origin := _clamp_move_origin(target_origin)
+	if clamped_origin == _selection_min():
+		_set_selection(selection_start, selection_end)
+		return
+	MapEditorOps.move_rect(world, selection_start, selection_end, clamped_origin)
+	var size := _selection_size()
+	_set_selection(clamped_origin, clamped_origin + size - Vector2i.ONE)
+	_mark_editor_dirty()
+	_refresh_view()
+
+func _clamp_move_origin(origin: Vector2i) -> Vector2i:
+	var size := _selection_size()
+	return Vector2i(
+		clampi(origin.x, 0, world.screen_size.x - size.x),
+		clampi(origin.y, 0, world.screen_size.y - size.y)
+	)
+
+func _selection_min() -> Vector2i:
+	return Vector2i(mini(selection_start.x, selection_end.x), mini(selection_start.y, selection_end.y))
+
+func _selection_max() -> Vector2i:
+	return Vector2i(maxi(selection_start.x, selection_end.x), maxi(selection_start.y, selection_end.y))
+
+func _selection_size() -> Vector2i:
+	var from := _selection_min()
+	var to := _selection_max()
+	return to - from + Vector2i.ONE
+
+func _selection_cells() -> Array[Vector2i]:
+	return MapEditorOps.cells_in_rect(selection_start, selection_end)
 
 func _save_editor_level() -> void:
 	_ensure_editor_save_dir()
@@ -341,10 +409,12 @@ func _sync_editor_overlay() -> void:
 		return
 	grid_layer.visible = edit_mode and grid_visible
 	selection_rect.visible = edit_mode
-	selection_rect.position = _grid_to_pixels(selected_cell)
-	selection_rect.size = Vector2(world.cell_size, world.cell_size)
+	var rect_origin := drag_preview_origin if dragging_selection else _selection_min()
+	var rect_size := _selection_size()
+	selection_rect.position = _grid_to_pixels(rect_origin)
+	selection_rect.size = Vector2(rect_size.x * world.cell_size, rect_size.y * world.cell_size)
 	if edit_mode and cell_input:
-		cell_input.position = map_layer.position + _grid_to_pixels(selected_cell) + Vector2(0, world.cell_size + 2)
+		cell_input.position = map_layer.position + _grid_to_pixels(_selection_min()) + Vector2(0, rect_size.y * world.cell_size + 2)
 	_update_editor_status()
 
 func _mark_editor_dirty() -> void:
@@ -356,11 +426,15 @@ func _update_editor_status() -> void:
 		return
 	var entity := _find_entity_at_any(selected_cell)
 	var flags := "空"
-	if entity:
+	if _selection_cells().size() > 1:
+		flags = "选区=%s格" % _selection_cells().size()
+	elif entity:
 		flags = "字=%s solid=%s push=%s del=%s tags=%s" % [entity.text, entity.solid, entity.pushable, entity.deletable, ",".join(entity.tags)]
 	var save_state := "未保存" if editor_dirty else "已保存"
 	var suffix := " | %s" % editor_notice if not editor_notice.is_empty() else ""
-	editor_status.text = "编辑模式 F9退出 F10网格 Ctrl+S保存 Ctrl+R读取 Alt+P/D/S属性 | %s | 格子=(%s,%s) %s%s" % [save_state, selected_cell.x, selected_cell.y, flags, suffix]
+	var from := _selection_min()
+	var to := _selection_max()
+	editor_status.text = "编辑模式 F9退出 F10网格 Ctrl+S保存 Ctrl+R读取 Alt+P/D/S属性 | %s | 选区=(%s,%s)-(%s,%s) %s%s" % [save_state, from.x, from.y, to.x, to.y, flags, suffix]
 
 func _make_word_label(text: String, font_color := Color.WHITE, bg_color := Color.BLACK) -> Label:
 	var label := Label.new()

@@ -34,9 +34,11 @@ Prompt rule: interaction prompts such as `手表可以查看人类世界的时�
 Runtime map editor:
 
 - F9 enters or exits the 32 by 18 grid editor.
-- Left click selects a cell; type one Chinese character in the focused input to write it into that cell.
-- Backspace/Delete clears the selected cell; arrow keys move the selection.
-- Alt+P, Alt+D, and Alt+S toggle pushable, deletable, and solid flags for the selected word.
+- Left click selects a cell; drag from outside the current selection to create a rectangular selection.
+- Drag from inside the current selection to move all selected words to a new position; destination cells are overwritten like a spreadsheet.
+- Type one Chinese character to fill the whole selection with that word.
+- Backspace/Delete clears the whole selection; arrow keys move the selection.
+- Alt+P, Alt+D, and Alt+S toggle pushable, deletable, and solid flags for every word in the selection.
 - Ctrl+S saves to `res://levels/hero_trial_fist_edit.json`; Ctrl+R reloads that file.
 - F10 hides or shows the grid while staying in edit mode.
 - Edited cells are first stored in the running `GridWorld`; the editor status shows `未保存` after a change. After Ctrl+S, the JSON is persisted and loaded automatically on the next run.
@@ -71,6 +73,7 @@ powershell -ExecutionPolicy Bypass -File "E:\wordgame copy\勇者试炼\tools\ca
 - `tests/test_gameplay_core.gd`: gameplay regression tests
 - `tests/test_hero_trial_fist.gd`: 勇者试炼拳头关卡 regression tests
 - `tests/test_map_editor_io.gd`: runtime editor JSON round-trip tests
+- `tests/test_map_editor_ops.gd`: bulk grid editor operation tests
 - `tools/run_all_tests.ps1`: one-command automated verification
 - `tools/capture_visual_smoke.ps1`: launches Godot, captures a real screenshot, and checks visible text pixels
 - `docs/交接文档.md`: handoff notes for the next developers

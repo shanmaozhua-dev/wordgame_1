@@ -19,6 +19,7 @@ $tests = @(
     "res://tests/test_gameplay_core.gd",
     "res://tests/test_hero_trial_fist.gd",
     "res://tests/test_map_editor_io.gd",
+    "res://tests/test_map_editor_ops.gd",
     "res://tests/test_visual_layout_metrics.gd",
     "res://tests/test_visual_resources.gd",
     "res://tests/test_precision_movement.gd",
