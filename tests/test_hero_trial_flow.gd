@@ -11,6 +11,7 @@ func _init() -> void:
 	test_pull_good_out_of_life_line_switches_state_and_keeps_good()
 	test_one_gesture_state_keeps_displaced_words()
 	test_pushing_one_into_zero_slot_displaces_zero_and_switches_state()
+	test_zero_returning_to_sentence_restores_zero_gesture()
 
 	if failures.is_empty():
 		print("hero_trial_flow tests passed")
@@ -125,6 +126,43 @@ func test_pushing_one_into_zero_slot_displaces_zero_and_switches_state() -> void
 	assert_true(flow.sync_after_player_action(world).success, "flow switches after pushed one enters the sentence")
 	assert_equal(flow.stage, "one_gesture", "flow reaches one gesture state after chained push")
 	assert_equal(world.get_entity_at(Vector2i(26, 18)).text, zero_word, "displaced zero remains after state switch")
+
+func test_zero_returning_to_sentence_restores_zero_gesture() -> void:
+	var world := GridWorld.new()
+	var flow := HeroTrialFlow.new()
+	var one_word := char(0x4e00)
+	var zero_word := char(0x96f6)
+	var good_word := char(0x597d)
+	flow.load_start_scene(world)
+	flow.handle_space(world)
+
+	var one = find_pushable_entity_by_text(world, one_word)
+	var zero = world.find_first_entity_by_text(zero_word)
+	var good = world.get_entity_at(Vector2i(14, 13))
+	assert_true(one != null, "scene two has movable one for zero restore")
+	assert_true(zero != null, "scene two has movable zero for zero restore")
+	assert_true(good != null, "scene two has good for zero restore")
+	if not one or not zero or not good:
+		return
+	world.move_entity_to(zero.id, Vector2i(28, 15))
+	world.move_entity_to(good.id, Vector2i(28, 16))
+	world.move_entity_to(one.id, Vector2i(26, 17))
+	assert_true(flow.sync_after_player_action(world).success, "one gesture setup succeeds")
+
+	var moved_one = find_pushable_entity_by_text(world, one_word)
+	var moved_zero = find_pushable_entity_by_text(world, zero_word)
+	assert_true(moved_one != null, "one exists before restoring zero gesture")
+	assert_true(moved_zero != null, "zero exists before restoring zero gesture")
+	if not moved_one or not moved_zero:
+		return
+	world.move_entity_to(moved_one.id, Vector2i(26, 18))
+	world.move_entity_to(moved_zero.id, Vector2i(26, 17))
+
+	assert_true(flow.sync_after_player_action(world).success, "zero gesture state switch succeeds")
+	assert_equal(flow.stage, "zero_gesture", "flow returns to zero gesture state")
+	assert_equal(world.get_entity_at(Vector2i(26, 17)).text, zero_word, "zero stays in the gesture sentence")
+	assert_equal(world.get_entity_at(Vector2i(26, 18)).text, one_word, "displaced one stays at its actual position")
+	assert_equal(world.get_entity_at(Vector2i(28, 16)).text, good_word, "moved good remains after zero gesture restore")
 
 func assert_equal(actual: Variant, expected: Variant, label: String) -> void:
 	if actual != expected:

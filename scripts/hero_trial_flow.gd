@@ -6,6 +6,7 @@ const SCENE_01_PATH := "res://levels/hero_trial_fist_scene_01.json"
 const SCENE_02_PATH := "res://levels/hero_trial_fist_scene_02.json"
 const LIFE_LINE_WITHOUT_GOOD_PATH := "res://levels/hero_trial_fist_state_life_line_without_good.json"
 const ONE_GESTURE_PATH := "res://levels/hero_trial_fist_state_one_gesture.json"
+const ZERO_GESTURE_PATH := "res://levels/hero_trial_fist_state_zero_gesture.json"
 const LIFE_LINE_GOOD_POS := Vector2i(14, 13)
 const GESTURE_WORD_POS := Vector2i(26, 17)
 
@@ -23,6 +24,8 @@ func handle_space(world: RefCounted) -> Dictionary:
 	return result
 
 func sync_after_player_action(world: RefCounted) -> Dictionary:
+	if _is_zero_gesture_ready(world):
+		return _switch_to_zero_gesture(world)
 	if _is_one_gesture_ready(world):
 		return _switch_to_one_gesture(world)
 	if stage != "scene_02":
@@ -72,6 +75,26 @@ func _switch_to_one_gesture(world: RefCounted) -> Dictionary:
 	world.update_page()
 	return {"success": true, "message": "one gesture state changed"}
 
+func _switch_to_zero_gesture(world: RefCounted) -> Dictionary:
+	var preserved: Array = []
+	var one_snapshot := _snapshot_first_pushable_entity(world, _one_word())
+	if not one_snapshot.is_empty():
+		preserved.append(one_snapshot)
+	var good_snapshot := _snapshot_first_entity(world, _good_word())
+	if not good_snapshot.is_empty():
+		preserved.append(good_snapshot)
+	var player_pos = world.player_pos
+	var facing = world.facing
+	var result := _load_scene(world, ZERO_GESTURE_PATH, "zero_gesture")
+	if not result.success:
+		return result
+	world.player_pos = player_pos
+	world.facing = facing
+	for snapshot in preserved:
+		world.add_entity(str(snapshot.text), snapshot.pos, snapshot.config)
+	world.update_page()
+	return {"success": true, "message": "zero gesture state changed"}
+
 func _load_scene(world: RefCounted, path: String, next_stage: String) -> Dictionary:
 	var loaded := MapEditorIO.load_editor_data(path)
 	if not loaded.success:
@@ -92,10 +115,25 @@ func _is_one_gesture_ready(world: RefCounted) -> bool:
 	var entity = world.get_entity_at(GESTURE_WORD_POS)
 	return entity != null and entity.text == _one_word()
 
+func _is_zero_gesture_ready(world: RefCounted) -> bool:
+	if stage != "one_gesture":
+		return false
+	var entity = world.get_entity_at(GESTURE_WORD_POS)
+	return entity != null and entity.text == _zero_word()
+
 func _snapshot_first_entity(world: RefCounted, text: String) -> Dictionary:
 	var entity = world.find_first_entity_by_text(text)
 	if entity == null:
 		return {}
+	return _snapshot_entity(entity)
+
+func _snapshot_first_pushable_entity(world: RefCounted, text: String) -> Dictionary:
+	for entity in world.entities.values():
+		if entity.text == text and entity.pushable:
+			return _snapshot_entity(entity)
+	return {}
+
+func _snapshot_entity(entity: RefCounted) -> Dictionary:
 	return {
 		"text": entity.text,
 		"pos": entity.grid_pos,
