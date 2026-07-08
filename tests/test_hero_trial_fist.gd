@@ -9,7 +9,7 @@ func _init() -> void:
 	test_screen_metrics_match_original_grid()
 	test_initial_hero_trial_layout()
 	test_zero_gesture_palm_matches_unpacked_big_text()
-	test_gesture_sentence_updates_state_and_keeps_collision_caption()
+	test_gesture_sentence_updates_state_without_slogan_caption()
 	test_release_sentence_completes_trial_after_deleting_not()
 
 	if failures.is_empty():
@@ -62,7 +62,7 @@ func test_zero_gesture_palm_matches_unpacked_big_text() -> void:
 		if not expected.has(cell):
 			failures.append("unexpected palm wall at %s; not in original visible palm big_text" % cell)
 
-func test_gesture_sentence_updates_state_and_keeps_collision_caption() -> void:
+func test_gesture_sentence_updates_state_without_slogan_caption() -> void:
 	var world = make_world()
 	var good = world.add_entity("好", Vector2i(2, 14), {"solid": true, "pushable": true})
 	var zero = world.find_first_entity_by_text("零")
@@ -73,9 +73,7 @@ func test_gesture_sentence_updates_state_and_keeps_collision_caption() -> void:
 	assert_equal(world.switches.get("ch3_好的手勢成立", false), true, "good gesture switch is set")
 	assert_equal(world.state.get("current_gesture", ""), "好", "current gesture state records the recognized gesture")
 	var caption = world.find_first_entity_by_text("已識別：好的手勢")
-	assert_true(caption != null, "gesture recognition creates persistent map text")
-	if caption:
-		assert_true(caption.solid, "gesture caption has collision")
+	assert_equal(caption, null, "gesture recognition does not create slogan map text")
 	var thumb = world.find_first_entity_by_text("好手勢")
 	assert_true(thumb != null, "hand layout adds a visible state marker for the good gesture")
 	if thumb:

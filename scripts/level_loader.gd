@@ -96,7 +96,7 @@ static func build_hero_trial_fist_level() -> Dictionary:
 		},
 		"sentence_rules": {
 			"巨大手掌，是好的手勢": {
-				"message": "已識別：好的手勢",
+				"message": "",
 				"switch": "ch3_好的手勢成立",
 				"state": {"current_gesture": "好"},
 				"caption_pos": Vector2i(18, 15),
@@ -105,19 +105,19 @@ static func build_hero_trial_fist_level() -> Dictionary:
 				]
 			},
 			"巨大手掌，是二的手勢": {
-				"message": "已識別：二的手勢",
+				"message": "",
 				"switch": "ch3_二的手勢成立",
 				"state": {"current_gesture": "二"},
 				"caption_pos": Vector2i(18, 15)
 			},
 			"巨大手掌，是讚的手勢": {
-				"message": "已識別：讚的手勢",
+				"message": "",
 				"switch": "ch3_讚的手勢成立",
 				"state": {"current_gesture": "讚"},
 				"caption_pos": Vector2i(18, 15)
 			},
 			"巨大手掌，是贏的手勢": {
-				"message": "已識別：贏的手勢",
+				"message": "",
 				"switch": "ch3_贏的手勢成立",
 				"state": {"current_gesture": "贏"},
 				"caption_pos": Vector2i(18, 15)

@@ -245,9 +245,7 @@ func test_json_sentence_spawn_positions_are_parsed() -> void:
 	if marker:
 		assert_equal(marker.grid_pos, Vector2i(24, 8), "json string spawn position is parsed")
 	var caption = world.find_first_entity_by_text("已識別：好的手勢")
-	assert_true(caption != null, "json string caption position creates caption")
-	if caption:
-		assert_equal(caption.grid_pos, Vector2i(18, 15), "json string caption position is parsed")
+	assert_equal(caption, null, "json-loaded gesture recognition does not create slogan caption")
 
 func test_deleting_not_opens_release_state() -> void:
 	var world := GridWorld.new()
