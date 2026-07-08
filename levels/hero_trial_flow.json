@@ -12,6 +12,17 @@
 		"release_opened": "res://levels/hero_trial_fist_state_release_opened.json"
 	},
 	"on_load": {
+		"*": [
+			{
+				"type": "set_cell_flags",
+				"pos": [
+					1,
+					5
+				],
+				"solid": true,
+				"pushable": true
+			}
+		],
 		"scene_02": [
 			{
 				"type": "set_cell_flags",

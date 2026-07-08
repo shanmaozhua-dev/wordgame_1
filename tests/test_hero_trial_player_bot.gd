@@ -13,6 +13,8 @@ var failures: Array[String] = []
 
 func _init() -> void:
 	test_player_bot_only_changes_gesture_when_word_enters_slot()
+	test_player_bot_document_gesture_cases_for_two_and_win()
+	test_player_bot_deletes_not_to_open_release_state()
 
 	if failures.is_empty():
 		print("hero_trial_player_bot tests passed")
@@ -57,6 +59,37 @@ func test_player_bot_only_changes_gesture_when_word_enters_slot() -> void:
 	assert_equal(world.get_entity_at(SLOT), null, "slot stays empty after good is removed")
 	assert_equal(flow.stage, "good_gesture", "removing good does not change hand state")
 
+func test_player_bot_document_gesture_cases_for_two_and_win() -> void:
+	for test_case in [
+		{"text": char(0x4e8c), "stage": "two_gesture", "label": "two"},
+		{"text": char(0x8d0f), "stage": "win_gesture", "label": "win"}
+	]:
+		var world := GridWorld.new()
+		var flow := HeroTrialFlow.new()
+		assert_true(flow.load_start_scene(world).success, "%s bot loads scene one" % test_case.label)
+		assert_true(flow.handle_space(world).success, "%s bot presses space into scene two" % test_case.label)
+		assert_true(drive_word_to(world, flow, char(0x597d), Vector2i(14, 14), "%s bot opens life-line passage" % test_case.label), "%s bot opens life-line passage" % test_case.label)
+		assert_equal(flow.stage, "life_line_without_good", "%s starts from open life-line state" % test_case.label)
+		assert_true(drive_word_to(world, flow, char(0x96f6), Vector2i(30, 18), "%s bot empties gesture slot" % test_case.label), "%s bot empties gesture slot" % test_case.label)
+		assert_equal(world.get_entity_at(SLOT), null, "%s gesture slot is empty before insertion" % test_case.label)
+
+		assert_true(drive_word_to(world, flow, str(test_case.text), SLOT, "%s bot pushes word into gesture slot" % test_case.label), "%s bot puts word into slot" % test_case.label)
+		assert_slot_and_stage(world, flow, str(test_case.text), str(test_case.stage), "%s entering slot changes hand state" % test_case.label)
+
+func test_player_bot_deletes_not_to_open_release_state() -> void:
+	var world := GridWorld.new()
+	var flow := HeroTrialFlow.new()
+	assert_true(flow.load_start_scene(world).success, "delete-not bot loads scene one")
+	assert_true(flow.handle_space(world).success, "delete-not bot presses space into scene two")
+	assert_true(not can_player_reach(world, Vector2i(5, 3)), "delete-not position is not reachable from current captured start")
+	world.player_pos = Vector2i(5, 3)
+	assert_true(world.try_move_player(Vector2i(1, 0)).success == false, "not word blocks movement before deletion")
+	world.facing = Vector2i(1, 0)
+	assert_true(world.delete_front().success, "delete-not bot presses backspace on not word")
+	assert_true(flow.sync_after_player_action(world).success, "release state switch succeeds after real deletion")
+	assert_equal(flow.stage, "release_opened", "deleting not opens release state")
+	assert_equal(world.get_entity_at(Vector2i(6, 3)), null, "not word remains absent after release state switch")
+
 func drive_word_to(world: RefCounted, flow: RefCounted, text: String, target: Vector2i, label: String) -> bool:
 	var action_count := 0
 	while action_count < 420:
@@ -64,6 +97,9 @@ func drive_word_to(world: RefCounted, flow: RefCounted, text: String, target: Ve
 		if entity == null:
 			failures.append("%s could not find pushable word %s" % [label, text])
 			return false
+		var target_entity = world.get_entity_at(target)
+		if target_entity != null and target_entity.text == text:
+			return true
 		if entity.grid_pos == target:
 			return true
 		var plan := plan_next_actions(world, entity, target)
@@ -96,6 +132,25 @@ func drive_word_to(world: RefCounted, flow: RefCounted, text: String, target: Ve
 				break
 	failures.append("%s exceeded bot step budget" % label)
 	return false
+
+func drive_player_to(world: RefCounted, flow: RefCounted, target: Vector2i, label: String) -> bool:
+	var blockers := solid_blockers_except(world, "")
+	var actions := plan_player_path(world.player_pos, target, Vector2i(9999, 9999), blockers)
+	if actions.is_empty() and world.player_pos != target:
+		failures.append("%s no player route from %s to %s; stage=%s" % [label, world.player_pos, target, flow.stage])
+		return false
+	for action in actions:
+		var result: Dictionary = world.try_move_player(action.direction)
+		if not bool(result.get("success", false)):
+			failures.append("%s move failed: %s -> %s" % [label, action, result])
+			return false
+		flow.sync_after_player_action(world)
+	return world.player_pos == target
+
+func can_player_reach(world: RefCounted, target: Vector2i) -> bool:
+	var blockers := solid_blockers_except(world, "")
+	var actions := plan_player_path(world.player_pos, target, Vector2i(9999, 9999), blockers)
+	return world.player_pos == target or not actions.is_empty()
 
 func plan_next_actions(world: RefCounted, selected: RefCounted, target: Vector2i) -> Array:
 	var blockers := solid_blockers_except(world, selected.id)

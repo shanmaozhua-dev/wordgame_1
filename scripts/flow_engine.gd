@@ -151,7 +151,10 @@ func _can_restore_snapshot(world: RefCounted, snapshot: Dictionary) -> bool:
 	return true
 
 func _apply_on_load(world: RefCounted, map_id: String) -> void:
-	for effect in on_load.get(map_id, []):
+	var effects: Array = []
+	effects.append_array(on_load.get("*", []))
+	effects.append_array(on_load.get(map_id, []))
+	for effect in effects:
 		if str(effect.get("type", "")) == "set_cell_flags":
 			var entity = world.get_entity_at(_array_to_vector2i(effect.get("pos", [])))
 			if entity:
