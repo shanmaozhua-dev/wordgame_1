@@ -39,4 +39,7 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 & (Join-Path $PSScriptRoot "capture_visual_smoke.ps1")
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+& python (Join-Path $PSScriptRoot "test_map_review_tools.py")
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
 Write-Host "All automated checks passed."

@@ -77,6 +77,7 @@ powershell -ExecutionPolicy Bypass -File "E:\wordgame copy\勇者试炼\tools\ca
 - `tests/test_map_editor_ops.gd`: bulk grid editor operation tests
 - `tools/run_all_tests.ps1`: one-command automated verification
 - `tools/capture_visual_smoke.ps1`: launches Godot, captures a real screenshot, and checks visible text pixels
+- `tools/make_grid_reference.py`, `tools/render_level_preview.py`, `tools/compare_level_to_screenshot.py`: screenshot-driven map review helpers; outputs go under `test-output/map-review/`
 - `levels/hero_trial_fist_scene_01.json`: hand-edited reference layout for the first captured scene
 - `levels/hero_trial_fist_scene_02.json`: hand-edited reference layout for the second captured scene
 - `levels/hero_trial_fist_state_life_line_without_good.json`: hand-edited gameplay state after moving `好` out of `逼退好手的生命線`; this is not a third scene
@@ -107,6 +108,7 @@ Implemented for this pass:
 - Runtime flow starts from `hero_trial_fist_scene_01.json`. Pressing Space loads `hero_trial_fist_scene_02.json`. When the movable `好` leaves `逼退好手的生命線`, the static map switches to `hero_trial_fist_state_life_line_without_good.json`, while that moved `好` remains at its current grid position.
 - When `一` enters the bottom gesture sentence and forms `巨大手掌，是一的手勢`, the static map switches to `hero_trial_fist_state_one_gesture.json`; displaced `零` and moved `好` are kept at their actual grid positions.
 - When `零` returns to the same gesture word slot from the one-gesture state, the static map switches back to `hero_trial_fist_state_zero_gesture.json`; displaced `一` and moved `好` are kept at their actual grid positions.
+- The flow is configured by `levels/hero_trial_flow.json`; new screenshot states should be added as maps and rules there instead of hard-coding new branches.
 - Pushable words can push another pushable word one cell farther in the same direction, which supports replacing `零` with `一` in the gesture sentence.
 - Recognition for `巨大手掌，是好的手勢`, `巨大手掌，是二的手勢`, `巨大手掌，是讚的手勢`, `巨大手掌，是贏的手勢`.
 - Recognition for deleting `不` to form `會輕易放開`, which sets `hero_trial_complete`. No invented tail text is spawned by the prototype.

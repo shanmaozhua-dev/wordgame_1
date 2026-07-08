@@ -2,10 +2,12 @@ extends SceneTree
 
 const GridWorld = preload("res://scripts/grid_world.gd")
 const HeroTrialFlow = preload("res://scripts/hero_trial_flow.gd")
+const FlowEngine = preload("res://scripts/flow_engine.gd")
 
 var failures: Array[String] = []
 
 func _init() -> void:
+	test_flow_config_loads_all_maps_and_rules()
 	test_space_advances_from_scene_one_to_scene_two()
 	test_push_good_out_of_life_line_switches_state_and_keeps_good()
 	test_pull_good_out_of_life_line_switches_state_and_keeps_good()
@@ -20,6 +22,14 @@ func _init() -> void:
 		for failure in failures:
 			printerr(failure)
 		quit(1)
+
+func test_flow_config_loads_all_maps_and_rules() -> void:
+	var engine := FlowEngine.new()
+	assert_true(engine.load_config("res://levels/hero_trial_flow.json").success, "flow config loads")
+	assert_equal(engine.stage, "scene_01", "flow config declares scene one start")
+	for map_id in ["scene_01", "scene_02", "life_line_without_good", "one_gesture", "zero_gesture"]:
+		assert_true(engine.has_map(map_id), "flow config registers map %s" % map_id)
+	assert_true(engine.rule_count() >= 4, "flow config registers current hero trial transitions")
 
 func test_space_advances_from_scene_one_to_scene_two() -> void:
 	var world := GridWorld.new()

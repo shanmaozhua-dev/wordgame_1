@@ -17,6 +17,7 @@
 *.log
 *.tmp
 *.bak
+__pycache__/
 screenshots/
 test-output/
 .superpowers/

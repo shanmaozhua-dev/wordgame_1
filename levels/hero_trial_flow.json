@@ -1,0 +1,40 @@
+{
+	"start_map": "scene_01",
+	"maps": {
+		"scene_01": "res://levels/hero_trial_fist_scene_01.json",
+		"scene_02": "res://levels/hero_trial_fist_scene_02.json",
+		"life_line_without_good": "res://levels/hero_trial_fist_state_life_line_without_good.json",
+		"one_gesture": "res://levels/hero_trial_fist_state_one_gesture.json",
+		"zero_gesture": "res://levels/hero_trial_fist_state_zero_gesture.json"
+	},
+	"on_load": {
+		"scene_02": [
+			{"type": "set_cell_flags", "pos": [14, 13], "solid": true, "pushable": true}
+		]
+	},
+	"rules": [
+		{
+			"from": ["scene_01"],
+			"trigger": {"type": "space"},
+			"to": "scene_02"
+		},
+		{
+			"from": ["scene_02", "life_line_without_good", "zero_gesture"],
+			"trigger": {"type": "cell_text", "pos": [26, 17], "text": "一"},
+			"to": "one_gesture",
+			"preserve": ["零", "好"]
+		},
+		{
+			"from": ["one_gesture"],
+			"trigger": {"type": "cell_text", "pos": [26, 17], "text": "零"},
+			"to": "zero_gesture",
+			"preserve": ["一", "好"]
+		},
+		{
+			"from": ["scene_02", "life_line_without_good"],
+			"trigger": {"type": "cell_not_text", "pos": [14, 13], "text": "好"},
+			"to": "life_line_without_good",
+			"preserve": ["好"]
+		}
+	]
+}
