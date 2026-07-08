@@ -63,6 +63,7 @@ func test_push_good_out_of_life_line_switches_state_and_keeps_good() -> void:
 	assert_equal(flow.stage, "life_line_without_good", "flow reaches life-line state")
 	assert_equal(world.player_pos, Vector2i(14, 13), "player position survives state switch")
 	assert_equal(world.get_entity_at(Vector2i(14, 13)), null, "old good cell stays empty")
+	assert_life_line_middle_palm_open(world)
 	var moved_good := world.get_entity_at(Vector2i(14, 14))
 	assert_true(moved_good != null, "moved good is still on the map")
 	if moved_good:
@@ -82,6 +83,7 @@ func test_pull_good_out_of_life_line_switches_state_and_keeps_good() -> void:
 	assert_true(flow.sync_after_player_action(world).success, "flow switches after pulled good leaves sentence")
 	assert_equal(flow.stage, "life_line_without_good", "flow reaches life-line state after pull")
 	assert_equal(world.player_pos, Vector2i(14, 11), "player position survives pull state switch")
+	assert_life_line_middle_palm_open(world)
 	var moved_good := world.get_entity_at(Vector2i(14, 12))
 	assert_true(moved_good != null, "pulled good is still on the map")
 	if moved_good:
@@ -225,3 +227,13 @@ func find_pushable_entity_by_text(world: RefCounted, text: String) -> RefCounted
 		if entity.text == text and entity.pushable:
 			return entity
 	return null
+
+func assert_life_line_middle_palm_open(world: RefCounted) -> void:
+	for cell in [
+		Vector2i(19, 10),
+		Vector2i(20, 10),
+		Vector2i(21, 10),
+		Vector2i(20, 11),
+		Vector2i(20, 12)
+	]:
+		assert_equal(world.get_entity_at(cell), null, "life-line middle palm cell %s is open" % cell)

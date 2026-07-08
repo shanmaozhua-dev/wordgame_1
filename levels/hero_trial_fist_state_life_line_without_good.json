@@ -1354,48 +1354,6 @@
 			]
 		},
 		{
-			"x": 19,
-			"y": 10,
-			"text": "掌",
-			"solid": true,
-			"pushable": false,
-			"deletable": false,
-			"splittable": false,
-			"interact_text": "",
-			"tags": [
-				"palm_wall",
-				"zero_gesture"
-			]
-		},
-		{
-			"x": 20,
-			"y": 10,
-			"text": "掌",
-			"solid": true,
-			"pushable": false,
-			"deletable": false,
-			"splittable": false,
-			"interact_text": "",
-			"tags": [
-				"palm_wall",
-				"zero_gesture"
-			]
-		},
-		{
-			"x": 21,
-			"y": 10,
-			"text": "掌",
-			"solid": true,
-			"pushable": false,
-			"deletable": false,
-			"splittable": false,
-			"interact_text": "",
-			"tags": [
-				"palm_wall",
-				"zero_gesture"
-			]
-		},
-		{
 			"x": 23,
 			"y": 10,
 			"text": "掌",
@@ -1494,20 +1452,6 @@
 			]
 		},
 		{
-			"x": 20,
-			"y": 11,
-			"text": "掌",
-			"solid": true,
-			"pushable": false,
-			"deletable": false,
-			"splittable": false,
-			"interact_text": "",
-			"tags": [
-				"palm_wall",
-				"zero_gesture"
-			]
-		},
-		{
 			"x": 30,
 			"y": 11,
 			"text": "掌",
@@ -1588,20 +1532,6 @@
 		},
 		{
 			"x": 11,
-			"y": 12,
-			"text": "掌",
-			"solid": true,
-			"pushable": false,
-			"deletable": false,
-			"splittable": false,
-			"interact_text": "",
-			"tags": [
-				"palm_wall",
-				"zero_gesture"
-			]
-		},
-		{
-			"x": 20,
 			"y": 12,
 			"text": "掌",
 			"solid": true,
