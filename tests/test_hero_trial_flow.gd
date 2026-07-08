@@ -9,6 +9,8 @@ func _init() -> void:
 	test_space_advances_from_scene_one_to_scene_two()
 	test_push_good_out_of_life_line_switches_state_and_keeps_good()
 	test_pull_good_out_of_life_line_switches_state_and_keeps_good()
+	test_one_gesture_state_keeps_displaced_words()
+	test_pushing_one_into_zero_slot_displaces_zero_and_switches_state()
 
 	if failures.is_empty():
 		print("hero_trial_flow tests passed")
@@ -73,6 +75,57 @@ func test_pull_good_out_of_life_line_switches_state_and_keeps_good() -> void:
 		assert_equal(moved_good.text, good_word, "pulled word remains good")
 		assert_true(moved_good.pushable, "pulled good remains movable")
 
+func test_one_gesture_state_keeps_displaced_words() -> void:
+	var world := GridWorld.new()
+	var flow := HeroTrialFlow.new()
+	var one_word := char(0x4e00)
+	var zero_word := char(0x96f6)
+	var good_word := char(0x597d)
+	flow.load_start_scene(world)
+	flow.handle_space(world)
+
+	var one = find_pushable_entity_by_text(world, one_word)
+	var zero = world.find_first_entity_by_text(zero_word)
+	var good = world.get_entity_at(Vector2i(14, 13))
+	assert_true(one != null, "scene two has movable one")
+	assert_true(zero != null, "scene two has movable zero")
+	assert_true(good != null, "scene two has life-line good")
+	if not one or not zero or not good:
+		return
+	world.move_entity_to(zero.id, Vector2i(28, 15))
+	world.move_entity_to(good.id, Vector2i(28, 16))
+	world.move_entity_to(one.id, Vector2i(26, 17))
+
+	assert_true(flow.sync_after_player_action(world).success, "one gesture state switch succeeds")
+	assert_equal(flow.stage, "one_gesture", "flow reaches one gesture state")
+	assert_equal(world.get_entity_at(Vector2i(26, 17)).text, one_word, "one stays in the gesture sentence")
+	assert_equal(world.get_entity_at(Vector2i(28, 15)).text, zero_word, "displaced zero stays at its actual position")
+	assert_equal(world.get_entity_at(Vector2i(28, 16)).text, good_word, "displaced good stays at its actual position")
+	assert_true(world.get_entity_at(Vector2i(28, 15)).pushable, "displaced zero remains movable")
+
+func test_pushing_one_into_zero_slot_displaces_zero_and_switches_state() -> void:
+	var world := GridWorld.new()
+	var flow := HeroTrialFlow.new()
+	var one_word := char(0x4e00)
+	var zero_word := char(0x96f6)
+	flow.load_start_scene(world)
+	flow.handle_space(world)
+
+	var one = find_pushable_entity_by_text(world, one_word)
+	assert_true(one != null, "scene two has movable one")
+	if not one:
+		return
+	world.move_entity_to(one.id, Vector2i(26, 16))
+	world.player_pos = Vector2i(26, 15)
+	world.facing = Vector2i(0, 1)
+
+	assert_true(world.try_move_player(Vector2i(0, 1)).success, "pushing one into zero slot displaces zero")
+	assert_equal(world.get_entity_at(Vector2i(26, 17)).text, one_word, "one enters gesture word slot")
+	assert_equal(world.get_entity_at(Vector2i(26, 18)).text, zero_word, "zero is pushed to the next cell")
+	assert_true(flow.sync_after_player_action(world).success, "flow switches after pushed one enters the sentence")
+	assert_equal(flow.stage, "one_gesture", "flow reaches one gesture state after chained push")
+	assert_equal(world.get_entity_at(Vector2i(26, 18)).text, zero_word, "displaced zero remains after state switch")
+
 func assert_equal(actual: Variant, expected: Variant, label: String) -> void:
 	if actual != expected:
 		failures.append("%s expected %s but got %s" % [label, expected, actual])
@@ -80,3 +133,9 @@ func assert_equal(actual: Variant, expected: Variant, label: String) -> void:
 func assert_true(actual: bool, label: String) -> void:
 	if not actual:
 		failures.append("%s expected true but got false" % label)
+
+func find_pushable_entity_by_text(world: RefCounted, text: String) -> RefCounted:
+	for entity in world.entities.values():
+		if entity.text == text and entity.pushable:
+			return entity
+	return null

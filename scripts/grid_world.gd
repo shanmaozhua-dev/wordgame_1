@@ -153,6 +153,11 @@ func move_entity_by(entity_id: String, direction: Vector2i) -> Dictionary:
 			var merged := try_merge_entities(entity.grid_pos, blocker.grid_pos)
 			if merged.success:
 				return merged
+			if blocker.pushable:
+				var pushed_blocker := move_entity_by(blocker.id, direction)
+				if not pushed_blocker.success:
+					return pushed_blocker
+				continue
 			return {"success": false, "message": "blocked by word"}
 		if target == player_pos and not own_cells.has(target):
 			return {"success": false, "message": "blocked by player"}

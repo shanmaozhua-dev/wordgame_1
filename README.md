@@ -80,6 +80,7 @@ powershell -ExecutionPolicy Bypass -File "E:\wordgame copy\勇者试炼\tools\ca
 - `levels/hero_trial_fist_scene_01.json`: hand-edited reference layout for the first captured scene
 - `levels/hero_trial_fist_scene_02.json`: hand-edited reference layout for the second captured scene
 - `levels/hero_trial_fist_state_life_line_without_good.json`: hand-edited gameplay state after moving `好` out of `逼退好手的生命線`; this is not a third scene
+- `levels/hero_trial_fist_state_one_gesture.json`: hand-edited static palm state for `巨大手掌，是一的手勢`; displaced movable words are restored by flow code
 - `docs/交接文档.md`: handoff notes for the next developers
 - `docs/测试复用指南.md`: how to reuse the test framework for new screenshot-based levels
 - `Fonts/Zpix.ttf`: original-style pixel font used by the manual test scene
@@ -103,6 +104,8 @@ Implemented for this pass:
 - Initial visible palm walls are locked against the source `零的手勢`, `生命線`, and `拇指下收` `big_text` coordinates.
 - Saved hand-edited JSON maps under `levels/` preserve manual layouts and intermediate states. The life-line state file intentionally has no standalone `好` entity, because `好` has already been moved out of `逼退好手的生命線`.
 - Runtime flow starts from `hero_trial_fist_scene_01.json`. Pressing Space loads `hero_trial_fist_scene_02.json`. When the movable `好` leaves `逼退好手的生命線`, the static map switches to `hero_trial_fist_state_life_line_without_good.json`, while that moved `好` remains at its current grid position.
+- When `一` enters the bottom gesture sentence and forms `巨大手掌，是一的手勢`, the static map switches to `hero_trial_fist_state_one_gesture.json`; displaced `零` and moved `好` are kept at their actual grid positions.
+- Pushable words can push another pushable word one cell farther in the same direction, which supports replacing `零` with `一` in the gesture sentence.
 - Recognition for `巨大手掌，是好的手勢`, `巨大手掌，是二的手勢`, `巨大手掌，是讚的手勢`, `巨大手掌，是贏的手勢`.
 - Recognition for deleting `不` to form `會輕易放開`, which sets `hero_trial_complete`. No invented tail text is spawned by the prototype.
 

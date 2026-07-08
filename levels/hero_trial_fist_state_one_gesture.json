@@ -1942,17 +1942,6 @@
 			]
 		},
 		{
-			"x": 28,
-			"y": 15,
-			"text": "零",
-			"solid": true,
-			"pushable": true,
-			"deletable": false,
-			"splittable": false,
-			"interact_text": "",
-			"tags": []
-		},
-		{
 			"x": 30,
 			"y": 15,
 			"text": "掌",
@@ -2043,19 +2032,6 @@
 			"tags": [
 				"palm_wall",
 				"zero_gesture"
-			]
-		},
-		{
-			"x": 28,
-			"y": 16,
-			"text": "好",
-			"solid": true,
-			"pushable": true,
-			"deletable": false,
-			"splittable": false,
-			"interact_text": "",
-			"tags": [
-				"manual_edit"
 			]
 		},
 		{
