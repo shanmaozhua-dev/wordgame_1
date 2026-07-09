@@ -1,0 +1,101 @@
+{
+  "level_id": "ch1_02_corridor",
+  "display_name": "第一章 02_長廊",
+  "owner": "",
+  "status": "not_started",
+  "source": {
+    "external_root": "D:/文字游戏",
+    "source_map": "D:/文字游戏/Scenes/Maps/第一章/02_長廊.tscn",
+    "local_reference_map": "E:/Godot/wordgame/Scenes/Maps/第一章/02_長廊.tscn"
+  },
+  "target": {
+    "godot_version": "4.7",
+    "target_scene": "res://Scenes/Maps/第一章/02_長廊.tscn"
+  },
+  "map": {
+    "root_structure": ["Node", "MainMap"],
+    "main_map_scene": "res://Scenes/MainMap.tscn",
+    "tile_set": "res://Tilesets/tileset_test.tres",
+    "cell_size": 60,
+    "bound": [0, 0, 32, 18],
+    "player_spawn_pos": [-1, -1],
+    "floor_type": "wood",
+    "has_bgm": true,
+    "bgm_path": "res://Sounds/bgm/ch1/BGM_1_1_room1.ogg",
+    "bgm_transition_type": "fade",
+    "has_env": false,
+    "env_path": "",
+    "has_reverb": true,
+    "reverb_mix_rate": 0.02
+  },
+  "placement_rule": {
+    "grid_cell_size": 60,
+    "event_anchor": "cell_top_left",
+    "event_position_formula": "Vector2(grid_x * 60, grid_y * 60)",
+    "word_anchor": "cell_center",
+    "word_sprite_offset": [30, 30],
+    "collision_extents": [30, 30]
+  },
+  "flow": {
+    "entry_from": [],
+    "exit_to": [
+      {
+        "event": "門",
+        "map_transport": "第一章/03_房間",
+        "transition_type": "fade"
+      }
+    ],
+    "section_name": "1-2"
+  },
+  "events": [
+    {
+      "name": "門",
+      "scene": "res://Scenes/Events/Event.tscn",
+      "grid_pos": [-1, -1],
+      "position": [-60, -60],
+      "text": "門",
+      "trigger": "TOUCH",
+      "layer": "MID",
+      "can_push": false,
+      "can_delete": false,
+      "can_split": false,
+      "need_be_saved": false,
+      "commands_summary": "open door, move player, fade, map_transport"
+    }
+  ],
+  "text_rules": {
+    "sentence_rules": [],
+    "split_list": {},
+    "merge_list": {}
+  },
+  "required_resources": {
+    "animations": [],
+    "sprites": [
+      {
+        "source": "D:/文字游戏/Sprites/door/door_open.png",
+        "target": "res://Sprites/door/door_open.png",
+        "used_by": "門",
+        "trigger": "play_sprite_animation"
+      }
+    ],
+    "audio": [
+      {
+        "source": "D:/文字游戏/Sounds/se/第一章 音效/SE_1_3_door_open.wav",
+        "target": "res://Sounds/se/第一章 音效/SE_1_3_door_open.wav",
+        "used_by": "門",
+        "trigger": "play_se"
+      }
+    ]
+  },
+  "missing_resources": [],
+  "acceptance": [
+    "scene_opens_without_missing_resources",
+    "entry_transition_works",
+    "exit_transition_works",
+    "text_inside_60x60_grid",
+    "event_position_matches_grid",
+    "no_custom_animation",
+    "manifest_and_handoff_updated"
+  ],
+  "notes": ""
+}
